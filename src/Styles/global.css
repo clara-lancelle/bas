@@ -1,0 +1,39 @@
+.text-blue-dark {
+    color : var(--main-blue-dark);
+}
+
+.text-blue-light {
+    color : var(--main-blue-light);
+}
+
+.text-gray-dark {
+    color : var(--main-gray-dark);
+}
+
+.text-black {
+    color : var(--main-black);
+}
+
+.text-white-light {
+    color : var(--main-white-light);
+}
+
+.bg-blue-night {
+    background-color: var(--main-blue-night);
+}
+
+.btn-blue-dark {
+    background-color : var(--main-blue-dark);
+    padding: 12px 24px;
+    color : white;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.text-opacity-light {
+    opacity : 70%;
+}
+
+.logo {
+    width : 252px;
+}

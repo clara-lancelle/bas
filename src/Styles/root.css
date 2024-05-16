@@ -1,0 +1,20 @@
+:root {
+    --main-blue-dark: #4640DE;
+    --main-blue-light: #26A4FF;
+    --main-blue-night: #202430;
+    --main-gray-dark: #25324B;
+    --main-black: #000;
+    --main-white-light: #D6DDEB;
+}
+
+@font-face {
+    font-family: 'Epilogue';
+    src: url('../Fonts/epilogue-variable.woff2') format('woff2'),
+         url('../Fonts/epilogue-variable.woff') format('woff'),
+         url('../Fonts/epilogue-variable.ttf') format('truetype');
+}
+
+body {
+    font-family: 'Epilogue', sans-serif;
+    font-size : 16px;
+}

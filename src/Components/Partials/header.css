@@ -1,0 +1,16 @@
+.nav-item__link::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 0px;
+    background-color: var(--main-blue-dark);
+    opacity: 0;
+    transition: height 0.2s ease-in-out, opacity 0.2s ease-in-out;
+}
+
+.nav-item__link:hover::after{
+    height: 4px;
+    opacity: 1;
+}
