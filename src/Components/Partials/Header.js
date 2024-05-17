@@ -16,8 +16,28 @@ export default function Header() {
                         
                     <ul className="flex justify-center items-center space-x-5 h-full">
                         <li className="h-full flex items-center relative nav-item"><Link to="#" className="nav-item__link">Accueil</Link></li>
-                        <li className="h-full flex items-center relative nav-item"><Link to="#" className="nav-item__link">Offres</Link></li>
-                        <li className="h-full flex items-center relative nav-item"><Link to="#" className="nav-item__link">Demandes</Link></li>
+                        <li className="h-full flex items-center relative nav-item">
+                            <span className="nav-item__link">Offres</span>
+                            <ul className="dropdown">
+                                <li className="h-full relative nav-item dropdown-item">
+                                    <Link to="#">Offres de stage</Link>
+                                </li>
+                                <li className="h-full relative nav-item dropdown-item">
+                                    <Link to="#">Offres d'alternance</Link>
+                                </li>
+                            </ul>
+                        </li>
+                        <li className="h-full flex items-center relative nav-item">
+                            <span className="nav-item__link">Demandes</span>
+                            <ul className="dropdown">
+                                <li className="h-full relative nav-item dropdown-item">
+                                    <Link to="#">Demandes de stage</Link>
+                                </li>
+                                <li className="h-full relative nav-item dropdown-item">
+                                    <Link to="#">Demandes d'alternance</Link>
+                                </li>
+                            </ul>
+                        </li>
                         <li className="h-full flex items-center relative nav-item"><Link to="#" className="nav-item__link">Entreprises</Link></li>
                         <li className="h-full flex items-center relative nav-item"><Link to="#" className="nav-item__link">Etudiants</Link></li>
                     </ul>

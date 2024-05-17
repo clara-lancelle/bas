@@ -25,7 +25,15 @@
 .btn-blue-dark {
     background-color : var(--main-blue-dark);
     padding: 12px 24px;
-    color : white;
+    color : #fff;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.btn-white {
+    background-color : #fff;
+    padding: 12px 24px;
+    color : var(--main-blue-dark);
     font-weight: bold;
     font-size: 1rem;
 }
@@ -37,3 +45,15 @@
 .logo {
     width : 252px;
 }
+
+/* DEBUT - A transférer vers un autre fichier propre a une offre (en cube?) */
+.tag-contract {
+    background-color: #F8F8FD;
+    padding: 4px 12px;
+}
+
+.offer-informations {
+    color : #515B6F; 
+}
+
+/* FIN */
