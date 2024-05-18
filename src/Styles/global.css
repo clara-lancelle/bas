@@ -1,0 +1,59 @@
+.text-blue-dark {
+    color : var(--main-blue-dark);
+}
+
+.text-blue-light {
+    color : var(--main-blue-light);
+}
+
+.text-gray-dark {
+    color : var(--main-gray-dark);
+}
+
+.text-black {
+    color : var(--main-black);
+}
+
+.text-white-light {
+    color : var(--main-white-light);
+}
+
+.bg-blue-night {
+    background-color: var(--main-blue-night);
+}
+
+.btn-blue-dark {
+    background-color : var(--main-blue-dark);
+    padding: 12px 24px;
+    color : #fff;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.btn-white {
+    background-color : #fff;
+    padding: 12px 24px;
+    color : var(--main-blue-dark);
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.text-opacity-light {
+    opacity : 70%;
+}
+
+.logo {
+    width : 252px;
+}
+
+/* DEBUT - A transférer vers un autre fichier propre a une offre (en cube?) */
+.tag-contract {
+    background-color: #F8F8FD;
+    padding: 4px 12px;
+}
+
+.offer-informations {
+    color : #515B6F; 
+}
+
+/* FIN */
