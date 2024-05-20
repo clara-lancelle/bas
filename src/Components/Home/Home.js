@@ -1,5 +1,5 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import './home.css';
 import amd from '../../Images/Home/Company/amd.png'
 import intel from '../../Images/Home/Company/intel.png'
@@ -10,9 +10,19 @@ import dashboardCompany from '../../Images/Home/dashboard-company.png'
 import arrowRight from '../../Images/Icons/arrow-right.svg'
 
 
-export default function Header() {
-    const totalStages = 987;
-    const totalAlternances = 1254;
+export default function Home() {
+    const { REACT_APP_API_URL } = process.env;
+    const [offerCount, setOfferCount] = useState()
+
+    useEffect(() => {
+        fetch(`${REACT_APP_API_URL}/api/offers/count`, {
+            method: "GET",
+        })
+            .then(response => response.json())
+            .then(response => setOfferCount({ ...response }))
+            .catch(err => console.error(err));
+    }, [])
+
     return (
         <>
             <div className="background">
@@ -23,7 +33,7 @@ export default function Header() {
                             <span className="text-blue-light relative vector-linear">aussi facile !</span>
                         </h2>
                         <h3 className="text-gray-dark opacity-70 mt-20 text-xl">Trouvez les offres de stage ou d’alternance près de chez vous <br />qui correspondent à votre profil et à vos attentes.</h3>
-                        <p className="text-gray-dark opacity-70 mt-6 text-xl"><span className="text-blue-light">{totalStages}</span> offres de <b>stages</b> | <span className="text-blue-light">{totalAlternances}</span> offres <b>d’alternance</b> n’attendent que vous !</p>
+                        <p className="text-gray-dark opacity-70 mt-6 text-xl"><span className="text-blue-light">{offerCount?.internship}</span> offres de <b>stages</b> | <span className="text-blue-light">{offerCount?.apprenticeship}</span> offres <b>d’alternance</b> n’attendent que vous !</p>
                     </div>
                 </div>
             </div>
@@ -65,56 +75,56 @@ export default function Header() {
                 </div>
                 <div className="mt-12 mb-18 offer-container">
                     <div className="offer-card border">
-                    <div className="flex justify-between items-start">
-                        <img src="" className="w-12 h-12"></img> {/* Image de l'entreprise */}
-                        <span className="text-blue-dark tag-contract">Stage</span> {/* Type de contrat */}
-                    </div>
+                        <div className="flex justify-between items-start">
+                            <img src="" className="w-12 h-12"></img> {/* Image de l'entreprise */}
+                            <span className="text-blue-dark tag-contract">Stage</span> {/* Type de contrat */}
+                        </div>
 
-                    <div className="my-4">
-                        <h3 className="font-semibold text-xl">Chargé de com</h3>{/* Intitulé du poste */}
-                        <p className="offer-informations">ClassPass • Nice</p>{/* Nom de l'entreprise + Ville */}
-                    </div>
+                        <div className="my-4">
+                            <h3 className="font-semibold text-xl">Chargé de com</h3>{/* Intitulé du poste */}
+                            <p className="offer-informations">ClassPass • Nice</p>{/* Nom de l'entreprise + Ville */}
+                        </div>
 
-                    <p className="my-4 opacity-70">Ceci est le début du texte de description de l’offre...</p>{/* Description de l'offre */}
+                        <p className="my-4 opacity-70">Ceci est le début du texte de description de l’offre...</p>{/* Description de l'offre */}
                     </div>
                     <div className="offer-card border">
-                    <div className="flex justify-between items-start">
-                        <img src="" className="w-12 h-12"></img> {/* Image de l'entreprise */}
-                        <span className="text-blue-dark tag-contract">Stage</span> {/* Type de contrat */}
-                    </div>
+                        <div className="flex justify-between items-start">
+                            <img src="" className="w-12 h-12"></img> {/* Image de l'entreprise */}
+                            <span className="text-blue-dark tag-contract">Stage</span> {/* Type de contrat */}
+                        </div>
 
-                    <div className="my-4">
-                        <h3 className="font-semibold text-xl">Chargé de com</h3>{/* Intitulé du poste */}
-                        <p className="offer-informations">ClassPass • Nice</p>{/* Nom de l'entreprise + Ville */}
-                    </div>
+                        <div className="my-4">
+                            <h3 className="font-semibold text-xl">Chargé de com</h3>{/* Intitulé du poste */}
+                            <p className="offer-informations">ClassPass • Nice</p>{/* Nom de l'entreprise + Ville */}
+                        </div>
 
-                    <p className="my-4 opacity-70">Ceci est le début du texte de description de l’offre...</p>{/* Description de l'offre */}
+                        <p className="my-4 opacity-70">Ceci est le début du texte de description de l’offre...</p>{/* Description de l'offre */}
                     </div>
                     <div className="offer-card border">
-                    <div className="flex justify-between items-start">
-                        <img src="" className="w-12 h-12"></img> {/* Image de l'entreprise */}
-                        <span className="text-blue-dark tag-contract">Stage</span> {/* Type de contrat */}
-                    </div>
+                        <div className="flex justify-between items-start">
+                            <img src="" className="w-12 h-12"></img> {/* Image de l'entreprise */}
+                            <span className="text-blue-dark tag-contract">Stage</span> {/* Type de contrat */}
+                        </div>
 
-                    <div className="my-4">
-                        <h3 className="font-semibold text-xl">Chargé de com</h3>{/* Intitulé du poste */}
-                        <p className="offer-informations">ClassPass • Nice</p>{/* Nom de l'entreprise + Ville */}
-                    </div>
+                        <div className="my-4">
+                            <h3 className="font-semibold text-xl">Chargé de com</h3>{/* Intitulé du poste */}
+                            <p className="offer-informations">ClassPass • Nice</p>{/* Nom de l'entreprise + Ville */}
+                        </div>
 
-                    <p className="my-4 opacity-70">Ceci est le début du texte de description de l’offre...</p>{/* Description de l'offre */}
+                        <p className="my-4 opacity-70">Ceci est le début du texte de description de l’offre...</p>{/* Description de l'offre */}
                     </div>
                     <div className="offer-card border">
-                    <div className="flex justify-between items-start">
-                        <img src="" className="w-12 h-12"></img> {/* Image de l'entreprise */}
-                        <span className="text-blue-dark tag-contract">Stage</span> {/* Type de contrat */}
-                    </div>
+                        <div className="flex justify-between items-start">
+                            <img src="" className="w-12 h-12"></img> {/* Image de l'entreprise */}
+                            <span className="text-blue-dark tag-contract">Stage</span> {/* Type de contrat */}
+                        </div>
 
-                    <div className="my-4">
-                        <h3 className="font-semibold text-xl">Chargé de com</h3>{/* Intitulé du poste */}
-                        <p className="offer-informations">ClassPass • Nice</p>{/* Nom de l'entreprise + Ville */}
-                    </div>
+                        <div className="my-4">
+                            <h3 className="font-semibold text-xl">Chargé de com</h3>{/* Intitulé du poste */}
+                            <p className="offer-informations">ClassPass • Nice</p>{/* Nom de l'entreprise + Ville */}
+                        </div>
 
-                    <p className="my-4 opacity-70">Ceci est le début du texte de description de l’offre...</p>{/* Description de l'offre */}
+                        <p className="my-4 opacity-70">Ceci est le début du texte de description de l’offre...</p>{/* Description de l'offre */}
                     </div>
                 </div>
             </div>
@@ -177,7 +187,7 @@ export default function Header() {
                                 </div>
                             </div>
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
