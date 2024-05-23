@@ -1,7 +1,3 @@
-.nav-item__link{
-    cursor: pointer;
-}
-
 .nav-item__link::after {
     content: "";
     position: absolute;

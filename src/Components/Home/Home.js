@@ -18,11 +18,11 @@ export default function Header() {
             <div className="background">
                 <div className="background-children ">
                     <div className="container flex flex-col pt-20 pb-24">
-                        <h2 className="text-7xl font-bold text-gray-dark leading-110">Trouver un stage <br />
+                        <h1 className="text-7xl font-bold text-gray-dark leading-110">Trouver un stage <br />
                             n’aura jamais été<br />
-                            <span className="text-blue-light relative vector-linear">aussi facile !</span>
-                        </h2>
-                        <h3 className="text-gray-dark opacity-70 mt-20 text-xl">Trouvez les offres de stage ou d’alternance près de chez vous <br />qui correspondent à votre profil et à vos attentes.</h3>
+                            <span className="text-blue-light relative hand-underline-title">aussi facile !</span>
+                        </h1>
+                        <p className="text-gray-dark opacity-70 mt-20 text-xl">Trouvez les offres de stage ou d’alternance près de chez vous <br />qui correspondent à votre profil et à vos attentes.</p>
                         <p className="text-gray-dark opacity-70 mt-6 text-xl"><span className="text-blue-light">{totalStages}</span> offres de <b>stages</b> | <span className="text-blue-light">{totalAlternances}</span> offres <b>d’alternance</b> n’attendent que vous !</p>
                     </div>
                 </div>

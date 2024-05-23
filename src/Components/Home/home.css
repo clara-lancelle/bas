@@ -8,10 +8,21 @@
     background-size: cover;
 }
 
-.vector-linear::after{
+.hand-underline-title::after{
     content: "";
     position: absolute;
     bottom: -50px;
+    left: 0;
+    width: 100%;
+    height: 40px;
+    background: url('../../Images/Home/vector-lines.png') no-repeat center center;
+    background-size: contain;
+}
+
+.hand-underline::after{
+    content: "";
+    position: absolute;
+    bottom: -30px;
     left: 0;
     width: 100%;
     height: 40px;

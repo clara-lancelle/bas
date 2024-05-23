@@ -10,17 +10,15 @@ export default function Header() {
         <header className="p-3 pb-0 bg-grey h-20">
             <div className='flex items-center justify-between container h-full'>
                 <div className="flex justify-between items-center gap-12 h-full">
-                    <h1>
-                        <img src={logo} alt="Bourses aux stages" className="logo"></img>
-                    </h1>
+                    <img src={logo} alt="Bourses aux stages" className="logo"></img>
                         
                     <ul className="flex justify-center items-center space-x-5 h-full">
-                        <li className="h-full flex items-center relative nav-item"><Link to="#" className="nav-item__link">Accueil</Link></li>
+                        <li className="h-full flex items-center relative nav-item"><Link to="/" className="nav-item__link">Accueil</Link></li>
                         <li className="h-full flex items-center relative nav-item">
                             <span className="nav-item__link">Offres</span>
                             <ul className="dropdown">
                                 <li className="h-full relative nav-item dropdown-item">
-                                    <Link to="#">Offres de stage</Link>
+                                    <Link to="/stage/offres">Offres de stage</Link>
                                 </li>
                                 <li className="h-full relative nav-item dropdown-item">
                                     <Link to="#">Offres d'alternance</Link>
