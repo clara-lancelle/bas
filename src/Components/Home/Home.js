@@ -13,6 +13,7 @@ import arrowRight from '../../Images/Icons/arrow-right.svg'
 export default function Home() {
     const { REACT_APP_API_URL } = process.env;
     const [offerCount, setOfferCount] = useState()
+    const [companiesWithTheMostOffers, setCompaniesWithTheMostOffers] = useState()
 
     useEffect(() => {
         fetch(`${REACT_APP_API_URL}/api/offers/count`, {
@@ -23,8 +24,18 @@ export default function Home() {
             .catch(err => console.error(err));
     }, [])
 
+    useEffect(() => {
+        fetch(`${REACT_APP_API_URL}/api/companies/mostOffersList`, {
+            method: "GET",
+        })
+            .then(response => response.json())
+            .then(response => setCompaniesWithTheMostOffers(response))
+            .catch(err => console.error(err));
+    }, [])
+
     return (
         <>
+            {console.log(companiesWithTheMostOffers)}
             <div className="background">
                 <div className="background-children ">
                     <div className="container flex flex-col pt-20 pb-24">
@@ -42,11 +53,9 @@ export default function Home() {
                 <div className="container">
                     <h2 className="mb-8 text-black text-lg">Entreprises à la une</h2>
                     <div className="flex justify-between items-center">
-                        <img src={vodafone} alt="vodafone" />
-                        <img src={intel} alt="intel" />
-                        <img src={tesla} alt="tesla" />
-                        <img src={amd} alt="amd" />
-                        <img src={talkit} alt="talkit" />
+                        {companiesWithTheMostOffers?.map(({ large_image, name: company, ...item }) => (
+                            <img className="w-[18%]" key={company} src={`http://127.0.0.1:8000/assets/images/companies/${large_image}`} alt={company} />
+                        ))}
                     </div>
                 </div>
             </div>
