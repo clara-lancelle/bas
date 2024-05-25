@@ -101,7 +101,7 @@ export default function Home() {
                             <p className="opacity-50 text-md relative txt-elipsis">{description}</p>{/* Description de l'offre */}
                             <div className="flex justify-between">
                                 {job_profiles.map((profile) => (
-                                    <p style={{ color: profile.color }}> {profile.name}</p>
+                                    <p key={profile.name} style={{ color: profile.color }}> {profile.name}</p>
                                 ))}
                             </div>
                         </div>
