@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import './home.css';
-import amd from '../../Images/Home/Company/amd.png'
-import intel from '../../Images/Home/Company/intel.png'
-import talkit from '../../Images/Home/Company/talkit.png'
-import tesla from '../../Images/Home/Company/tesla.png'
-import vodafone from '../../Images/Home/Company/vodafone.png'
 import dashboardCompany from '../../Images/Home/dashboard-company.png'
 import arrowRight from '../../Images/Icons/arrow-right.svg'
 
@@ -13,7 +8,8 @@ import arrowRight from '../../Images/Icons/arrow-right.svg'
 export default function Home() {
     const { REACT_APP_API_URL } = process.env;
     const [offerCount, setOfferCount] = useState()
-    const [companiesWithTheMostOffers, setCompaniesWithTheMostOffers] = useState()
+    const [companiesWithTheMostOffers, setCompaniesWithTheMostOffers] = useState([])
+    const [lastOffers, setLastOffers] = useState([])
 
     useEffect(() => {
         fetch(`${REACT_APP_API_URL}/api/offers/count`, {
@@ -33,9 +29,17 @@ export default function Home() {
             .catch(err => console.error(err));
     }, [])
 
+    useEffect(() => {
+        fetch(`${REACT_APP_API_URL}/api/offers/last`, {
+            method: "GET",
+        })
+            .then(response => response.json())
+            .then(response => setLastOffers(response))
+            .catch(err => console.error(err));
+    }, [])
+
     return (
         <>
-            {console.log(companiesWithTheMostOffers)}
             <div className="background">
                 <div className="background-children ">
                     <div className="container flex flex-col pt-20 pb-24">
@@ -54,7 +58,7 @@ export default function Home() {
                     <h2 className="mb-8 text-black text-lg">Entreprises à la une</h2>
                     <div className="flex justify-between items-center">
                         {companiesWithTheMostOffers?.map(({ large_image, name: company, ...item }) => (
-                            <img className="w-[18%]" key={company} src={`http://127.0.0.1:8000/assets/images/companies/${large_image}`} alt={company} />
+                            <img className="w-[18%]" key={company} src={`${REACT_APP_API_URL}/assets/images/companies/${large_image}`} alt={company} />
                         ))}
                     </div>
                 </div>
@@ -83,60 +87,27 @@ export default function Home() {
                     <Link to="#" className="text-blue-light font-semibold flex items-center gap-4">Toutes les offres <img src={arrowRight} className="text-blue-light" width="24px"></img></Link>
                 </div>
                 <div className="mt-12 mb-18 offer-container">
-                    <div className="offer-card border">
-                        <div className="flex justify-between items-start">
-                            <img src="" className="w-12 h-12"></img> {/* Image de l'entreprise */}
-                            <span className="text-blue-dark tag-contract">Stage</span> {/* Type de contrat */}
-                        </div>
+                    {lastOffers?.map(({ picto_image, type, id, companyName, description, city, name, job_profiles, ...items }) => (
+                        <div key={id} className="offer-card border h-[283px] overflow-hidden justify-between flex flex-col">
+                            <div className="flex justify-between items-start">
+                                <img src={`${REACT_APP_API_URL}/assets/images/companies/${picto_image}`} className="object-contain w-12 h-12" /> {/* Image de l'entreprise */}
+                                <span className="text-blue-dark tag-contract">{type}</span> {/* Type de contrat */}
+                            </div>
 
-                        <div className="my-4">
-                            <h3 className="font-semibold text-xl">Chargé de com</h3>{/* Intitulé du poste */}
-                            <p className="offer-informations">ClassPass • Nice</p>{/* Nom de l'entreprise + Ville */}
+                            <div className="my-2">
+                                <h3 className="font-semibold text-[18px]">{name}</h3>{/* Intitulé du poste */}
+                                <p className="offer-informations text-md text-wrap">{companyName} • {city}</p>{/* Nom de l'entreprise + Ville */}
+                            </div>
+                            <p className="opacity-50 text-md relative txt-elipsis">{description}</p>{/* Description de l'offre */}
+                            <div className="flex justify-between">
+                                {job_profiles.map((profile) => (
+                                    <p style={{ color: profile.color }}> {profile.name}</p>
+                                ))}
+                            </div>
                         </div>
-
-                        <p className="my-4 opacity-70">Ceci est le début du texte de description de l’offre...</p>{/* Description de l'offre */}
-                    </div>
-                    <div className="offer-card border">
-                        <div className="flex justify-between items-start">
-                            <img src="" className="w-12 h-12"></img> {/* Image de l'entreprise */}
-                            <span className="text-blue-dark tag-contract">Stage</span> {/* Type de contrat */}
-                        </div>
-
-                        <div className="my-4">
-                            <h3 className="font-semibold text-xl">Chargé de com</h3>{/* Intitulé du poste */}
-                            <p className="offer-informations">ClassPass • Nice</p>{/* Nom de l'entreprise + Ville */}
-                        </div>
-
-                        <p className="my-4 opacity-70">Ceci est le début du texte de description de l’offre...</p>{/* Description de l'offre */}
-                    </div>
-                    <div className="offer-card border">
-                        <div className="flex justify-between items-start">
-                            <img src="" className="w-12 h-12"></img> {/* Image de l'entreprise */}
-                            <span className="text-blue-dark tag-contract">Stage</span> {/* Type de contrat */}
-                        </div>
-
-                        <div className="my-4">
-                            <h3 className="font-semibold text-xl">Chargé de com</h3>{/* Intitulé du poste */}
-                            <p className="offer-informations">ClassPass • Nice</p>{/* Nom de l'entreprise + Ville */}
-                        </div>
-
-                        <p className="my-4 opacity-70">Ceci est le début du texte de description de l’offre...</p>{/* Description de l'offre */}
-                    </div>
-                    <div className="offer-card border">
-                        <div className="flex justify-between items-start">
-                            <img src="" className="w-12 h-12"></img> {/* Image de l'entreprise */}
-                            <span className="text-blue-dark tag-contract">Stage</span> {/* Type de contrat */}
-                        </div>
-
-                        <div className="my-4">
-                            <h3 className="font-semibold text-xl">Chargé de com</h3>{/* Intitulé du poste */}
-                            <p className="offer-informations">ClassPass • Nice</p>{/* Nom de l'entreprise + Ville */}
-                        </div>
-
-                        <p className="my-4 opacity-70">Ceci est le début du texte de description de l’offre...</p>{/* Description de l'offre */}
-                    </div>
+                    ))}
                 </div>
-            </div>
+            </div >
 
             <div className="pb-15 pt-18 last-request-container">
                 <div className="container">
