@@ -4,11 +4,11 @@
 }
 
 .background-children {
-    background : linear-gradient(150deg, #f8f8fd00 97%, #ffffff 97%);
+    background: linear-gradient(150deg, #f8f8fd00 97%, #ffffff 97%);
     background-size: cover;
 }
 
-.vector-linear::after{
+.vector-linear::after {
     content: "";
     position: absolute;
     bottom: -50px;
@@ -19,16 +19,16 @@
     background-size: contain;
 }
 
-.company-bg{
-    background: linear-gradient(150deg, rgba(255,255,255,1) 7%, rgba(70,64,222,1) 7%, rgba(70,64,222,1) 93%, rgba(255,255,255,1) 93%);
+.company-bg {
+    background: linear-gradient(150deg, rgba(255, 255, 255, 1) 7%, rgba(70, 64, 222, 1) 7%, rgba(70, 64, 222, 1) 93%, rgba(255, 255, 255, 1) 93%);
 }
 
 .gap-offer {
-    gap : 10%;
+    gap: 10%;
 }
 
 .last-request-container {
-    background: linear-gradient(150deg, rgba(255,255,255,1) 4%, rgba(248,248,253,1) 4%);
+    background: linear-gradient(150deg, rgba(255, 255, 255, 1) 4%, rgba(248, 248, 253, 1) 4%);
 }
 
 .offer-container {
@@ -38,9 +38,9 @@
 }
 
 .offer-card {
-    flex: 1 1 calc(25% - 32px);
-    border: 1px solid #ccc; 
-    padding: 16px; 
+    /* flex: 1 1 calc(25% - 32px); */
+    border: 1px solid #ccc;
+    padding: 16px;
     box-sizing: border-box;
     max-width: calc(25% - 24px);
 }
@@ -53,7 +53,36 @@
 
 .demand-card {
     flex: 1 1 calc(50% - 32px);
-    padding: 16px; 
+    padding: 16px;
     box-sizing: border-box;
     max-width: calc(50% - 16px);
+}
+
+.txt-elipsis {
+    overflow: hidden;
+    position: relative;
+    line-height: 1em;
+    max-height: 2em;
+    text-align: justify;
+    margin-right: -1em;
+    padding-right: 1em;
+}
+
+.txt-elipsis::before {
+    content: '...';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    right: 1em;
+    background-color: white;
+}
+
+.txt-elipsis::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    width: 1em;
+    height: 1em;
+    margin-top: 0.2em;
+    background: white;
 }
