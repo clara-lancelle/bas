@@ -22,6 +22,14 @@
     background-color: var(--main-blue-night);
 }
 
+.bg-light-grey{
+    background-color : var(--main-grey-light);
+}
+
+.border-white-light {
+    border-color: var(--main-white-light);
+}
+
 .btn-blue-dark {
     background-color : var(--main-blue-dark);
     padding: 12px 24px;

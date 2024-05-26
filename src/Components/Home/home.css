@@ -8,7 +8,7 @@
     background-size: cover;
 }
 
-.vector-linear::after {
+.hand-underline-title::after{
     content: "";
     position: absolute;
     bottom: -50px;
@@ -19,8 +19,19 @@
     background-size: contain;
 }
 
-.company-bg {
-    background: linear-gradient(150deg, rgba(255, 255, 255, 1) 7%, rgba(70, 64, 222, 1) 7%, rgba(70, 64, 222, 1) 93%, rgba(255, 255, 255, 1) 93%);
+.hand-underline::after{
+    content: "";
+    position: absolute;
+    bottom: -30px;
+    left: 0;
+    width: 100%;
+    height: 40px;
+    background: url('../../Images/Home/vector-lines.png') no-repeat center center;
+    background-size: contain;
+}
+
+.company-bg{
+    background: linear-gradient(150deg, rgba(255,255,255,1) 7%, rgba(70,64,222,1) 7%, rgba(70,64,222,1) 93%, rgba(255,255,255,1) 93%);
 }
 
 .gap-offer {
