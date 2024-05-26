@@ -21,7 +21,7 @@ export default function Header() {
                                     <Link to="/stage/offres">Offres de stage</Link>
                                 </li>
                                 <li className="h-full relative nav-item dropdown-item">
-                                    <Link to="#">Offres d'alternance</Link>
+                                    <Link to="/alternance/offres">Offres d'alternance</Link>
                                 </li>
                             </ul>
                         </li>
