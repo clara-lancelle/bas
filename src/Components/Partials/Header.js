@@ -36,7 +36,7 @@ export default function Header() {
                                 </li>
                             </ul>
                         </li>
-                        <li className="h-full flex items-center relative nav-item"><Link to="#" className="nav-item__link">Entreprises</Link></li>
+                        <li className="h-full flex items-center relative nav-item"><Link to="/entreprises" className="nav-item__link">Entreprises</Link></li>
                         <li className="h-full flex items-center relative nav-item"><Link to="#" className="nav-item__link">Etudiants</Link></li>
                     </ul>
                 </div>
