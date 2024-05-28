@@ -10,6 +10,7 @@ export default function Home() {
     const [offerCount, setOfferCount] = useState()
     const [companiesWithTheMostOffers, setCompaniesWithTheMostOffers] = useState([])
     const [lastOffers, setLastOffers] = useState([])
+    const [lastRequests, setLastRequests] = useState([])
 
     useEffect(() => {
         fetch(`${REACT_APP_API_URL}/api/offers/count`, {
@@ -37,6 +38,15 @@ export default function Home() {
             .then(response => setLastOffers(response))
             .catch(err => console.error(err));
     }, [REACT_APP_API_URL])
+
+    useEffect(() => {
+        fetch(`${REACT_APP_API_URL}/api/requests/last`, {
+            method: "GET",
+        })
+            .then(response => response.json())
+            .then(response => setLastRequests(response))
+            .catch(err => console.error(err));
+    }, [])
 
     return (
         <>
@@ -101,8 +111,8 @@ export default function Home() {
                             </div>
                             <p className="opacity-50 text-md relative txt-elipsis">{description}</p>{/* Description de l'offre */}
                             <div className="flex justify-between">
-                                {job_profiles.map((profile) => (
-                                    <p key={profile.name} style={{ color: profile.color }}> {profile.name}</p>
+                                {job_profiles?.map((profile) => (
+                                    <p key={profile.name} style={{ color: profile.color }}>{profile.name}</p>
                                 ))}
                             </div>
                         </div>
@@ -120,55 +130,20 @@ export default function Home() {
                     </div>
 
                     <div className="mt-12 flex flex-wrap justify-between demand-container">
-                        <div className="demand-card p-6 ps-9 flex gap-6 bg-white">
-                            <img src="" className="w-16 h-16 rounded-full"></img>
-                            <div className="flex flex-col">
-                                <h3 className="font-semibold text-xl">Stage assistante marketing</h3>
-                                <p className="">Alexandra (24 ans) • Paris</p>
-                                <div className="flex items-center">
-                                    <span className="text-blue-dark tag-contract">Stage</span>
-                                    <span className="border w-px h-full mx-2"></span>
-                                    <span>Du 01/06/2024 au 30/06/2024 (30 jours)</span>
+                        {lastRequests?.map(({ profile_image, type, id, firstname, description, city, calcul_age, calcul_duration, name, birthdate, job_profiles, start_date, end_date, ...items }) => (
+                            <div key={id} className="demand-card p-6 ps-9 flex gap-6 bg-white">
+                                <img alt={`${firstname, name} image de profile`} src={`${REACT_APP_API_URL}/assets/images/users/${profile_image}`} className="w-16 h-16 rounded-full" />
+                                <div className="flex flex-col">
+                                    <h3 className="font-semibold text-xl">{name}</h3>
+                                    <p className="">{firstname} ({calcul_age} ans) • {city}</p>
+                                    <div className="flex items-center">
+                                        <span className="text-blue-dark tag-contract">{type}</span>
+                                        <span className="border w-px h-full mx-2"></span>
+                                        <span>Du {start_date} au {end_date} ({calcul_duration} jours)</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="demand-card p-6 ps-9 flex gap-6 bg-white">
-                            <img src="" className="w-16 h-16 rounded-full"></img>
-                            <div className="flex flex-col">
-                                <h3 className="font-semibold text-xl">Stage assistante marketing</h3>
-                                <p className="">Alexandra (24 ans) • Paris</p>
-                                <div className="flex items-center">
-                                    <span className="text-blue-dark tag-contract">Stage</span>
-                                    <span className="border w-px h-full mx-2"></span>
-                                    <span>Du 01/06/2024 au 30/06/2024 (30 jours)</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="demand-card p-6 ps-9 flex gap-6 bg-white">
-                            <img src="" className="w-16 h-16 rounded-full"></img>
-                            <div className="flex flex-col">
-                                <h3 className="font-semibold text-xl">Stage assistante marketing</h3>
-                                <p className="">Alexandra (24 ans) • Paris</p>
-                                <div className="flex items-center">
-                                    <span className="text-blue-dark tag-contract">Stage</span>
-                                    <span className="border w-px h-full mx-2"></span>
-                                    <span>Du 01/06/2024 au 30/06/2024 (30 jours)</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="demand-card p-6 ps-9 flex gap-6 bg-white">
-                            <img src="" className="w-16 h-16 rounded-full"></img>
-                            <div className="flex flex-col">
-                                <h3 className="font-semibold text-xl">Stage assistante marketing</h3>
-                                <p className="">Alexandra (24 ans) • Paris</p>
-                                <div className="flex items-center">
-                                    <span className="text-blue-dark tag-contract">Stage</span>
-                                    <span className="border w-px h-full mx-2"></span>
-                                    <span>Du 01/06/2024 au 30/06/2024 (30 jours)</span>
-                                </div>
-                            </div>
-                        </div>
-
+                        ))}
                     </div>
                 </div>
             </div>
