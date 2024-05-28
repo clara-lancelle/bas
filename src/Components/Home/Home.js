@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import './home.css';
 import dashboardCompany from '../../Images/Home/dashboard-company.png'
 import arrowRight from '../../Images/Icons/arrow-right.svg'
@@ -18,7 +18,7 @@ export default function Home() {
             .then(response => response.json())
             .then(response => setOfferCount({ ...response }))
             .catch(err => console.error(err));
-    }, [])
+    }, [REACT_APP_API_URL])
 
     useEffect(() => {
         fetch(`${REACT_APP_API_URL}/api/companies/mostOffersList`, {
@@ -27,7 +27,7 @@ export default function Home() {
             .then(response => response.json())
             .then(response => setCompaniesWithTheMostOffers(response))
             .catch(err => console.error(err));
-    }, [])
+    }, [REACT_APP_API_URL])
 
     useEffect(() => {
         fetch(`${REACT_APP_API_URL}/api/offers/last`, {
@@ -36,7 +36,7 @@ export default function Home() {
             .then(response => response.json())
             .then(response => setLastOffers(response))
             .catch(err => console.error(err));
-    }, [])
+    }, [REACT_APP_API_URL])
 
     return (
         <>
@@ -58,7 +58,7 @@ export default function Home() {
                     <h2 className="mb-8 text-black text-lg">Entreprises à la une</h2>
                     <div className="flex justify-between items-center">
                         {companiesWithTheMostOffers?.map(({ large_image, name: company, ...item }) => (
-                            <img className="w-[18%]" key={company} src={`${REACT_APP_API_URL}/assets/images/companies/${large_image}`} alt={company} />
+                            <img alt={`${company} image`} className="w-[18%]" key={company} src={`${REACT_APP_API_URL}/assets/images/companies/${large_image}`} alt={company} />
                         ))}
                     </div>
                 </div>
@@ -74,7 +74,7 @@ export default function Home() {
                                 <Link to="/">Créer votre compte</Link>
                             </div>
                         </div>
-                        <img src={dashboardCompany}></img>
+                        <img alt="image d'un dashboard" src={dashboardCompany} />
                     </div>
                 </div>
             </div>
@@ -87,10 +87,11 @@ export default function Home() {
                     <Link to="#" className="text-blue-light font-semibold flex items-center gap-4">Toutes les offres <img src={arrowRight} className="text-blue-light" width="24px"></img></Link>
                 </div>
                 <div className="mt-12 mb-18 offer-container">
+
                     {lastOffers?.map(({ picto_image, type, id, companyName, description, city, name, job_profiles, ...items }) => (
                         <div key={id} className="offer-card border h-[283px] overflow-hidden justify-between flex flex-col">
                             <div className="flex justify-between items-start">
-                                <img src={`${REACT_APP_API_URL}/assets/images/companies/${picto_image}`} className="object-contain w-12 h-12" /> {/* Image de l'entreprise */}
+                                <img alt={`${companyName} image`} src={`${REACT_APP_API_URL}/assets/images/companies/${picto_image}`} className="object-contain w-12 h-12" /> {/* Image de l'entreprise */}
                                 <span className="text-blue-dark tag-contract">{type}</span> {/* Type de contrat */}
                             </div>
 
