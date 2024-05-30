@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Ariane from "../Partials/Ariane";
 import share from "../../Images/Icons/share.svg";
+import arrowRight from '../../Images/Icons/arrow-right-dark.svg'
+import mwLogo from '../../Images/Company/mw-logo-large.png'
 
 export default function OfferDetail() {
     const ariane = (offerType, offerName, offerId) => {
@@ -25,6 +27,18 @@ export default function OfferDetail() {
             )
         }
     }
+
+    const [internshipOffers, setInternshipOffers] = useState([])
+    const { REACT_APP_API_URL } = process.env;
+
+    useEffect(() => {
+        fetch(`${REACT_APP_API_URL}/api/offers/last`, {
+            method: "GET",
+        })
+            .then(response => response.json())
+            .then(response => setInternshipOffers(response))
+            .catch(err => console.error(err));
+    }, [])
 
     return (
         <>
@@ -145,9 +159,9 @@ export default function OfferDetail() {
                 </div>
             </div>
 
-            <div className="mt-18 flex ">
-                <div className="w-1/2">
-                    {/* <img src={mwLogo} className="max-w-full mb-8" /> */}
+            <div className="mt-18 flex container">
+                <div className="w-1/2 mr-11">
+                    <img src={mwLogo} className="max-w-full mb-8" />
                     <div className="mb-8 flex flex-col">
                         <p className="font-bold mb-4">{/* Présentation courte de l'entreprise */}
                             Mentalworks est à la fois une agence web et webmarketing mais aussi une SSII/ESN spécialisée dans le développement et la maintenance d’applications sur-mesure.
@@ -156,7 +170,39 @@ export default function OfferDetail() {
                             Créé par des anciens de l’UTC et de l’INSSET, notre culture et notre modèle atypique est un atout et une force qui nous permet de couvrir l’intégralité de la chaîne de valeurs pour concevoir et réaliser un site internet ou une application web de A à Z : audit, conseil, ergonomie, création et webdesign, développement front et back, maintenance corrective/évolutive, accompagnement webmarketing et même des formations expertes.
                         </p>
                     </div>
-                    {/* <Link to="#" className="text-blue-dark flex items-center font-semibold mt-6">En savoir plus sur  <img src={arrowRight} className="ms-2" /></Link> */}
+                    <Link to="#" className="text-blue-dark flex items-center font-semibold mt-6">En savoir plus sur  <img src={arrowRight} className="ms-2" /></Link>
+                </div>
+                <div className="w-1/2 flex justify-between">
+                    <div className="w-1/3 flex flex-col gap-y-4 mr-4">
+                        <img src="" className="w-full max-h-[130px]"></img>
+                        <img src="" className="w-full max-h-[130px]"></img>
+                        <img src="" className="w-full max-h-[130px]"></img>
+                    </div>
+                    <div className="w-2/3">
+                        {/* Map a afficher */}
+                    </div>
+                </div>
+            </div>
+
+            <div className="mt-16 pb-20 pt-18 last-request-container">
+                <div className="container">
+                    <h2 className="text-[32px] font-semibold text-gray-dark leading-110">Offres de stage similaires</h2>
+                    <div className="mt-12 mb-18 offer-container">
+                        {internshipOffers?.map(({ picto_image, type, id, companyName, description, city, name, job_profiles, ...items }) => (
+                            <div key={id} className="offer-card border h-[283px] overflow-hidden justify-between flex flex-col">
+                                <div>
+                                    <h3 className="font-semibold text-[18px]">{name}</h3>{/* Intitulé du poste */}
+                                    <p className="offer-informations text-md text-wrap">{companyName} • {city}</p>{/* Durée du stage */}
+                                </div>
+                                <p className="opacity-50 text-md relative txt-elipsis">{description}</p>{/* Description de l'offre (raccourci a l'espace)*/}
+                                <div className="flex justify-between">
+                                    {job_profiles.map((profile) => (
+                                        <p key={profile.name} style={{ color: profile.color }}> {profile.name}</p>
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
         </>
