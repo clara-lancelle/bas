@@ -30,6 +30,10 @@
     border-color: var(--main-white-light);
 }
 
+.border-blue-dark {
+    border-color: var(--main-blue-dark);
+}
+
 .btn-blue-dark {
     background-color : var(--main-blue-dark);
     padding: 12px 24px;
