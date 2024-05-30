@@ -26,6 +26,10 @@
     background-color : var(--main-grey-light);
 }
 
+.bg-blue-dark{
+    background-color : var(--main-blue-dark);
+}
+
 .border-white-light {
     border-color: var(--main-white-light);
 }
@@ -48,6 +52,10 @@
     color : var(--main-blue-dark);
     font-weight: bold;
     font-size: 1rem;
+}
+
+.list-img-check {
+    list-style-image: url('../Images/Icons/check-green.svg');
 }
 
 .text-opacity-light {
