@@ -9,13 +9,15 @@ export default function InternshipOffers() {
     const [offers, setOffers] = useState([]);
 
     useEffect(() => {
-        fetch(`${process.env.REACT_APP_API_URL}/api/offers/internship`, {
+        fetch(`${process.env.REACT_APP_API_URL}/api/offers?type=stage`, {
             method: "GET",
         })
             .then(response => response.json())
-            .then(response => setOffers(response))
+            .then(response => setOffers(response['hydra:member']))
             .catch(err => console.error(err));
     }, [process.env.REACT_APP_API_URL])
+
+    console.log(offers)
     // useEffect(() => {
     //     // Fonction pour effectuer la requête fetch avec les filtres
     //     const fetchFilteredOffers = async () => {
