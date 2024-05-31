@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import './internshipOffers.css';
 import Ariane from '../Partials/Ariane';
-import OffersFilter from '../Filters/OffersFilter';
+import OfferFiltersHandler from "../Filters/OfferFiltersHandler";
 
 export default function InternshipOffers() {
-    // const [selectedFilters, setSelectedFilters] = useState({});
+    const [selectedJobProfile, setSelectedJobProfile] = useState()
+    const [selectedStudyLevel, setSelectedStudyLevel] = useState()
+    const [selectedDuration, setSelectedDuration] = useState()
     const [selectedSort, setSelectedSort] = useState(1)
     const [offers, setOffers] = useState([]);
     const sorter = [
@@ -15,29 +17,36 @@ export default function InternshipOffers() {
         ['name', 'desc'],
         ['application_limit_date', 'asc']
     ]
+    const setters = {
+        selectedJobProfile, setSelectedJobProfile, selectedStudyLevel, setSelectedStudyLevel, selectedDuration, setSelectedDuration
+
+    }
+
     useEffect(() => {
         let [name, value] = sorter[(selectedSort - 1)]
-        console.log(`${process.env.REACT_APP_API_URL}/api/offers?type=stage&order[${name}]=${value}`)
-        fetch(`${process.env.REACT_APP_API_URL}/api/offers?type=stage&order[${name}]=${value}`, {
+        let d = ''
+        let jp = ''
+        let sl = ''
+        if (selectedDuration) {
+            d = `&duration=${selectedDuration}`
+        }
+        if (selectedJobProfile) {
+            jp = `&job_profiles.id=${selectedJobProfile}`
+        }
+        if (selectedStudyLevel) {
+            sl = `&study_level=${selectedStudyLevel}`
+        }
+        console.log(`${process.env.REACT_APP_API_URL}/api/offers?type=stage${d}${jp}${sl}&order[${name}]=${value}`)
+
+        fetch(`${process.env.REACT_APP_API_URL}/api/offers?type=stage${d}${jp}${sl}&order[${name}]=${value}`, {
             method: "GET",
         })
             .then(response => response.json())
             .then(response => setOffers(response['hydra:member']))
             .catch(err => console.error(err));
-    }, [process.env.REACT_APP_API_URL, selectedSort])
-    // const sort = (num) => {
-
-    //     console.log(num)
+    }, [process.env.REACT_APP_API_URL, selectedSort, selectedJobProfile, selectedDuration, selectedStudyLevel])
 
 
-    //     fetch(`${process.env.REACT_APP_API_URL}/api/offers?type=stage&order[${name}]=${value}`, {
-    //         method: "GET",
-    //     })
-    //         .then(response => response.json())
-    //         .then(response => setOffers(response['hydra:member']))
-    //         .catch(err => console.error(err));
-
-    // }
 
     // useEffect(() => {
     //     // Fonction pour effectuer la requête fetch avec les filtres
@@ -95,15 +104,7 @@ export default function InternshipOffers() {
 
             <div className="container my-18 flex gap-8">
                 <div className="w-1/4 flex flex-col">
-                    {/* {filters?.map((filter, index) => (
-                        <OffersFilter
-                            key={index}
-                            title={filter.title}
-                            options={filter.options}
-                            selectedOptions={selectedFilters[filter.title] || []}
-                            onChange={handleFilterChange}
-                        />
-                    ))} */}
+                    <OfferFiltersHandler setters={setters} />
                     <div className="mb-10">
                         <p className="font-bold">
 
