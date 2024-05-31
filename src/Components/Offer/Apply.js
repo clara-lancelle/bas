@@ -7,6 +7,7 @@ import RichTextEditor from '../Fields/RichTextEditor';
 import share from "../../Images/Icons/share.svg";
 import arrow from '../../Images/Icons/arrow-right-grey-dark.svg'
 import mwLogo from '../../Images/Company/mw-logo-large.png'
+import ImageUploader from "../Fields/ImageUploader";
 
 const LinkEditor = (props) => {
     const { url } = props.contentState.getEntity(props.entityKey).getData();
@@ -100,7 +101,7 @@ export default function OfferDetail() {
                                     {/* Créer un composant pour le lien */}
                                     <Link to="#" className="flex items-center h-full px-14 py-4 border">
                                         <img src={arrow} width="32px"></img>
-                                        <span className="ms-2 text-grey-dark">Button</span>
+                                        <span className="ms-2 text-grey-dark">Retour</span>
                                     </Link>
                                 </div>
                             </div>
@@ -242,6 +243,14 @@ export default function OfferDetail() {
                         </div>
                         <button className="w-full btn-blue-dark">Postuler</button>
                     </div>
+                </div>
+                <div className="w-1/3">
+                    <div className="pb-5 border-b">
+                        <p className="text-2xl text-blue-dark font-semibold mb-4">Votre photo</p>
+                        <p className="text-grey-dark mb-4">Ajouter votre photo à votre profil est apprécié par les entreprises et augmente vos chances</p>
+                        <ImageUploader/>
+                    </div>
+
                 </div>
             </form>
         </>
