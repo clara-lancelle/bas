@@ -6,8 +6,12 @@
     color : var(--main-blue-light);
 }
 
-.text-gray-dark {
-    color : var(--main-gray-dark);
+.text-grey-dark {
+    color : var(--main-grey-dark);
+}
+
+.text-grey-placeholder {
+    color : var(--main-grey-placeholder);
 }
 
 .text-black {
@@ -77,3 +81,23 @@
 }
 
 /* FIN */
+
+.required {
+    position: relative;
+    width: fit-content;
+}
+
+.required::after{
+    content: "*";
+    position: absolute;
+    top: 0;
+    right: -10px;
+    font-size: 16px;
+    color: red;
+}
+
+.input-apply{
+    padding : 12px 16px;
+    border: 1px solid var(--main-white-light);
+    height: 50px;
+}

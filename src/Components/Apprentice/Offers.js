@@ -81,8 +81,8 @@ export default function ApprenticeOffers() {
                         { url: '/alternance/offres', text: 'Alternance' },
                     ]} />
                     <div className="mt-18 text-center">
-                        <h1 className="text-5xl font-bold text-gray-dark">Offres d'<span className="text-blue-light relative hand-underline">alternance</span></h1>
-                        <p className="text-gray-dark opacity-70 mt-6 text-xl">Découvrez les offres d'alternances actuellement proposées par les entreprises</p>
+                        <h1 className="text-5xl font-bold text-grey-dark">Offres d'<span className="text-blue-light relative hand-underline">alternance</span></h1>
+                        <p className="text-grey-dark opacity-70 mt-6 text-xl">Découvrez les offres d'alternances actuellement proposées par les entreprises</p>
                     </div>
                 </div>
             </div>
@@ -111,7 +111,7 @@ export default function ApprenticeOffers() {
                             <span>offres trouvées</span>
                         </div>
                         <div>
-                            <span className="text-gray-dark opacity-70">Trier par :</span>
+                            <span className="text-grey-dark opacity-70">Trier par :</span>
                             <select className="border-r pr-2 font-medium">
                                 <option value="date-asc">Date de publication (plus récent)</option>
                                 <option value="date-desc">Date de publication (plus ancien)</option>

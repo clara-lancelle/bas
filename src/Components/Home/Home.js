@@ -53,12 +53,12 @@ export default function Home() {
             <div className="background">
                 <div className="background-children ">
                     <div className="container flex flex-col pt-20 pb-24">
-                        <h1 className="text-7xl font-bold text-gray-dark leading-110">Trouver un stage <br />
+                        <h1 className="text-7xl font-bold text-grey-dark leading-110">Trouver un stage <br />
                             n’aura jamais été<br />
                             <span className="text-blue-light relative hand-underline-title">aussi facile !</span>
                         </h1>
-                        <p className="text-gray-dark opacity-70 mt-20 text-xl">Trouvez les offres de stage ou d’alternance près de chez vous <br />qui correspondent à votre profil et à vos attentes.</p>
-                        <p className="text-gray-dark opacity-70 mt-6 text-xl"><span className="text-blue-light">{offerCount?.internship}</span> offres de <b>stages</b> | <span className="text-blue-light">{offerCount?.apprenticeship}</span> offres <b>d’alternance</b> n’attendent que vous !</p>
+                        <p className="text-grey-dark opacity-70 mt-20 text-xl">Trouvez les offres de stage ou d’alternance près de chez vous <br />qui correspondent à votre profil et à vos attentes.</p>
+                        <p className="text-grey-dark opacity-70 mt-6 text-xl"><span className="text-blue-light">{offerCount?.internship}</span> offres de <b>stages</b> | <span className="text-blue-light">{offerCount?.apprenticeship}</span> offres <b>d’alternance</b> n’attendent que vous !</p>
                     </div>
                 </div>
             </div>
@@ -91,7 +91,7 @@ export default function Home() {
 
             <div className="mb-18 container">
                 <div className="flex justify-between items-baseline">
-                    <h2 className="text-5xl font-semibold text-gray-dark leading-110">Dernières
+                    <h2 className="text-5xl font-semibold text-grey-dark leading-110">Dernières
                         <span className="text-blue-light"> offres</span>
                     </h2>
                     <Link to="#" className="text-blue-light font-semibold flex items-center gap-4">Toutes les offres <img src={arrowRight} className="text-blue-light" width="24px"></img></Link>
@@ -123,7 +123,7 @@ export default function Home() {
             <div className="pb-15 pt-18 last-request-container">
                 <div className="container">
                     <div className="flex justify-between items-baseline">
-                        <h2 className="text-5xl font-semibold text-gray-dark leading-110">Dernières
+                        <h2 className="text-5xl font-semibold text-grey-dark leading-110">Dernières
                             <span className="text-blue-light"> demandes</span>
                         </h2>
                         <Link to="#" className="text-blue-light font-semibold flex items-center gap-4">Toutes les demandes <img src={arrowRight} className="text-blue-light" width="24px"></img></Link>
