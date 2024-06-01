@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import Ariane from '../Partials/Ariane';
 import OfferFiltersHandler from "../Filters/OfferFiltersHandler";
 
-export default function OfferList(type) {
+export default function OfferList({ type }) {
     const [selectedJobProfile, setSelectedJobProfile] = useState()
     const [selectedStudyLevel, setSelectedStudyLevel] = useState()
     const [selectedDuration, setSelectedDuration] = useState()
@@ -98,7 +98,7 @@ export default function OfferList(type) {
                                         <h3 className="mb-2 font-semibold text-xl">{name}</h3>
                                         <p className="mb-2"><span className="font-bold">{companyName}</span> • {city} • Du {start_date} au {end_date} ({calculatedDuration} jours)</p>
                                         <div className="flex items-center">
-                                            <span className="text-blue-dark tag-contract border-r pr-2">Stage</span>
+                                            <span className="text-blue-dark tag-contract border-r pr-2">{type}</span>
                                             <div className="flex justify-between ml-1">
                                                 {job_profiles?.map((profile) => (
                                                     <p key={profile.name} className="mx-1" style={{ color: profile.color }}>{profile.name}</p>
