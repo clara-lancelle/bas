@@ -7,6 +7,7 @@ import arrowRight from '../../Images/Icons/arrow-right.svg'
 
 export default function Home() {
     const { REACT_APP_API_URL } = process.env;
+    const { REACT_APP_API_COMPANY_ASSETS } = process.env;
     const [offerCount, setOfferCount] = useState()
     const [companiesWithTheMostOffers, setCompaniesWithTheMostOffers] = useState([])
     const [lastOffers, setLastOffers] = useState([])
@@ -31,20 +32,26 @@ export default function Home() {
     }, [REACT_APP_API_URL])
 
     useEffect(() => {
-        fetch(`${REACT_APP_API_URL}/api/offers/last`, {
+        fetch(`${REACT_APP_API_URL}/api/offers?page=1&order%5Bcreated_at%5D=desc`, {
             method: "GET",
         })
             .then(response => response.json())
-            .then(response => setLastOffers(response))
+            .then(data => {
+                const offers = data['hydra:member'];
+                setLastOffers(offers)
+            })
             .catch(err => console.error(err));
     }, [REACT_APP_API_URL])
 
     useEffect(() => {
-        fetch(`${REACT_APP_API_URL}/api/requests/last`, {
+        fetch(`${REACT_APP_API_URL}/api/requests?page=1&order%5Bcreated_at%5D=desc`, {
             method: "GET",
         })
             .then(response => response.json())
-            .then(response => setLastRequests(response))
+            .then(data => {
+                const requests = data['hydra:member'];
+                setLastRequests(requests)
+            })
             .catch(err => console.error(err));
     }, [])
 
@@ -68,7 +75,7 @@ export default function Home() {
                     <h2 className="mb-8 text-black text-lg">Entreprises à la une</h2>
                     <div className="flex justify-between items-center">
                         {companiesWithTheMostOffers?.map(({ large_image, name: company, ...item }) => (
-                            <img alt={`${company} image`} className="w-[18%]" key={company} src={`${REACT_APP_API_URL}/assets/images/companies/${large_image}`} alt={company} />
+                            <img alt={`${company} image`} className="w-[18%]" key={company} src={`${REACT_APP_API_COMPANY_ASSETS + large_image}`} />
                         ))}
                     </div>
                 </div>
@@ -98,16 +105,16 @@ export default function Home() {
                 </div>
                 <div className="mt-12 mb-18 offer-container">
 
-                    {lastOffers?.map(({ picto_image, type, id, companyName, description, city, name, job_profiles, ...items }) => (
+                    {lastOffers?.map(({ company, type, id, companyName, description, city, name, job_profiles, ...items }) => (
                         <div key={id} className="offer-card border h-[283px] overflow-hidden justify-between flex flex-col">
                             <div className="flex justify-between items-start">
-                                <img alt={`${companyName} image`} src={`${REACT_APP_API_URL}/assets/images/companies/${picto_image}`} className="object-contain w-12 h-12" /> {/* Image de l'entreprise */}
+                                <img alt={`${companyName} image`} src={`${REACT_APP_API_COMPANY_ASSETS}${company.picto_image}`} className="object-contain w-12 h-12" /> {/* Image de l'entreprise */}
                                 <span className="text-blue-dark tag-contract">{type}</span> {/* Type de contrat */}
                             </div>
 
                             <div className="my-2">
                                 <h3 className="font-semibold text-[18px]">{name}</h3>{/* Intitulé du poste */}
-                                <p className="offer-informations text-md text-wrap">{companyName} • {city}</p>{/* Nom de l'entreprise + Ville */}
+                                <p className="offer-informations text-md text-wrap">{company.name} • {company.city}</p>{/* Nom de l'entreprise + Ville */}
                             </div>
                             <p className="opacity-50 text-md relative txt-elipsis">{description}</p>{/* Description de l'offre */}
                             <div className="flex justify-between">
