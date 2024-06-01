@@ -68,7 +68,7 @@ export default function Home() {
                     <h2 className="mb-8 text-black text-lg">Entreprises à la une</h2>
                     <div className="flex justify-between items-center">
                         {companiesWithTheMostOffers?.map(({ large_image, name: company, ...item }) => (
-                            <img alt={`${company} image`} className="w-[18%]" key={company} src={`${REACT_APP_API_URL}/assets/images/companies/${large_image}`} alt={company} />
+                            <img alt={`${company} image`} className="w-[18%]" key={company} src={`${REACT_APP_API_URL}/assets/images/companies/${large_image}`} />
                         ))}
                     </div>
                 </div>
