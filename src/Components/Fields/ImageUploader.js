@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import cross from '../../Images/Icons/cross-white.svg';
 
-const ImageUploader = () => {
+const ImageUploader = ({name, onUpload}) => {
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
 
@@ -14,6 +14,9 @@ const ImageUploader = () => {
         setImagePreview(reader.result);
       };
       reader.readAsDataURL(file);
+      if (onUpload) {
+        onUpload(file);
+      }
     }
   };
 
@@ -51,6 +54,7 @@ const ImageUploader = () => {
         onChange={handleImageChange}
         style={{ display: 'none' }}
         id="fileInput"
+        name={name}
       />
       <div className='relative'>
         <div
