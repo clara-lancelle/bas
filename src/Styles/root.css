@@ -2,10 +2,11 @@
     --main-blue-dark: #4640DE;
     --main-blue-light: #26A4FF;
     --main-blue-night: #202430;
-    --main-gray-dark: #25324B;
+    --main-grey-dark: #25324B;
     --main-black: #000;
     --main-white-light: #D6DDEB;
     --main-grey-light: #F8F8FD;
+    --main-grey-placeholder: #757E90;
 }
 
 @font-face {

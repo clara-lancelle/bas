@@ -1,0 +1,14 @@
+.editor-container {
+    min-height: 100px;
+    position: relative;
+  }
+  
+  .editor-container .DraftEditor-root {
+    min-height: 150px;
+    padding: 1rem;
+  }
+
+  .editor-container .DraftEditor-root div{
+    min-height: calc(150px - 32px);
+  }
+  

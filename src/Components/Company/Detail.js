@@ -49,7 +49,7 @@ export default function CompanyDetail() {
                         { url: '/entreprise/', text: 'Entreprises' }, // Id et nom de l'entreprise
                     ]} />
                     <div className="mt-8 mb-6">
-                        <h1 className="text-5xl font-bold text-gray-dark">Mentalworks</h1>
+                        <h1 className="text-5xl font-bold text-grey-dark">Mentalworks</h1>
                         <p className="bg-white px-3 py-2 mt-4 text-blue-dark font-semibold flex items-center w-fit rounded-md"><span>mentalworks.fr</span><img src={arrowRight} className="ms-4 text-blue-dark" width="16px" style={{ fill: '#4640DE' }}></img></p>
                     </div>
                     <div className="flex gap-10 justify-start">
@@ -148,7 +148,7 @@ export default function CompanyDetail() {
                 <div className="w-1/3">
                     <img src={mwLogo} className="max-w-full mb-10" />
                     <div className="mb-4">
-                        <h2 className="text-[32px] font-semibold mb-4 text-gray-dark">Situation</h2>
+                        <h2 className="text-[32px] font-semibold mb-4 text-grey-dark">Situation</h2>
                         <div className="flex flex-col opacity-70">
                             <span className="font-bold">Mentalworks</span>{/* Nom de l'entreprise */}
                             <span>41 rue Irène Joliot Curie</span>{/* Adresse de l'entreprise */}
@@ -161,7 +161,7 @@ export default function CompanyDetail() {
                         {/* Composant map une fois l'adresse obtenue */}
                     </div>
                     <div className="mb-10 pb-10 border-b">
-                        <h2 className="text-[32px] font-semibold mb-4 text-gray-dark">Nous joindre</h2>
+                        <h2 className="text-[32px] font-semibold mb-4 text-grey-dark">Nous joindre</h2>
                         <div className="flex flex-col opacity-70">
                             <span>Téléphone: </span>{/* Téléphone */}
                             <span>Du lundi au vendredi de 8h30 à 18h30</span>{/* Horaires */}
@@ -169,7 +169,7 @@ export default function CompanyDetail() {
                         <Link to="#" className="text-blue-dark flex items-center font-semibold mt-6">Nous envoyer un message <img src={arrowRight} className="ms-2" /></Link>
                     </div>
                     <div className="mb-10 pb-10 flex flex-col gap-y-6">
-                        <h2 className="text-[32px] font-semibold text-gray-dark">Vos contacts</h2>
+                        <h2 className="text-[32px] font-semibold text-grey-dark">Vos contacts</h2>
                         <div className="flex flex-col gap-y-2 pb-2 border-b">
                             <span className="font-bold  opacity-70">Directeur des ressources humaines</span>{/* Poste */}
                             <p className="opacity-70">Olivier <span className="uppercase">SALESSE</span></p>{/* prénom NOM */}
@@ -184,7 +184,7 @@ export default function CompanyDetail() {
 
             <div className="mt-16 pb-20 pt-18 last-request-container">
                 <div className="container">
-                    <h2 className="text-[32px] font-semibold text-gray-dark leading-110">Offres de stage proposées</h2>
+                    <h2 className="text-[32px] font-semibold text-grey-dark leading-110">Offres de stage proposées</h2>
                     <div className="mt-12 mb-18 offer-container">
                         {internshipOffers?.map(({ picto_image, type, id, companyName, description, city, name, job_profiles, ...items }) => (
                             <div key={id} className="offer-card border h-[283px] overflow-hidden justify-between flex flex-col">
@@ -202,7 +202,7 @@ export default function CompanyDetail() {
                         ))}
                     </div>
 
-                    <h2 className="text-[32px] font-semibold text-gray-dark leading-110 mt-13">Offres d'alternance proposées</h2>
+                    <h2 className="text-[32px] font-semibold text-grey-dark leading-110 mt-13">Offres d'alternance proposées</h2>
                     <div className="mt-12 mb-18 offer-container">
                         {internshipOffers?.map(({ picto_image, type, id, companyName, description, city, name, job_profiles, ...items }) => (
                             <div key={id} className="offer-card border h-[283px] overflow-hidden justify-between flex flex-col">

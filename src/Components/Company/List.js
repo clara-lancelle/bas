@@ -101,8 +101,8 @@ export default function CompanyList() {
                         { url: '/entreprises', text: 'Entreprises' },
                     ]} />
                     <div className="mt-18 text-center">
-                        <h1 className="text-5xl font-bold text-gray-dark">Liste des <span className="text-blue-light relative hand-underline">entreprises</span></h1>
-                        <p className="text-gray-dark opacity-70 mt-6 text-xl">Découvrez les entreprises qui proposent des offres de stage ou d’alternance</p>
+                        <h1 className="text-5xl font-bold text-grey-dark">Liste des <span className="text-blue-light relative hand-underline">entreprises</span></h1>
+                        <p className="text-grey-dark opacity-70 mt-6 text-xl">Découvrez les entreprises qui proposent des offres de stage ou d’alternance</p>
                     </div>
                 </div>
             </div>
@@ -131,7 +131,7 @@ export default function CompanyList() {
                             <span>entreprises trouvées</span>
                         </div>
                         <div>
-                            <span className="text-gray-dark opacity-70">Trier par :</span>
+                            <span className="text-grey-dark opacity-70">Trier par :</span>
                             <select className="border-r pr-2 font-medium">
                                 <option value="name-asc">Nom (A-Z)</option>
                                 <option value="name-desc">Nom (Z-A)</option>

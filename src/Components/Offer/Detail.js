@@ -79,11 +79,11 @@ export default function OfferDetail() {
             <div className="mt-14 pb-18 border-b container flex ">
                 <div className="w-2/3 mr-16">
                     <div className="mb-10">
-                        <h2 className="font-semibold mb-4 text-[32px]">A propos de ce stage</h2>
+                        <h2 className="font-semibold mb-4 text-[32px] text-grey-dark">A propos de ce stage</h2>
                         <p>Mentalworks est à la recherche d'un(e) assistant(e) en marketing des médias sociaux pour l'aider à gérer ses réseaux en ligne. Vous serez responsable de la surveillance de nos canaux de médias sociaux, de la création de contenu, de la recherche de moyens efficaces d'engager la communauté et d'inciter les autres à s'engager sur nos canaux.</p>
                     </div>
                     <div className="mb-10">
-                        <h2 className="font-semibold mb-4 text-[32px]">Missions</h2>
+                        <h2 className="font-semibold mb-4 text-[32px] text-grey-dark">Missions</h2>
                         <ul className="list-img-check">
                             <li>Engagement de la communauté pour s'assurer qu'elle est soutenue et activement représentée en ligne</li>
                             <li>Engagement de la communauté pour s'assurer qu'elle est soutenue et activement représentée en ligne</li>
@@ -92,7 +92,7 @@ export default function OfferDetail() {
                         </ul>
                     </div>
                     <div className="mb-10">
-                        <h2 className="font-semibold mb-4 text-[32px]">Profil recherché</h2>
+                        <h2 className="font-semibold mb-4 text-[32px] text-grey-dark">Profil recherché</h2>
                         <ul className="list-img-check">
                             <li>Vous êtes passionné par le digital et pratiquez les principaux réseaux sociaux</li>
                             <li>Vous êtes passionné par le digital et pratiquez les principaux réseaux sociaux</li>
@@ -186,7 +186,7 @@ export default function OfferDetail() {
 
             <div className="mt-16 pb-20 pt-18 last-request-container">
                 <div className="container">
-                    <h2 className="text-[32px] font-semibold text-gray-dark leading-110">Offres de stage similaires</h2>
+                    <h2 className="text-[32px] font-semibold text-grey-dark leading-110">Offres de stage similaires</h2>
                     <div className="mt-12 mb-18 offer-container">
                         {internshipOffers?.map(({ picto_image, type, id, companyName, description, city, name, job_profiles, ...items }) => (
                             <div key={id} className="offer-card border h-[283px] overflow-hidden justify-between flex flex-col">
