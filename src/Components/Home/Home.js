@@ -31,20 +31,20 @@ export default function Home() {
     }, [REACT_APP_API_URL])
 
     useEffect(() => {
-        fetch(`${REACT_APP_API_URL}/api/offers/last`, {
+        fetch(`${REACT_APP_API_URL}/api/offers?order[created_at]=asc`, {
             method: "GET",
         })
             .then(response => response.json())
-            .then(response => setLastOffers(response))
+            .then(response => setLastOffers(response['hydra:member']))
             .catch(err => console.error(err));
     }, [REACT_APP_API_URL])
 
     useEffect(() => {
-        fetch(`${REACT_APP_API_URL}/api/requests/last`, {
+        fetch(`${REACT_APP_API_URL}/api/requests?order[created_at]=asc`, {
             method: "GET",
         })
             .then(response => response.json())
-            .then(response => setLastRequests(response))
+            .then(response => setLastRequests(response['hydra:member']))
             .catch(err => console.error(err));
     }, [])
 
@@ -68,7 +68,7 @@ export default function Home() {
                     <h2 className="mb-8 text-black text-lg">Entreprises à la une</h2>
                     <div className="flex justify-between items-center">
                         {companiesWithTheMostOffers?.map(({ large_image, name: company, ...item }) => (
-                            <img alt={`${company} image`} className="w-[18%]" key={company} src={`${REACT_APP_API_URL}/assets/images/companies/${large_image}`} alt={company} />
+                            <img alt={`${company} image`} className="w-[18%]" key={company} src={`${REACT_APP_API_URL}/assets/images/companies/${large_image}`} />
                         ))}
                     </div>
                 </div>
@@ -98,7 +98,7 @@ export default function Home() {
                 </div>
                 <div className="mt-12 mb-18 offer-container">
 
-                    {lastOffers?.map(({ picto_image, type, id, companyName, description, city, name, job_profiles, ...items }) => (
+                    {lastOffers?.slice(0, 8)?.map(({ company: { picto_image, name: companyName, city, ...rest }, type, id, description, name, job_profiles, ...items }) => (
                         <div key={id} className="offer-card border h-[283px] overflow-hidden justify-between flex flex-col">
                             <div className="flex justify-between items-start">
                                 <img alt={`${companyName} image`} src={`${REACT_APP_API_URL}/assets/images/companies/${picto_image}`} className="object-contain w-12 h-12" /> {/* Image de l'entreprise */}
@@ -130,16 +130,16 @@ export default function Home() {
                     </div>
 
                     <div className="mt-12 flex flex-wrap justify-between demand-container">
-                        {lastRequests?.map(({ profile_image, type, id, firstname, description, city, calcul_age, calcul_duration, name, birthdate, job_profiles, start_date, end_date, ...items }) => (
+                        {lastRequests?.map(({ student: { firstname, city, calculatedAge, profile_image }, calculatedDuration, type, id, description, calcul_duration, name, birthdate, job_profiles, start_date, end_date, ...items }) => (
                             <div key={id} className="demand-card p-6 ps-9 flex gap-6 bg-white">
                                 <img alt={`${firstname, name} image de profile`} src={`${REACT_APP_API_URL}/assets/images/users/${profile_image}`} className="w-16 h-16 rounded-full" />
                                 <div className="flex flex-col">
                                     <h3 className="font-semibold text-xl">{name}</h3>
-                                    <p className="">{firstname} ({calcul_age} ans) • {city}</p>
+                                    <p className="">{firstname} ({calculatedAge} ans) • {city}</p>
                                     <div className="flex items-center">
                                         <span className="text-blue-dark tag-contract">{type}</span>
                                         <span className="border w-px h-full mx-2"></span>
-                                        <span>Du {start_date} au {end_date} ({calcul_duration} jours)</span>
+                                        <span>Du {start_date} au {end_date} ({calculatedDuration} jours)</span>
                                     </div>
                                 </div>
                             </div>
