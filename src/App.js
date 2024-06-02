@@ -2,7 +2,7 @@ import React from 'react';
 import Header from './Components/Partials/Header';
 import Footer from './Components/Partials/Footer';
 import Home from './Components/Home/Home';
-import CompanyList from './Components/Company/List';
+import CompanyList from './Components/Company/CompanyList';
 import CompanyDetail from './Components/Company/Detail';
 import OfferDetail from './Components/Offer/Detail';
 import OfferApply from './Components/Offer/Apply';
