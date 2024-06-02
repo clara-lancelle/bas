@@ -75,7 +75,7 @@ export default function OfferList({ type }) {
                     <div className="flex items-center justify-between mb-8">
                         <div className="flex flex-col text-grey-dark">
                             <h2 className="text-[32px] font-semibold">Résultats</h2>
-                            <span>{offers.length} offres trouvées</span>
+                            <span>{offers.length > 1 && `${offers.length} offres trouvées` || `${offers.length} offre trouvée`}</span>
                         </div>
                         <div>
                             <span className="text-gray-dark opacity-70">Trier par :</span>
