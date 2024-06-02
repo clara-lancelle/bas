@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import OffersFilter from "./OffersFilter";
+import ListFilter from "./ListFilter";
 
 export default function OfferFiltersHandler(setters) {
     const [jobProfiles, setJobProfiles] = useState([])
@@ -51,9 +51,9 @@ export default function OfferFiltersHandler(setters) {
 
     return (
         <div className="mb-4 bloc--filters">
-            <OffersFilter title="Profils métiers" options={jobProfiles} setter={setters.setters.setSelectedJobProfile} current={setters.setters.selectedJobProfile} />
-            <OffersFilter title="Niveau recherché" options={studyLevels} setter={setters.setters.setSelectedStudyLevel} current={setters.setters.selectedStudyLevel} />
-            <OffersFilter title="Durée" options={durations} setter={setters.setters.setSelectedDuration} current={setters.setters.selectedDuration} />
+            <ListFilter title="Profils métiers" options={jobProfiles} setter={setters.setters.setSelectedJobProfile} current={setters.setters.selectedJobProfile} />
+            <ListFilter title="Niveau recherché" options={studyLevels} setter={setters.setters.setSelectedStudyLevel} current={setters.setters.selectedStudyLevel} />
+            <ListFilter title="Durée" options={durations} setter={setters.setters.setSelectedDuration} current={setters.setters.selectedDuration} />
         </div>
     )
 }

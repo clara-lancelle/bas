@@ -1,15 +1,11 @@
 import React, { useState } from 'react';
 
-const OffersFilter = ({ title, options, setter, current }) => {
+const ListFilter = ({ title, options, setter, current }) => {
   const [isOpen, setIsOpen] = useState(true);
 
   const toggleSection = () => {
     setIsOpen(!isOpen);
   };
-
-  // const handleCheckboxChange = (optionValue) => {
-  //   onChange(title, optionValue);
-  // };
 
   return (
     <div className="mb-4 bloc--filters">
@@ -58,4 +54,4 @@ const OffersFilter = ({ title, options, setter, current }) => {
   );
 };
 
-export default OffersFilter;
+export default ListFilter;

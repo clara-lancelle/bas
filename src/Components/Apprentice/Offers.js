@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Ariane from '../Partials/Ariane';
-import OffersFilter from '../Filters/OffersFilter';
+import ListFilter from '../Filters/ListFilter';
 
 export default function ApprenticeOffers() {
     const [selectedFilters, setSelectedFilters] = useState({});
@@ -90,7 +90,7 @@ export default function ApprenticeOffers() {
             <div className="container my-18 flex gap-8">
                 <div className="w-1/4 flex flex-col">
                     {filters.map((filter, index) => (
-                        <OffersFilter
+                        <ListFilter
                             key={index}
                             title={filter.title}
                             options={filter.options}
