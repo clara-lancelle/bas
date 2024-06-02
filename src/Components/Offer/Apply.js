@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { EditorState, convertToRaw, CompositeDecorator } from 'draft-js';
 import { stateToHTML } from 'draft-js-export-html';
 import Ariane from "../Partials/Ariane";
@@ -44,6 +44,7 @@ export default function OfferDetail() {
 
     const [editorState, setEditorState] = useState(EditorState.createEmpty()); // Assurez-vous que l'état est initialisé
     const [checked, setChecked] = useState(false);
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         gender: '',
@@ -137,6 +138,10 @@ export default function OfferDetail() {
 
         console.log(formData)
     };
+    
+    const handleGoBack = () => {
+        navigate(-1); // Va vers la page précédente dans l'historique
+    };
 
     // const handleSubmit = async (e) => {
     //     e.preventDefault();
@@ -210,10 +215,10 @@ export default function OfferDetail() {
                                 </div>
                                 <div className="border-l pl-18 flex items-center text-white font-bold ">
                                     {/* Créer un composant pour le lien */}
-                                    <Link to="#" className="flex items-center h-full px-14 py-4 border">
+                                    <button onClick={handleGoBack} className="flex items-center h-full px-14 py-4 border">
                                         <img src={arrow} width="32px"></img>
                                         <span className="ms-2 text-grey-dark">Retour</span>
-                                    </Link>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -355,10 +360,10 @@ export default function OfferDetail() {
                         <p>En validant ce formulaire, vous confirmez que vous acceptez nos <Link to="#" className="text-blue-dark underline">Conditions Générales d’Utilisation</Link> et notre <Link to="#" className="text-blue-dark underline">politique de confidentialité</Link>.</p>
                     </div>
 
-                    <Link to="#" className="flex items-center w-fit px-8 py-3 border border-grey-dark">
+                    <button onChange={handleGoBack} className="flex items-center w-fit px-8 py-3 border border-grey-dark">
                         <img src={arrow} width="24px"></img>
                         <span className="ms-2 text-grey-dark font-bold">Retour</span>
-                    </Link>
+                    </button>
                 </div>
                 <div className="w-1/3">
                     <div className="pb-5 border-b">

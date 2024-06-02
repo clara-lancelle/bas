@@ -1,11 +1,32 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Ariane from "../Partials/Ariane";
+import JobProfiles from "../JobProfiles/JobProfiles";
+import ProgressBar from "../ProgressBar/ProgressBar";
+import Skill from "../Skill/Skill";
 import share from "../../Images/Icons/share.svg";
 import arrowRight from '../../Images/Icons/arrow-right-dark.svg'
 import mwLogo from '../../Images/Company/mw-logo-large.png'
+import tempCompanyImg from '../../Images/Temp/company-1.png'
+import tempCompanyMap from '../../Images/Temp/map.png'
 
 export default function OfferDetail() {
+    const [internshipOffers, setInternshipOffers] = useState([])
+    const [offer, setOffer] = useState([])
+    const [company, setCompany] = useState([])
+    const [loading, setLoading] = useState(true);
+
+    const { REACT_APP_API_URL } = process.env;
+    const location = useLocation();
+
+    const formatDate = (isoString) => {
+        const date = new Date(isoString);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = String(date.getFullYear());
+        return `${day}/${month}/${year}`;
+    };
+
     const ariane = (offerType, offerName, offerId) => {
         if (offerType == 'stage') {
             return (
@@ -28,17 +49,40 @@ export default function OfferDetail() {
         }
     }
 
-    const [internshipOffers, setInternshipOffers] = useState([])
-    const { REACT_APP_API_URL } = process.env;
-
     useEffect(() => {
-        fetch(`${REACT_APP_API_URL}/api/offers/last`, {
-            method: "GET",
-        })
-            .then(response => response.json())
-            .then(response => setInternshipOffers(response))
-            .catch(err => console.error(err));
-    }, [])
+        const fetchData = async () => {
+            try {
+                // Fetch the offer
+                const offerResponse = await fetch(`${REACT_APP_API_URL}/api/offers/${location.state.offerId}`);
+                const offerData = await offerResponse.json();
+                setOffer(offerData);
+
+                // Fetch the company using the company ID from the offer
+                const companyResponse = await fetch(`${REACT_APP_API_URL}/api/companies/${offerData.company.id}`);
+                const companyData = await companyResponse.json();
+                setCompany(companyData);
+
+                const internshipOffersResponse = await fetch(`${REACT_APP_API_URL}/api/offers?order[created_at]=asc}`);
+                const internshipOffersData = await internshipOffersResponse.json()
+                setInternshipOffers(internshipOffersData['hydra:member'] || []);
+
+                // Set loading to false after all data is fetched
+                setLoading(false);
+            } catch (error) {
+                console.error(error);
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, [REACT_APP_API_URL, location.state.offerId]);
+
+    console.log(internshipOffers)
+
+
+    if (loading) {
+        return <p>Chargement...</p>;
+    }
 
     return (
         <>
@@ -49,16 +93,20 @@ export default function OfferDetail() {
                     <div className="mt-18">
                         <div className="p-6 border border-white-light bg-white mb-4">
                             <div className="flex justify-between items-center">
-                                <div className="flex">
-                                    <img alt="" src="" className="w-16 h-16 object-contain"></img>
+                                <div className="flex items-center">
+                                    <img alt="" src={`${process.env.REACT_APP_API_URL}/assets/images/companies/${company.picto_image}`} className="w-16 h-16 object-contain"></img>
                                     <div className="ms-6">
-                                        <h1 className="mb-2 font-semibold text-[32px] leading-8">Assistant Social Media</h1>
-                                        <p className="mb-2 text-xl"><span className="font-bold">Mentalworks</span> • Lacroix St ouen • Du 20/05/2024 au 28/08/2024 (39 jours)</p>
-                                        <div className="flex">
+                                        <h1 className="mb-2 font-semibold text-[32px] leading-8">{offer.name}</h1>
+                                        <p className="mb-2 text-xl"><span className="font-bold">{offer.company.name}</span> • {offer.company.name} • Du {offer.start_date} au {offer.end_date} ({offer.calculatedDuration} jours) </p>
+                                        <div className="flex items-center">
                                             <div className="pr-2 border-r">
-                                                <span className="text-blue-dark tag-contract">Stage</span>
+                                                <span className="text-blue-dark tag-contract">{offer.type}</span>
                                             </div>
-                                            {/* Affichage des profils métiers */}
+                                            <div className="flex justify-start items-center flex-wrap gap-2 ml-2">
+                                                {offer.job_profiles?.map((profile) => (
+                                                    <JobProfiles profile={profile} />
+                                                ))}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -68,7 +116,7 @@ export default function OfferDetail() {
                                     </div>
 
                                     <div className="flex items-center text-white font-bold bg-blue-dark">
-                                        <Link to="#" className="px-14 py-4">Postuler</Link>
+                                        <Link to="postuler" className="px-14 py-4">Postuler</Link>
                                     </div>
                                 </div>
                             </div>
@@ -80,29 +128,27 @@ export default function OfferDetail() {
                 <div className="w-2/3 mr-16">
                     <div className="mb-10">
                         <h2 className="font-semibold mb-4 text-[32px] text-grey-dark">A propos de ce stage</h2>
-                        <p>Mentalworks est à la recherche d'un(e) assistant(e) en marketing des médias sociaux pour l'aider à gérer ses réseaux en ligne. Vous serez responsable de la surveillance de nos canaux de médias sociaux, de la création de contenu, de la recherche de moyens efficaces d'engager la communauté et d'inciter les autres à s'engager sur nos canaux.</p>
+                        <p>{offer.description}</p>
                     </div>
                     <div className="mb-10">
                         <h2 className="font-semibold mb-4 text-[32px] text-grey-dark">Missions</h2>
                         <ul className="list-img-check">
-                            <li>Engagement de la communauté pour s'assurer qu'elle est soutenue et activement représentée en ligne</li>
-                            <li>Engagement de la communauté pour s'assurer qu'elle est soutenue et activement représentée en ligne</li>
-                            <li>Engagement de la communauté pour s'assurer qu'elle est soutenue et activement représentée en ligne</li>
-                            <li>Engagement de la communauté pour s'assurer qu'elle est soutenue et activement représentée en ligne</li>
+                            {offer.missions.map((mission) => (
+                                <li>{mission.text}</li>
+                            ))}
                         </ul>
                     </div>
                     <div className="mb-10">
                         <h2 className="font-semibold mb-4 text-[32px] text-grey-dark">Profil recherché</h2>
                         <ul className="list-img-check">
-                            <li>Vous êtes passionné par le digital et pratiquez les principaux réseaux sociaux</li>
-                            <li>Vous êtes passionné par le digital et pratiquez les principaux réseaux sociaux</li>
-                            <li>Vous êtes passionné par le digital et pratiquez les principaux réseaux sociaux</li>
-                            <li>Vous êtes passionné par le digital et pratiquez les principaux réseaux sociaux</li>
+                            {offer.required_profiles.map((required_profile) => (
+                                <li>{required_profile.text}</li>
+                            ))}
                         </ul>
                     </div>
 
                     <div className="flex items-center text-white font-bold bg-blue-dark w-fit py-4 px-10">
-                        <Link to="#">Postuler</Link>
+                        <Link to="postuler">Postuler</Link>
                     </div>
                 </div>
 
@@ -110,50 +156,48 @@ export default function OfferDetail() {
                     <div className="pb-10 border-b">
                         <h2 className="text-blue-dark text-2xl font-semibold mb-6">Échéances</h2>
                         <div className="p-4 flex flex-col bg-light-grey mb-6">
-                            <span className="mb-2">Reste 3 jours pour postuler</span>
-                            <div className="flex">
-                                <span className="h-2 w-20 bg-red-500"></span>
-                                <span className="h-2 w-20 bg-slate-300"></span>
-                                <span className="h-2 w-20 bg-slate-300"></span>
-                                <span className="h-2 w-20 bg-slate-300"></span>
-                                <span className="h-2 w-20 bg-slate-300"></span>
-                            </div>
+                            <span className="mb-2">Reste {offer.calculatedLimitDays} jours pour postuler</span>
+                            <ProgressBar limitDays={offer.calculatedLimitDays} />
                         </div>
                         <div className="flex flex-col gap-y-6 justify-between">
                             <div className="flex justify-between">
                                 <span>Postuler avant le</span>
-                                <span className="font-semibold text-blue-dark">17 mai 2024</span> {/* Date max postulation */}
+                                <span className="font-semibold text-blue-dark">{offer.application_limit_date}</span>
                             </div>
                             <div className="flex justify-between">
                                 <span>Offre publiée le</span>
-                                <span className="font-semibold text-blue-dark">15 avril 2024</span> {/* Date de publication / Created_at */}
+                                <span className="font-semibold text-blue-dark">{formatDate(offer.created_at)}</span>
                             </div>
                             <div className="flex justify-between">
                                 <span>Type d’offre</span>
-                                <span className="font-semibold text-blue-dark">Stage</span> {/* Condition d'affichage selon le type d'offre */}
+                                <span className="font-semibold text-blue-dark">{offer.type}</span>
                             </div>
                             <div className="flex justify-between">
                                 <span>Gratification</span>
-                                <span className="font-semibold text-blue-dark">Non obligatoire</span> {/* ?? */}
+                                <span className="font-semibold text-blue-dark">{offer.revenue}</span>
                             </div>
                             <div className="flex justify-between">
                                 <span>Candidatures déposées</span>
-                                <span className="font-semibold text-blue-dark">6</span> {/* Get des candidatures pour l'id de l'offre actuelle  */}
+                                <span className="font-semibold text-blue-dark">??</span> {/* Get des candidatures pour l'id de l'offre actuelle  */}
                             </div>
                         </div>
                     </div>
 
                     <div className="py-10 border-b">
                         <h2 className="text-blue-dark text-2xl font-semibold mb-6">Profils métiers</h2>
-                        <div className="flex justify-start gap-x-2">
-                            {/* Liste des profils métiers de l'offre / A voir pour en faire un composant a réutiliser partout */}
+                        <div className="flex flex-wrap justify-start gap-x-2">
+                            {offer.job_profiles.map((job_profile) => (
+                                <JobProfiles profile={job_profile} />
+                            ))}
                         </div>
                     </div>
 
                     <div className="py-10 border-b">
                         <h2 className="text-blue-dark text-2xl font-semibold mb-6">Compétences recherchées</h2>
-                        <div className="flex justify-start gap-x-2">
-                            {/* Liste des compétences recherchées de l'offre / A voir pour en faire un composant a réutiliser partout */}
+                        <div className="flex flex-wrap justify-start gap-2">
+                            {offer.skills.map((skill) => (
+                                <Skill skill={skill} />
+                            ))}
                         </div>
                     </div>
                 </div>
@@ -161,25 +205,25 @@ export default function OfferDetail() {
 
             <div className="mt-18 flex container">
                 <div className="w-1/2 mr-11">
-                    <img src={mwLogo} className="max-w-full mb-8" />
+                    <img alt={`${company.name} image`} src={`${process.env.REACT_APP_API_URL}/assets/images/companies/${company.large_image}`} className="max-w-full mb-8"></img>
                     <div className="mb-8 flex flex-col">
-                        <p className="font-bold mb-4">{/* Présentation courte de l'entreprise */}
+                        {/* <p className="font-bold mb-4">
                             Mentalworks est à la fois une agence web et webmarketing mais aussi une SSII/ESN spécialisée dans le développement et la maintenance d’applications sur-mesure.
-                        </p>
-                        <p>{/* Description de l'entreprise / Coupée au point le plus proche après la limite */}
-                            Créé par des anciens de l’UTC et de l’INSSET, notre culture et notre modèle atypique est un atout et une force qui nous permet de couvrir l’intégralité de la chaîne de valeurs pour concevoir et réaliser un site internet ou une application web de A à Z : audit, conseil, ergonomie, création et webdesign, développement front et back, maintenance corrective/évolutive, accompagnement webmarketing et même des formations expertes.
+                        </p> */}
+                        <p>
+                            {company.description}
                         </p>
                     </div>
-                    <Link to="#" className="text-blue-dark flex items-center font-semibold mt-6">En savoir plus sur  <img src={arrowRight} className="ms-2" /></Link>
+                    <Link to={`/entreprise/${company.id}`} className="text-blue-dark flex items-center font-semibold mt-6">En savoir plus sur {company.name} <img src={arrowRight} className="ms-2" /></Link>
                 </div>
                 <div className="w-1/2 flex justify-between">
                     <div className="w-1/3 flex flex-col gap-y-4 mr-4">
-                        <img src="" className="w-full max-h-[130px]"></img>
-                        <img src="" className="w-full max-h-[130px]"></img>
-                        <img src="" className="w-full max-h-[130px]"></img>
+                        <img src={tempCompanyImg} className="w-full max-h-[130px]"></img>
+                        <img src={tempCompanyImg} className="w-full max-h-[130px]"></img>
+                        <img src={tempCompanyImg} className="w-full max-h-[130px]"></img>
                     </div>
                     <div className="w-2/3">
-                        {/* Map a afficher */}
+                        <img src={tempCompanyMap} className="h-[422px] object-cover"></img>
                     </div>
                 </div>
             </div>
@@ -188,20 +232,25 @@ export default function OfferDetail() {
                 <div className="container">
                     <h2 className="text-[32px] font-semibold text-grey-dark leading-110">Offres de stage similaires</h2>
                     <div className="mt-12 mb-18 offer-container">
-                        {internshipOffers?.map(({ picto_image, type, id, companyName, description, city, name, job_profiles, ...items }) => (
-                            <div key={id} className="offer-card border h-[283px] overflow-hidden justify-between flex flex-col">
-                                <div>
-                                    <h3 className="font-semibold text-[18px]">{name}</h3>{/* Intitulé du poste */}
-                                    <p className="offer-informations text-md text-wrap">{companyName} • {city}</p>{/* Durée du stage */}
-                                </div>
-                                <p className="opacity-50 text-md relative txt-elipsis">{description}</p>{/* Description de l'offre (raccourci a l'espace)*/}
-                                <div className="flex justify-between">
-                                    {job_profiles.map((profile) => (
-                                        <p key={profile.name} style={{ color: profile.color }}> {profile.name}</p>
-                                    ))}
-                                </div>
+                        {internshipOffers?.slice(0, 8)?.map(({ company: { picto_image, name: companyName, city, ...rest }, type, id, description, name, job_profiles, ...items }) => (
+                        <Link to={`${type.toLowerCase()}/offre/${id}`} state={{ offerId: id }} key={id} className="bg-white offer-card border h-[283px] overflow-hidden justify-between flex flex-col">
+                            <div className="flex justify-between items-start">
+                                <img alt={`${companyName} image`} src={`${REACT_APP_API_URL}/assets/images/companies/${picto_image}`} className="object-contain w-12 h-12" /> {/* Image de l'entreprise */}
+                                <span className="text-blue-dark tag-contract">{type}</span> {/* Type de contrat */}
                             </div>
-                        ))}
+
+                            <div className="my-2">
+                                <h3 className="font-semibold text-[18px]">{name}</h3>{/* Intitulé du poste */}
+                                <p className="offer-informations text-md text-wrap">{companyName} • {city}</p>{/* Nom de l'entreprise + Ville */}
+                            </div>
+                            <p className="opacity-50 text-md relative txt-elipsis">{description}</p>{/* Description de l'offre */}
+                            <div className="flex justify-start items-center flex-wrap gap-2">
+                                { job_profiles?.map((profile) => (
+                                    <JobProfiles profile={profile} />
+                                ))}
+                            </div>
+                        </Link>
+                    ))}
                     </div>
                 </div>
             </div>
