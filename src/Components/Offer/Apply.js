@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { EditorState, convertToRaw, CompositeDecorator } from 'draft-js';
 import { stateToHTML } from 'draft-js-export-html';
 import Ariane from "../Partials/Ariane";
+import JobProfiles from "../JobProfiles/JobProfiles";
 import RichTextEditor from '../Fields/RichTextEditor';
 import SkillsList from '../Fields/SkillsList';
 import LanguageLevelList from '../Fields/LanguageLevelList';
@@ -203,16 +204,17 @@ export default function OfferDetail() {
                                     <div className="ms-6">
                                         <h1 className="mb-2 font-semibold text-[32px] leading-8">{offer.name}</h1>
                                         <p className="mb-2 text-xl"><span className="font-bold">{offer.company.name}</span> • {offer.company.city} • Du {offer.start_date} au {offer.end_date} ({offer.calculatedDuration} jours)</p>
-                                        <div className="flex">
+                                        <div className="flex items-center gap-x-2">
                                             <div className="pr-2 border-r">
-                                                <span className="text-blue-dark tag-contract">Stage</span>
+                                                <span className="text-blue-dark tag-contract">{offer.type}</span>
                                             </div>
-                                            {/* Affichage des profils métiers */}
+                                            {offer.job_profiles?.map((profile) => (
+                                                <JobProfiles profile={profile} />
+                                            ))}
                                         </div>
                                     </div>
                                 </div>
                                 <div className="border-l pl-18 flex items-center text-white font-bold ">
-                                    {/* Créer un composant pour le lien */}
                                     <button onClick={handleGoBack} className="flex items-center h-full px-14 py-4 border">
                                         <img src={arrow} width="32px"></img>
                                         <span className="ms-2 text-grey-dark">Retour</span>
@@ -355,7 +357,7 @@ export default function OfferDetail() {
                         <button className="w-full btn-blue-dark">Postuler</button>
                     </div>
                     <div className="my-8">
-                        <p>En validant ce formulaire, vous confirmez que vous acceptez nos <Link to="#" className="text-blue-dark underline">Conditions Générales d’Utilisation</Link> et notre <Link to="#" className="text-blue-dark underline">politique de confidentialité</Link>.</p>
+                        <p>En validant ce formulaire, vous confirmez que vous acceptez nos <Link to="#" state={{offerId: offer.id}} className="text-blue-dark underline">Conditions Générales d’Utilisation</Link> et notre <Link to="#" state={{offerId: offer.id}} className="text-blue-dark underline">politique de confidentialité</Link>.</p>
                     </div>
 
                     <button onClick={handleGoBack} className="flex items-center w-fit px-8 py-3 border border-grey-dark">
