@@ -55,7 +55,7 @@ export default function OfferList({ type }) {
                         { url: '/stage/offres', text: 'Stage' },
                     ]} />
                     <div className="mt-18 text-center">
-                        <h1 className="text-5xl font-bold text-gray-dark">Offres de <span className="text-blue-light relative hand-underline">{type}</span></h1>
+                        <h1 className="text-5xl font-bold text-gray-dark">Offres {type == 'Alternance' ? 'd\'' : 'de'} <span className="text-blue-light relative hand-underline">{type}</span></h1>
                         <p className="text-gray-dark opacity-70 mt-6 text-xl">Découvrez les offres de stages actuellement proposées par les entreprises</p>
                     </div>
                 </div>
