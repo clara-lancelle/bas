@@ -41,14 +41,14 @@ export default function Home() {
     }, [REACT_APP_API_URL])
 
     useEffect(() => {
-        fetch(`${REACT_APP_API_URL}/api/requests?order[created_at]=asc`, {
+        fetch(`${REACT_APP_API_URL}/api/requests/last`, {
             method: "GET",
         })
             .then(response => response.json())
-            .then(response => setLastRequests(response['hydra:member']))
+            .then(response => setLastRequests(response))
             .catch(err => console.error(err));
     }, [])
-    console.log(lastOffers);
+    console.log(lastRequests);
     return (
         <>
             <div className="background">
@@ -112,7 +112,7 @@ export default function Home() {
                             </div>
                             <p className="opacity-50 text-md relative txt-elipsis">{description}</p>{/* Description de l'offre */}
                             <div className="flex justify-start items-center flex-wrap gap-2">
-                                { job_profiles?.map((profile) => (
+                                {job_profiles?.map((profile) => (
                                     <JobProfiles profile={profile} />
                                 ))}
                             </div>
@@ -131,16 +131,16 @@ export default function Home() {
                     </div>
 
                     <div className="mt-12 flex flex-wrap justify-between demand-container">
-                        {lastRequests?.map(({ student: { firstname, city, calculatedAge, profile_image }, calculatedDuration, type, id, description, calcul_duration, name, birthdate, job_profiles, start_date, end_date, ...items }) => (
-                            <div key={id} className="demand-card p-6 ps-9 flex gap-6 bg-white">
+                        {lastRequests?.map(({ firstname, city, calcul_age, profile_image, calcul_duration, type, id, description, requestName, name, job_profiles, start_date, end_date, ...items }) => (
+                            <div key={`${name}-${id}`} className="demand-card p-6 ps-9 flex gap-6 bg-white">
                                 <img alt={`${firstname, name} image de profile`} src={`${REACT_APP_API_URL}/assets/images/users/${profile_image}`} className="w-16 h-16 rounded-full" />
                                 <div className="flex flex-col">
-                                    <h3 className="font-semibold text-xl">{name}</h3>
-                                    <p className="">{firstname} ({calculatedAge} ans) • {city}</p>
+                                    <h3 className="font-semibold text-xl">{requestName}</h3>
+                                    <p className="">{firstname} ({calcul_age} ans) • {city}</p>
                                     <div className="flex items-center">
                                         <span className="text-blue-dark tag-contract">{type}</span>
                                         <span className="border w-px h-full mx-2"></span>
-                                        <span>Du {start_date} au {end_date} ({calculatedDuration} jours)</span>
+                                        <span>Du {start_date} au {end_date} ({calcul_duration} jours)</span>
                                     </div>
                                 </div>
                             </div>
