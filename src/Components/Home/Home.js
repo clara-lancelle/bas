@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import './home.css';
 import dashboardCompany from '../../Images/Home/dashboard-company.png'
 import arrowRight from '../../Images/Icons/arrow-right.svg'
+import JobProfiles from "../JobProfiles/JobProfiles";
 
 
 export default function Home() {
@@ -47,7 +48,7 @@ export default function Home() {
             .then(response => setLastRequests(response['hydra:member']))
             .catch(err => console.error(err));
     }, [])
-
+    console.log(lastOffers);
     return (
         <>
             <div className="background">
@@ -94,12 +95,12 @@ export default function Home() {
                     <h2 className="text-5xl font-semibold text-grey-dark leading-110">Dernières
                         <span className="text-blue-light"> offres</span>
                     </h2>
-                    <Link to="#" className="text-blue-light font-semibold flex items-center gap-4">Toutes les offres <img src={arrowRight} className="text-blue-light" width="24px"></img></Link>
+                    <Link to="offres/stage" className="text-blue-light font-semibold flex items-center gap-4">Toutes les offres <img src={arrowRight} className="text-blue-light" width="24px"></img></Link>
                 </div>
                 <div className="mt-12 mb-18 offer-container">
 
                     {lastOffers?.slice(0, 8)?.map(({ company: { picto_image, name: companyName, city, ...rest }, type, id, description, name, job_profiles, ...items }) => (
-                        <div key={id} className="offer-card border h-[283px] overflow-hidden justify-between flex flex-col">
+                        <Link to={`${type.toLowerCase()}/offre/${id}`} key={id} className="offer-card border h-[283px] overflow-hidden justify-between flex flex-col">
                             <div className="flex justify-between items-start">
                                 <img alt={`${companyName} image`} src={`${REACT_APP_API_URL}/assets/images/companies/${picto_image}`} className="object-contain w-12 h-12" /> {/* Image de l'entreprise */}
                                 <span className="text-blue-dark tag-contract">{type}</span> {/* Type de contrat */}
@@ -110,12 +111,12 @@ export default function Home() {
                                 <p className="offer-informations text-md text-wrap">{companyName} • {city}</p>{/* Nom de l'entreprise + Ville */}
                             </div>
                             <p className="opacity-50 text-md relative txt-elipsis">{description}</p>{/* Description de l'offre */}
-                            <div className="flex justify-between">
-                                {job_profiles?.map((profile) => (
-                                    <p key={profile.name} style={{ color: profile.color }}>{profile.name}</p>
+                            <div className="flex justify-start items-center flex-wrap gap-2">
+                                { job_profiles?.map((profile) => (
+                                    <JobProfiles profile={profile} />
                                 ))}
                             </div>
-                        </div>
+                        </Link>
                     ))}
                 </div>
             </div >
