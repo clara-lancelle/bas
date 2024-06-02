@@ -112,7 +112,7 @@ export default function OfferDetail() {
                                 </div>
                                 <div className="flex gap-x-8">
                                     <div className="border-r pr-8">
-                                        <Link to="#" className="flex items-center h-full"><img src={share} className="w-[32px] min-w-[32px]"></img></Link>
+                                        <Link to="https://linkedin.fr" className="flex items-center h-full"><img src={share} className="w-[32px] min-w-[32px]"></img></Link>
                                     </div>
 
                                     <div className="flex items-center text-white font-bold bg-blue-dark">
@@ -205,11 +205,11 @@ export default function OfferDetail() {
 
             <div className="mt-18 flex container">
                 <div className="w-1/2 mr-11">
-                    <Link to={`/entreprise/${company.id}`}><img alt={`${company.name} image`} src={`${process.env.REACT_APP_API_URL}/assets/images/companies/${company.large_image}`} className="max-w-full mb-8"></img></Link>
+                    <Link to={`/entreprise/${company.id}`} state={{companyId: company.id}}><img alt={`${company.name} image`} src={`${process.env.REACT_APP_API_URL}/assets/images/companies/${company.large_image}`} className="max-w-full mb-8"></img></Link>
                     <p className="mb-8">
                         {company.description}
                     </p>
-                    <Link to={`/entreprise/${company.id}`} className="text-blue-dark flex items-center font-semibold mt-6">En savoir plus sur {company.name} <img src={arrowRight} className="ms-2" /></Link>
+                    <Link to={`/entreprise/${company.id}`} state={{companyId: company.id}} className="text-blue-dark flex items-center font-semibold mt-6">En savoir plus sur {company.name} <img src={arrowRight} className="ms-2" /></Link>
                 </div>
                 <div className="w-1/2 flex justify-between">
                     <div className="w-1/3 flex flex-col gap-y-4 mr-4">
