@@ -92,7 +92,7 @@ export default function CompanyDetail() {
                     <div className="mt-8 mb-6">
                         <h1 className="text-5xl font-bold text-grey-dark">{company.name}</h1>
                         {company.website_url ?
-                            <Link to={company.website_url} className="bg-white px-3 py-2 mt-4 text-blue-dark font-semibold flex items-center w-fit rounded-md"><span>mentalworks.fr</span><img src={arrowRight} className="ms-4 text-blue-dark" width="16px" style={{ fill: '#4640DE' }}></img></Link>
+                            <Link to={company.website_url} target="_blank" className="bg-white px-3 py-2 mt-4 text-blue-dark font-semibold flex items-center w-fit rounded-md"><span>mentalworks.fr</span><img src={arrowRight} className="ms-4 text-blue-dark" width="16px" style={{ fill: '#4640DE' }}></img></Link>
                             : ''}
                     </div>
                     <div className="flex gap-10 justify-start">
@@ -196,7 +196,7 @@ export default function CompanyDetail() {
                     <div className="mb-10 pb-10 border-b">
                         <h2 className="text-[32px] font-semibold mb-4 text-grey-dark">Nous joindre</h2>
                         <div className="flex flex-col opacity-70">
-                            <span>Téléphone: </span>{/* Téléphone */}
+                            <span>Téléphone: {company.phone_num}</span>{/* Téléphone */}
                             <span>Du lundi au vendredi de 8h30 à 18h30</span>{/* Horaires */}
                         </div>
                         <Link to="#" state={{ companyId: company.id }} className="text-blue-dark flex items-center font-semibold mt-6">Nous envoyer un message <img src={arrowRight} className="ms-2" /></Link>

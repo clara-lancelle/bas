@@ -117,7 +117,7 @@ export default function OfferDetail() {
                                     </div>
 
                                     <div className="flex items-center text-white font-bold bg-blue-dark">
-                                        <Link to="postuler" className="px-14 py-4">Postuler</Link>
+                                        <Link to="postuler" className="px-14 py-4" state={{offerId: offer.id}}>Postuler</Link>
                                     </div>
                                 </div>
                             </div>
