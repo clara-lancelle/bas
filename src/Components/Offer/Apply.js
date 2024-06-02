@@ -173,9 +173,9 @@ export default function OfferDetail() {
                 <Ariane ariane={[
                     { url: '/', text: 'Accueil' },
                     { text: 'Offres' },
-                    { url: '/stage/offres', text: 'Stage' },
-                    { url: '/stage/offre/' + offerId, text: offerName },
-                    { url: '/stage/offre/' + offerId + '/postuler', text: 'Postuler' },
+                    { url: '/offres/stage', text: 'Stage' },
+                    { url: '/offre/stage/' + offerId, text: offerName },
+                    { url: '/offre/stage/' + offerId + '/postuler', text: 'Postuler' },
                 ]} />
             )
         } else {
@@ -183,9 +183,9 @@ export default function OfferDetail() {
                 <Ariane ariane={[
                     { url: '/', text: 'Accueil' },
                     { text: 'Offres' },
-                    { url: '/alternance/offres', text: 'Alternance' },
-                    { url: '/alternance/offre/' + offerId, text: offerName },
-                    { url: '/alternance/offre/' + offerId + '/postuler', text: 'Postuler' },
+                    { url: '/offres/alternance', text: 'Alternance' },
+                    { url: '/offre/alternance/' + offerId, text: offerName },
+                    { url: '/offre/alternance/' + offerId + '/postuler', text: 'Postuler' },
                 ]} />
             )
         }

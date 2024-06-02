@@ -53,7 +53,7 @@ export default function OfferList({ type }) {
                     <Ariane ariane={[
                         { url: '/', text: 'Accueil' },
                         { text: 'Offres' },
-                        { url: '/stage/offres', text: 'Stage' },
+                        { url: '/offres/stage', text: 'Stage' },
                     ]} />
                     <div className="mt-18 text-center">
                         <h1 className="text-5xl font-bold text-gray-dark">Offres {type == 'Alternance' ? 'd\'' : 'de'} <span className="text-blue-light relative hand-underline">{type}</span></h1>
@@ -109,7 +109,7 @@ export default function OfferList({ type }) {
                                     </div>
                                     <div className="flex flex-col">
                                         <div className="flex items-center btn-blue-dark mb-4">
-                                            <Link to="#">En savoir plus</Link>
+                                            <Link to={`/offre/${id}`} state={{offerId: id}}>En savoir plus</Link>
                                         </div>
                                         <span className="h-2 w-full bg-lime-500 mb-2"></span>
                                         <span className="text-xs">Reste {calculatedLimitDays} jours pour postuler</span>

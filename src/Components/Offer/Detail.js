@@ -33,8 +33,8 @@ export default function OfferDetail() {
                 <Ariane ariane={[
                     { url: '/', text: 'Accueil' },
                     { text: 'Offres' },
-                    { url: '/stage/offres', text: 'Stage' },
-                    { url: '/stage/offre/' + offerId, text: offerName },
+                    { url: '/offres/stage', text: 'Stage' },
+                    { url: '/offre/stage/' + offerId, text: offerName },
                 ]} />
             )
         } else {
@@ -42,8 +42,8 @@ export default function OfferDetail() {
                 <Ariane ariane={[
                     { url: '/', text: 'Accueil' },
                     { text: 'Offres' },
-                    { url: '/alternance/offres', text: 'Alternance' },
-                    { url: '/alternance/offre/' + offerId, text: offerName },
+                    { url: '/offres/alternance', text: 'Alternance' },
+                    { url: '/offre/alternance/' + offerId, text: offerName },
                 ]} />
             )
         }
@@ -77,8 +77,9 @@ export default function OfferDetail() {
         fetchData();
     }, [REACT_APP_API_URL, location.state.offerId]);
 
-    console.log(internshipOffers)
-
+    const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
 
     if (loading) {
         return <p>Chargement...</p>;
@@ -228,7 +229,7 @@ export default function OfferDetail() {
                     <h2 className="text-[32px] font-semibold text-grey-dark leading-110">Offres de stage similaires</h2>
                     <div className="mt-12 mb-18 offer-container">
                         {internshipOffers?.slice(0, 8)?.map(({ company: { picto_image, name: companyName, city, ...rest }, type, id, description, name, job_profiles, ...items }) => (
-                            <Link to={`${type.toLowerCase()}/offre/${id}`} state={{ offerId: id }} key={id} className="bg-white offer-card border h-[283px] overflow-hidden justify-between flex flex-col">
+                            <Link to={`/offre/${id}`} state={{ offerId: id }} key={id} onClick={scrollToTop()} className="bg-white offer-card border h-[283px] overflow-hidden justify-between flex flex-col">
                                 <div className="flex justify-between items-start">
                                     <img alt={`${companyName} image`} src={`${REACT_APP_API_URL}/assets/images/companies/${picto_image}`} className="object-contain w-12 h-12" /> {/* Image de l'entreprise */}
                                     <span className="text-blue-dark tag-contract">{type}</span> {/* Type de contrat */}

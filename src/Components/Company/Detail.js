@@ -62,10 +62,9 @@ export default function CompanyDetail() {
     if (loading) {
         return <p>Chargement...</p>;
     }
-    console.log(company)
 
     const getCompanyAge = (creationDate) => {
-        if (!creationDate) return null;
+        if (!creationDate) return 'Inconnue';
 
         const today = new Date();
         const creationDateObj = new Date(creationDate);
@@ -87,8 +86,8 @@ export default function CompanyDetail() {
                 <div className="container flex flex-col pt-3 pb-11">
                     <Ariane ariane={[
                         { url: '/', text: 'Accueil' },
-                        { text: 'Entreprises' },
-                        { url: '/entreprise/', text: 'Entreprises' }, // Id et nom de l'entreprise
+                        { url: '/entreprises', text: 'Entreprises' },
+                        { url: '/entreprise/', text: company.name }, // Id et nom de l'entreprise
                     ]} />
                     <div className="mt-8 mb-6">
                         <h1 className="text-5xl font-bold text-grey-dark">{company.name}</h1>
@@ -221,7 +220,7 @@ export default function CompanyDetail() {
                     <h2 className="text-[32px] font-semibold text-grey-dark leading-110">Offres de stage proposées</h2>
                     <div className="mt-12 mb-18 offer-container">
                         {internshipOffers?.slice(0, 4)?.map(({ company: { picto_image, name: companyName, city, ...rest }, type, id, description, name, job_profiles, ...items }) => (
-                            <Link to={`${type.toLowerCase()}/offre/${id}`} state={{ offerId: id }} key={id} className="offer-card border h-[283px] overflow-hidden justify-between flex flex-col">
+                            <Link to={`/offre/${id}`} state={{ offerId: id }} key={id} className="offer-card border h-[283px] overflow-hidden justify-between flex flex-col">
                                 <div>
                                     <h3 className="font-semibold text-[18px]">{name}</h3>{/* Intitulé du poste */}
                                     <p className="offer-informations text-md text-wrap">{companyName} • {city}</p>{/* Durée du stage */}
@@ -239,7 +238,7 @@ export default function CompanyDetail() {
                     <h2 className="text-[32px] font-semibold text-grey-dark leading-110 mt-13">Offres d'alternance proposées</h2>
                     <div className="mt-12 mb-18 offer-container">
                         {internshipOffers?.slice(0, 4)?.map(({ company: { picto_image, name: companyName, city, ...rest }, type, id, description, name, job_profiles, ...items }) => (
-                            <Link to={`${type.toLowerCase()}/offre/${id}`} state={{ offerId: id }} key={id} className="offer-card border h-[283px] overflow-hidden justify-between flex flex-col">
+                            <Link to={`/offre/${id}`} state={{ offerId: id }} key={id} className="offer-card border h-[283px] overflow-hidden justify-between flex flex-col">
                                 <div>
                                     <h3 className="font-semibold text-[18px]">{name}</h3>{/* Intitulé du poste */}
                                     <p className="offer-informations text-md text-wrap">{companyName} • {city}</p>{/* Durée du stage */}
