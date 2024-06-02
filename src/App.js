@@ -16,12 +16,10 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/stage/offre/:id" element={<OfferDetail />} />
-        <Route path="/stage/offre/:id/postuler" element={<OfferApply />} />
-        <Route path="/offres/stage" element={<OfferList type="Stage" />} />
+        <Route path="/offre/:id" element={<OfferDetail />} />
+        <Route path="/offre/:id/postuler" element={<OfferApply />} />
+        <Route path="/offres/stage" element={<OfferList type={"Stage"} />} />
         <Route path="/offres/alternance" element={<OfferList type={"Alternance"} />} />
-        <Route path="/alternance/offre/:id" element={<OfferDetail />} />
-        <Route path="/alternance/offre/:id/postuler" element={<OfferApply />} />
         <Route path="/entreprises" element={<CompanyList />} />
         <Route path="/entreprise/:id" element={<CompanyDetail />} />
       </Routes>

@@ -100,7 +100,7 @@ export default function Home() {
                 <div className="mt-12 mb-18 offer-container">
 
                     {lastOffers?.slice(0, 8)?.map(({ company: { picto_image, name: companyName, city, ...rest }, type, id, description, name, job_profiles, ...items }) => (
-                        <Link to={`${type.toLowerCase()}/offre/${id}`} state={{ offerId: id }} key={id} className="offer-card border h-[283px] overflow-hidden justify-between flex flex-col">
+                        <Link to={`/offre/${id}`} state={{ offerId: id }} key={id} className="offer-card border h-[283px] overflow-hidden justify-between flex flex-col">
                             <div className="flex justify-between items-start">
                                 <img alt={`${companyName} image`} src={`${REACT_APP_API_URL}/assets/images/companies/${picto_image}`} className="object-contain w-12 h-12" /> {/* Image de l'entreprise */}
                                 <span className="text-blue-dark tag-contract">{type}</span> {/* Type de contrat */}

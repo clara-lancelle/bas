@@ -134,7 +134,7 @@ export default function CompanyList() {
 
                     <div className="flex flex-wrap gap-6">
                         {companies?.map(({ name, city, picto_image, id, description, offers, activity, ...items }) => (
-                            <Link to={`/companies/${id}`} className="companyCard" key={name + id}>
+                            <Link to={`/entreprise/${id}`} state={{companyId: id}}className="companyCard" key={name + id}>
                                 <div className="p-6 border border-white-light h-full">
                                     <div className="flex justify-between items-start">
                                         <img alt={`${name} image`} src={`${process.env.REACT_APP_API_URL}/assets/images/companies/${picto_image}`} className="w-20 h-20 object-contain" />

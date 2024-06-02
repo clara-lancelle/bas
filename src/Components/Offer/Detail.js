@@ -33,8 +33,8 @@ export default function OfferDetail() {
                 <Ariane ariane={[
                     { url: '/', text: 'Accueil' },
                     { text: 'Offres' },
-                    { url: '/stage/offres', text: 'Stage' },
-                    { url: '/stage/offre/' + offerId, text: offerName },
+                    { url: '/offres/stage', text: 'Stage' },
+                    { url: '/offre/stage/' + offerId, text: offerName },
                 ]} />
             )
         } else {
@@ -42,8 +42,8 @@ export default function OfferDetail() {
                 <Ariane ariane={[
                     { url: '/', text: 'Accueil' },
                     { text: 'Offres' },
-                    { url: '/alternance/offres', text: 'Alternance' },
-                    { url: '/alternance/offre/' + offerId, text: offerName },
+                    { url: '/offres/alternance', text: 'Alternance' },
+                    { url: '/offre/alternance/' + offerId, text: offerName },
                 ]} />
             )
         }
@@ -77,8 +77,9 @@ export default function OfferDetail() {
         fetchData();
     }, [REACT_APP_API_URL, location.state.offerId]);
 
-    console.log(internshipOffers)
-
+    const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
 
     if (loading) {
         return <p>Chargement...</p>;
@@ -112,7 +113,7 @@ export default function OfferDetail() {
                                 </div>
                                 <div className="flex gap-x-8">
                                     <div className="border-r pr-8">
-                                        <Link to="#" className="flex items-center h-full"><img src={share} className="w-[32px] min-w-[32px]"></img></Link>
+                                        <Link to="https://linkedin.fr" className="flex items-center h-full"><img src={share} className="w-[32px] min-w-[32px]"></img></Link>
                                     </div>
 
                                     <div className="flex items-center text-white font-bold bg-blue-dark">
@@ -205,11 +206,11 @@ export default function OfferDetail() {
 
             <div className="mt-18 flex container">
                 <div className="w-1/2 mr-11">
-                    <Link to={`/entreprise/${company.id}`}><img alt={`${company.name} image`} src={`${process.env.REACT_APP_API_URL}/assets/images/companies/${company.large_image}`} className="max-w-full mb-8"></img></Link>
+                    <Link to={`/entreprise/${company.id}`} state={{companyId: company.id}}><img alt={`${company.name} image`} src={`${process.env.REACT_APP_API_URL}/assets/images/companies/${company.large_image}`} className="max-w-full mb-8"></img></Link>
                     <p className="mb-8">
                         {company.description}
                     </p>
-                    <Link to={`/entreprise/${company.id}`} className="text-blue-dark flex items-center font-semibold mt-6">En savoir plus sur {company.name} <img src={arrowRight} className="ms-2" /></Link>
+                    <Link to={`/entreprise/${company.id}`} state={{companyId: company.id}} className="text-blue-dark flex items-center font-semibold mt-6">En savoir plus sur {company.name} <img src={arrowRight} className="ms-2" /></Link>
                 </div>
                 <div className="w-1/2 flex justify-between">
                     <div className="w-1/3 flex flex-col gap-y-4 mr-4">
@@ -228,7 +229,7 @@ export default function OfferDetail() {
                     <h2 className="text-[32px] font-semibold text-grey-dark leading-110">Offres de stage similaires</h2>
                     <div className="mt-12 mb-18 offer-container">
                         {internshipOffers?.slice(0, 8)?.map(({ company: { picto_image, name: companyName, city, ...rest }, type, id, description, name, job_profiles, ...items }) => (
-                            <Link to={`${type.toLowerCase()}/offre/${id}`} state={{ offerId: id }} key={id} className="bg-white offer-card border h-[283px] overflow-hidden justify-between flex flex-col">
+                            <Link to={`/offre/${id}`} state={{ offerId: id }} key={id} onClick={scrollToTop()} className="bg-white offer-card border h-[283px] overflow-hidden justify-between flex flex-col">
                                 <div className="flex justify-between items-start">
                                     <img alt={`${companyName} image`} src={`${REACT_APP_API_URL}/assets/images/companies/${picto_image}`} className="object-contain w-12 h-12" /> {/* Image de l'entreprise */}
                                     <span className="text-blue-dark tag-contract">{type}</span> {/* Type de contrat */}
