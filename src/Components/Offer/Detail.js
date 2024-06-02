@@ -112,7 +112,7 @@ export default function OfferDetail() {
                                 </div>
                                 <div className="flex gap-x-8">
                                     <div className="border-r pr-8">
-                                        <Link to="#" className="flex items-center h-full"><img src={share} width="32px"></img></Link>
+                                        <Link to="#" className="flex items-center h-full"><img src={share} className="w-[32px] min-w-[32px]"></img></Link>
                                     </div>
 
                                     <div className="flex items-center text-white font-bold bg-blue-dark">
@@ -205,15 +205,10 @@ export default function OfferDetail() {
 
             <div className="mt-18 flex container">
                 <div className="w-1/2 mr-11">
-                    <img alt={`${company.name} image`} src={`${process.env.REACT_APP_API_URL}/assets/images/companies/${company.large_image}`} className="max-w-full mb-8"></img>
-                    <div className="mb-8 flex flex-col">
-                        {/* <p className="font-bold mb-4">
-                            Mentalworks est à la fois une agence web et webmarketing mais aussi une SSII/ESN spécialisée dans le développement et la maintenance d’applications sur-mesure.
-                        </p> */}
-                        <p>
-                            {company.description}
-                        </p>
-                    </div>
+                    <Link to={`/entreprise/${company.id}`}><img alt={`${company.name} image`} src={`${process.env.REACT_APP_API_URL}/assets/images/companies/${company.large_image}`} className="max-w-full mb-8"></img></Link>
+                    <p className="mb-8">
+                        {company.description}
+                    </p>
                     <Link to={`/entreprise/${company.id}`} className="text-blue-dark flex items-center font-semibold mt-6">En savoir plus sur {company.name} <img src={arrowRight} className="ms-2" /></Link>
                 </div>
                 <div className="w-1/2 flex justify-between">
@@ -233,24 +228,24 @@ export default function OfferDetail() {
                     <h2 className="text-[32px] font-semibold text-grey-dark leading-110">Offres de stage similaires</h2>
                     <div className="mt-12 mb-18 offer-container">
                         {internshipOffers?.slice(0, 8)?.map(({ company: { picto_image, name: companyName, city, ...rest }, type, id, description, name, job_profiles, ...items }) => (
-                        <Link to={`${type.toLowerCase()}/offre/${id}`} state={{ offerId: id }} key={id} className="bg-white offer-card border h-[283px] overflow-hidden justify-between flex flex-col">
-                            <div className="flex justify-between items-start">
-                                <img alt={`${companyName} image`} src={`${REACT_APP_API_URL}/assets/images/companies/${picto_image}`} className="object-contain w-12 h-12" /> {/* Image de l'entreprise */}
-                                <span className="text-blue-dark tag-contract">{type}</span> {/* Type de contrat */}
-                            </div>
+                            <Link to={`${type.toLowerCase()}/offre/${id}`} state={{ offerId: id }} key={id} className="bg-white offer-card border h-[283px] overflow-hidden justify-between flex flex-col">
+                                <div className="flex justify-between items-start">
+                                    <img alt={`${companyName} image`} src={`${REACT_APP_API_URL}/assets/images/companies/${picto_image}`} className="object-contain w-12 h-12" /> {/* Image de l'entreprise */}
+                                    <span className="text-blue-dark tag-contract">{type}</span> {/* Type de contrat */}
+                                </div>
 
-                            <div className="my-2">
-                                <h3 className="font-semibold text-[18px]">{name}</h3>{/* Intitulé du poste */}
-                                <p className="offer-informations text-md text-wrap">{companyName} • {city}</p>{/* Nom de l'entreprise + Ville */}
-                            </div>
-                            <p className="opacity-50 text-md relative txt-elipsis">{description}</p>{/* Description de l'offre */}
-                            <div className="flex justify-start items-center flex-wrap gap-2">
-                                { job_profiles?.map((profile) => (
-                                    <JobProfiles profile={profile} />
-                                ))}
-                            </div>
-                        </Link>
-                    ))}
+                                <div className="my-2">
+                                    <h3 className="font-semibold text-[18px]">{name}</h3>{/* Intitulé du poste */}
+                                    <p className="offer-informations text-md text-wrap">{companyName} • {city}</p>{/* Nom de l'entreprise + Ville */}
+                                </div>
+                                <p className="opacity-50 text-md relative txt-elipsis">{description}</p>{/* Description de l'offre */}
+                                <div className="flex justify-start items-center flex-wrap gap-2">
+                                    {job_profiles?.map((profile) => (
+                                        <JobProfiles profile={profile} />
+                                    ))}
+                                </div>
+                            </Link>
+                        ))}
                     </div>
                 </div>
             </div>
