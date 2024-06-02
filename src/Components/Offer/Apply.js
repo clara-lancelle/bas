@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { EditorState, convertToRaw, CompositeDecorator } from 'draft-js';
 import { stateToHTML } from 'draft-js-export-html';
 import Ariane from "../Partials/Ariane";
@@ -43,8 +43,29 @@ const decorator = new CompositeDecorator([
 export default function OfferDetail() {
 
     const [editorState, setEditorState] = useState(EditorState.createEmpty()); // Assurez-vous que l'état est initialisé
+    const [offer, setOffer] = useState([]);
     const [checked, setChecked] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const {REACT_APP_API_URL} = process.env;
     const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const offerResponse = await fetch(`${REACT_APP_API_URL}/api/offers/${location.state.offerId}`);
+                const offerData = await offerResponse.json();
+                setOffer(offerData);
+
+                setLoading(false);
+            } catch (error) {
+                console.error(error);
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, [REACT_APP_API_URL, location.state.offerId]);
 
     const [formData, setFormData] = useState({
         gender: '',
@@ -143,30 +164,6 @@ export default function OfferDetail() {
         navigate(-1); // Va vers la page précédente dans l'historique
     };
 
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-    //     console.log('Form data:', formData);
-
-    //     try {
-    //       const response = await fetch('https://example.com/api/endpoint', {
-    //         method: 'POST',
-    //         headers: {
-    //           'Content-Type': 'application/json',
-    //         },
-    //         body: JSON.stringify(formData),
-    //       });
-
-    //       if (response.ok) {
-    //         const responseData = await response.json();
-    //         console.log('Response:', responseData);
-    //       } else {
-    //         console.error('Error:', response.statusText);
-    //       }
-    //     } catch (error) {
-    //       console.error('Error:', error);
-    //     }
-    //   };
-
     const ariane = (offerType, offerName, offerId) => {
         if (offerType == 'stage') {
             return (
@@ -191,6 +188,7 @@ export default function OfferDetail() {
         }
     }
 
+    console.log(offer)
     return (
         <>
             <div className="bg-light-grey">
@@ -201,10 +199,10 @@ export default function OfferDetail() {
                         <div className="p-6 pr-12 border border-white-light bg-white mb-4">
                             <div className="flex justify-between items-center">
                                 <div className="flex">
-                                    <img alt="" src="" className="w-16 h-16 object-contain"></img>
+                                    <img alt={offer.company.name} src={`${process.env.REACT_APP_API_URL}/assets/images/companies/${offer.company.picto_image}`} className="w-16 h-16 object-contain"></img>
                                     <div className="ms-6">
-                                        <h1 className="mb-2 font-semibold text-[32px] leading-8">Assistant Social Media</h1>
-                                        <p className="mb-2 text-xl"><span className="font-bold">Mentalworks</span> • Lacroix St ouen • Du 20/05/2024 au 28/08/2024 (39 jours)</p>
+                                        <h1 className="mb-2 font-semibold text-[32px] leading-8">{offer.name}</h1>
+                                        <p className="mb-2 text-xl"><span className="font-bold">{offer.company.name}</span> • {offer.company.city} • Du {offer.start_date} au {offer.end_date} ({offer.calculatedDuration} jours)</p>
                                         <div className="flex">
                                             <div className="pr-2 border-r">
                                                 <span className="text-blue-dark tag-contract">Stage</span>
@@ -360,7 +358,7 @@ export default function OfferDetail() {
                         <p>En validant ce formulaire, vous confirmez que vous acceptez nos <Link to="#" className="text-blue-dark underline">Conditions Générales d’Utilisation</Link> et notre <Link to="#" className="text-blue-dark underline">politique de confidentialité</Link>.</p>
                     </div>
 
-                    <button onChange={handleGoBack} className="flex items-center w-fit px-8 py-3 border border-grey-dark">
+                    <button onClick={handleGoBack} className="flex items-center w-fit px-8 py-3 border border-grey-dark">
                         <img src={arrow} width="24px"></img>
                         <span className="ms-2 text-grey-dark font-bold">Retour</span>
                     </button>

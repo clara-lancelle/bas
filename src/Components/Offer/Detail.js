@@ -98,7 +98,7 @@ export default function OfferDetail() {
                                     <img alt="" src={`${process.env.REACT_APP_API_URL}/assets/images/companies/${company.picto_image}`} className="w-16 h-16 object-contain"></img>
                                     <div className="ms-6">
                                         <h1 className="mb-2 font-semibold text-[32px] leading-8">{offer.name}</h1>
-                                        <p className="mb-2 text-xl"><span className="font-bold">{offer.company.name}</span> • {offer.company.name} • Du {offer.start_date} au {offer.end_date} ({offer.calculatedDuration} jours) </p>
+                                        <p className="mb-2 text-xl"><span className="font-bold">{offer.company.name}</span> • {offer.company.city} • Du {offer.start_date} au {offer.end_date} ({offer.calculatedDuration} jours) </p>
                                         <div className="flex items-center">
                                             <div className="pr-2 border-r">
                                                 <span className="text-blue-dark tag-contract">{offer.type}</span>
