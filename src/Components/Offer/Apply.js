@@ -46,20 +46,18 @@ export default function OfferApply() {
     const [editorState, setEditorState] = useState(EditorState.createEmpty()); // Assurez-vous que l'état est initialisé
     const [offer, setOffer] = useState([]);
     const [checked, setChecked] = useState(false);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const {REACT_APP_API_URL} = process.env;
     const navigate = useNavigate();
     const location = useLocation();
 
-    console.log(location.state.offerId)
     useEffect(() => {
-        console.log('coucou');
         const fetchData = async () => {
             try {
                 const offerResponse = await fetch(`${REACT_APP_API_URL}/api/offers/${location.state.offerId}`);
                 const offerData = await offerResponse.json();
                 console.log(offerData);
-                setOffer(offerResponse, offerData);
+                setOffer(offerData);
 
                 setLoading(false);
             } catch (error) {
@@ -184,9 +182,9 @@ export default function OfferApply() {
                 <Ariane ariane={[
                     { url: '/', text: 'Accueil' },
                     { text: 'Offres' },
-                    { url: '/offres/alternance', text: 'Alternance' },
-                    { url: '/offre/alternance/' + offerId, text: offerName },
-                    { url: '/offre/alternance/' + offerId + '/postuler', text: 'Postuler' },
+                    { url: '/offres/', text: 'Alternance' },
+                    { url: '/offre/' + offerId, text: offerName, state: {offerId: location.state.offerId} },
+                    { url: '/offre/' + offerId + '/postuler', text: 'Postuler' },
                 ]} />
             )
         }
@@ -195,14 +193,13 @@ export default function OfferApply() {
     if (loading) {
         return <p>Chargement...</p>;
     }
-    console.log(offer)
 
     return (
         <>
             <div className="bg-light-grey">
                 <div className="container flex flex-col pt-3 pb-11">
 
-                    {ariane('stages', 'Assistant Web Marketing', 1)}
+                    {ariane(offer.type, offer.name, offer.id)}
                     <div className="mt-18">
                         <div className="p-6 pr-12 border border-white-light bg-white mb-4">
                             <div className="flex justify-between items-center">
