@@ -41,7 +41,7 @@ const decorator = new CompositeDecorator([
     },
 ]);
 
-export default function OfferDetail() {
+export default function OfferApply() {
 
     const [editorState, setEditorState] = useState(EditorState.createEmpty()); // Assurez-vous que l'état est initialisé
     const [offer, setOffer] = useState([]);
@@ -51,12 +51,15 @@ export default function OfferDetail() {
     const navigate = useNavigate();
     const location = useLocation();
 
+    console.log(location.state.offerId)
     useEffect(() => {
+        console.log('coucou');
         const fetchData = async () => {
             try {
                 const offerResponse = await fetch(`${REACT_APP_API_URL}/api/offers/${location.state.offerId}`);
                 const offerData = await offerResponse.json();
-                setOffer(offerData);
+                console.log(offerData);
+                setOffer(offerResponse, offerData);
 
                 setLoading(false);
             } catch (error) {
@@ -189,7 +192,11 @@ export default function OfferDetail() {
         }
     }
 
+    if (loading) {
+        return <p>Chargement...</p>;
+    }
     console.log(offer)
+
     return (
         <>
             <div className="bg-light-grey">

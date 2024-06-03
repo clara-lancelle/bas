@@ -95,8 +95,8 @@ export default function OfferList({ type }) {
 
                     <div className="flex flex-col">
                         {offers?.map(({ company: { name: companyName, city, picto_image }, id, name, start_date, end_date, job_profiles, calculatedLimitDays, calculatedDuration, ...items }) => (
-                            <div key={name + id} className="p-6 border border-white-light mb-4">
-                                <div className="flex justify-between">
+                            <div key={name + id} className="p-6 border border-white-light mb-4 flex justify-between">
+                                <div className="flex justify-start">
                                     <img alt={`${companyName} image`} src={`${process.env.REACT_APP_API_URL}/assets/images/companies/${picto_image}`} className="w-16 h-16 object-contain"></img>
                                     <div className="ms-6">
                                         <h3 className="mb-2 font-semibold text-xl">{name}</h3>
@@ -110,7 +110,9 @@ export default function OfferList({ type }) {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="flex flex-col w-1/5">
+                                </div>
+                                <div className="w-1/5">
+                                    <div className="flex flex-col">
                                         <div className="flex items-center justify-center btn-blue-dark mb-4">
                                             <Link to={`/offre/${id}`} state={{offerId: id}}>En savoir plus</Link>
                                         </div>
