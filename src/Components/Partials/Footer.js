@@ -19,18 +19,18 @@ export default function Footer() {
                     </div>
                     <div className="flex w-4/12 gap-12 text-white-light">
                         <ul className="flex flex-col gap-4">
-                            <li><Link to="#">Accueil</Link></li>
-                            <li><Link to="#">Offres</Link></li>
-                            <li><Link to="#">Demandes</Link></li>
-                            <li><Link to="#">Entreprises</Link></li>
-                            <li><Link to="#">Etudiants</Link></li>
+                            <li><Link to="/">Accueil</Link></li>
+                            <li><Link to="/offres/stage">Offres</Link></li>
+                            <li><Link to="/">Demandes</Link></li>
+                            <li><Link to="/entreprises">Entreprises</Link></li>
+                            <li><Link to="/">Etudiants</Link></li>
                         </ul>
                         <ul className="flex flex-col gap-4">
-                            <li><Link to="#">Blog</Link></li>
-                            <li><Link to="#">Sponsors</Link></li>
-                            <li><Link to="#">Mentions légales</Link></li>
-                            <li><Link to="#">Données personnelles</Link></li>
-                            <li><Link to="#">Nous contacter</Link></li>
+                            <li><Link to="/">Blog</Link></li>
+                            <li><Link to="/">Sponsors</Link></li>
+                            <li><Link to="/">Mentions légales</Link></li>
+                            <li><Link to="/">Données personnelles</Link></li>
+                            <li><Link to="/">Nous contacter</Link></li>
                         </ul>
                     </div>
                     <div className="flex flex-col w-4/12 ">
@@ -51,11 +51,11 @@ export default function Footer() {
                 <div className="flex justify-between py-10">
                     <span className="opacity-50	">2024 @  Bourse aux Stages • Tous droits réservés</span>
                     <div className="flex justify-between w-3/12">
-                        <Link to="#" className="bubble-dark flex justify-center rounded-full p-2.5 w-8"><img src={dribbble}/></Link>
-                        <Link to="#" className="bubble-dark flex justify-center rounded-full p-2.5 w-8"><img src={facebook}/></Link>
-                        <Link to="#" className="bubble-dark flex justify-center rounded-full p-2.5 w-8"><img src={instagram}/></Link>
-                        <Link to="#" className="bubble-dark flex justify-center rounded-full p-2.5 w-8"><img src={linkedin}/></Link>
-                        <Link to="#" className="bubble-dark flex justify-center rounded-full p-2.5 w-8"><img src={twitter}/></Link>
+                        <Link to="https://dribbble.com" className="bubble-dark flex justify-center rounded-full p-2.5 w-8"><img src={dribbble}/></Link>
+                        <Link to="https://facebook.com" className="bubble-dark flex justify-center rounded-full p-2.5 w-8"><img src={facebook}/></Link>
+                        <Link to="https://instagram.com" className="bubble-dark flex justify-center rounded-full p-2.5 w-8"><img src={instagram}/></Link>
+                        <Link to="https://linkedin.com" className="bubble-dark flex justify-center rounded-full p-2.5 w-8"><img src={linkedin}/></Link>
+                        <Link to="https://twitter.com" className="bubble-dark flex justify-center rounded-full p-2.5 w-8"><img src={twitter}/></Link>
                     </div>
                 </div>
             </div>
