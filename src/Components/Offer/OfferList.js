@@ -4,6 +4,7 @@ import Ariane from '../Partials/Ariane';
 import JobProfiles from "../JobProfiles/JobProfiles";
 import ProgressBar from "../ProgressBar/ProgressBar";
 import OfferFiltersHandler from "../Filters/OfferFiltersHandler";
+import Paginate from "../Paginate/Paginate";
 
 export default function OfferList({ type }) {
     const [selectedJobProfile, setSelectedJobProfile] = useState()
@@ -119,6 +120,7 @@ export default function OfferList({ type }) {
                                 </div>
                             </div>
                         ))}
+                        <Paginate currentPage={1} />
                     </div>
                 </div>
             </div >
