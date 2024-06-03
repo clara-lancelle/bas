@@ -11,6 +11,8 @@ export default function CompanyList() {
     const [selectedWorkforce, setSelectedWorkforce] = useState()
     const [selectedSort, setSelectedSort] = useState(1)
     const [companies, setCompanies] = useState([]);
+    let countInternship = ''
+    let countApprenticeship = ''
 
     const sorter = [
         ['name', 'asc'],
@@ -45,53 +47,6 @@ export default function CompanyList() {
             ))
             .catch(err => console.error(err));
     }, [process.env.REACT_APP_API_URL, selectedSort, selectedActivity, selectedCategory, selectedWorkforce])
-
-
-    // const filters = [
-    //     {
-    //         title: 'Secteur d\'activité',
-    //         options: [
-    //             { text: 'Tous', value: 'all' },
-    //             { text: 'Commerce', value: 'commerce' },
-    //             { text: 'Industrie mécanique', value: 'mecanical_industry' },
-    //             { text: 'Industrie chimique', value: 'chemical_industry' },
-    //             { text: 'Automobile', value: 'automobile' },
-    //             { text: 'Informatique', value: 'it' },
-    //             { text: 'Réseau, téléphonie, FAI', value: 'network' },
-    //             { text: 'Tourisme, sport', value: 'tourism' },
-    //             { text: 'Transport', value: 'transport' },
-    //             { text: 'Finances', value: 'finance' },
-    //             { text: 'Loisirs', value: 'activities' },
-    //             { text: 'Alimentation', value: 'alimentation' },
-    //             { text: 'Santé, bien-être', value: 'health' },
-    //             { text: 'Immobilier, BTP', value: 'immobilier' },
-    //             { text: 'Média', value: 'media' },
-    //             { text: 'Autre', value: 'other' },
-    //         ]
-    //     },
-    //     {
-    //         title: 'Catégorie',
-    //         options: [
-    //             { text: 'Service aux particuliers', value: 'individual_service' },
-    //             { text: 'Service aux entreprises', value: 'business_service' },
-    //             { text: 'Mairie, collectivité', value: 'city_hall' },
-    //             { text: 'Association, ONG', value: 'association' },
-    //             { text: 'Organisme d\'état', value: 'state_agency' },
-    //             { text: 'Autres', value: 'others' }
-    //         ]
-    //     },
-    //     {
-    //         title: 'Effectifs',
-    //         options: [
-    //             { text: '1-9', value: 'between_1_and_9' },
-    //             { text: '10-49', value: 'between_10_and_49' },
-    //             { text: '50-99', value: 'between_50_and_99' },
-    //             { text: '100-249', value: 'between_100_and_249' },
-    //             { text: '250-999', value: 'between_250_and_999' },
-    //             { text: '1000 et supérieur', value: 'more_than_1k' }
-    //         ]
-    //     }
-    // ];
 
     return (
         <>
@@ -139,15 +94,17 @@ export default function CompanyList() {
                                 <div className="p-6 border border-white-light h-full">
                                     <div className="flex justify-between items-start">
                                         <img alt={`${name} image`} src={`${process.env.REACT_APP_API_URL}/assets/images/companies/${picto_image}`} className="w-20 h-20 object-contain" />
-                                        {(offers.filter(offer => offer.type === 'Stage').length || offers.filter(offer => offer.type === 'Alternance').length) && (
+                                        {(countInternship = offers.filter(offer => offer.type === 'Stage').length || 0) && "" || ""}
+                                        {(countApprenticeship = offers.filter(offer => offer.type === 'Alternance').length || 0) && "" || ""}
+                                        {(countInternship || countApprenticeship) && (
                                             <span className="text-blue-dark tag-contract pr-2">
-                                                {offers.filter(offer => offer.type === 'Stage').length && offers.filter(offer => offer.type === 'Alternance').length && (
-                                                    `${offers.filter(offer => offer.type === 'Stage').length} stages, ${offers.filter(offer => offer.type === 'Alternance').length} alternances`
-                                                ) || offers.filter(offer => offer.type === 'Stage').length && (
-                                                    `${offers.filter(offer => offer.type === 'Stage').length} stages`
-                                                ) || offers.filter(offer => offer.type === 'Alternance').length && (
-                                                    `${offers.filter(offer => offer.type === 'Alternance').length} alternances`
-                                                )}
+                                                {(countInternship && countApprenticeship) && (
+                                                    `${countInternship} ${countInternship > 1 && 'stages' || 'stage'}, ${countApprenticeship} ${countApprenticeship > 1 && 'alternances' || 'alternance'}` || ""
+                                                ) || countInternship && (
+                                                    countInternship > 1 && `${countInternship} stages` || `${countInternship} stage`
+                                                ) || countApprenticeship && (
+                                                    countApprenticeship > 1 && `${countApprenticeship} alternances` || `${countApprenticeship} alternance`
+                                                ) || ""}
                                             </span>
                                         ) || ""}
                                     </div>
