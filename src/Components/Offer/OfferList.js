@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Ariane from '../Partials/Ariane';
 import JobProfiles from "../JobProfiles/JobProfiles";
+import ProgressBar from "../ProgressBar/ProgressBar";
 import OfferFiltersHandler from "../Filters/OfferFiltersHandler";
 
 export default function OfferList({ type }) {
     const [selectedJobProfile, setSelectedJobProfile] = useState()
     const [selectedStudyLevel, setSelectedStudyLevel] = useState()
     const [selectedDuration, setSelectedDuration] = useState()
+    const [selectedDistance, setsetSelectedDuration] = useState()
     const [selectedSort, setSelectedSort] = useState(1)
     const [offers, setOffers] = useState([]);
     const sorter = [
@@ -18,7 +20,7 @@ export default function OfferList({ type }) {
         ['application_limit_date', 'asc']
     ]
     const setters = {
-        selectedJobProfile, setSelectedJobProfile, selectedStudyLevel, setSelectedStudyLevel, selectedDuration, setSelectedDuration
+        selectedJobProfile, setSelectedJobProfile, selectedStudyLevel, setSelectedStudyLevel, selectedDuration, setSelectedDuration, selectedDistance, setSelectedDuration
 
     }
 
@@ -107,11 +109,11 @@ export default function OfferList({ type }) {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="flex flex-col">
-                                        <div className="flex items-center btn-blue-dark mb-4">
+                                    <div className="flex flex-col w-1/5">
+                                        <div className="flex items-center justify-center btn-blue-dark mb-4">
                                             <Link to={`/offre/${id}`} state={{offerId: id}}>En savoir plus</Link>
                                         </div>
-                                        <span className="h-2 w-full bg-lime-500 mb-2"></span>
+                                        <ProgressBar limitDays={calculatedLimitDays} />
                                         <span className="text-xs">Reste {calculatedLimitDays} jours pour postuler</span>
                                     </div>
                                 </div>
