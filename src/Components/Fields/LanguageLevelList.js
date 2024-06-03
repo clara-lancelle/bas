@@ -44,7 +44,6 @@ const LanguageLevel = ({ onLanguagesChange }) => {
   const addLanguageReturn = (languageValue) => {
     const updatedSelectedLanguagesValue = [...selectedLanguagesValue, languageValue];
     setSelectedLanguagesValue(updatedSelectedLanguagesValue);
-    console.log(updatedSelectedLanguagesValue);
     onLanguagesChange(updatedSelectedLanguagesValue);
 
   }

@@ -56,7 +56,6 @@ export default function OfferApply() {
             try {
                 const offerResponse = await fetch(`${REACT_APP_API_URL}/api/offers/${location.state.offerId}`);
                 const offerData = await offerResponse.json();
-                console.log(offerData);
                 setOffer(offerData);
 
                 setLoading(false);
@@ -121,7 +120,6 @@ export default function OfferApply() {
     };
 
     const handleFileUpload = (name, files) => {
-        console.log('1')
         setFormData({
             ...formData,
             [name]: files,
@@ -145,8 +143,6 @@ export default function OfferApply() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log('Form data:', formData);
-
         if (editorState) {
             const contentState = editorState.getCurrentContent(); // Récupération du contenu
             const rawContentState = JSON.stringify(convertToRaw(contentState));

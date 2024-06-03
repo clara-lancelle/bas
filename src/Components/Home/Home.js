@@ -48,7 +48,7 @@ export default function Home() {
             .then(response => setLastRequests(response))
             .catch(err => console.error(err));
     }, [])
-    console.log(lastRequests);
+
     return (
         <>
             <div className="background">

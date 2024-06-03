@@ -7,7 +7,7 @@ export default function Ariane({ ariane }) {
             {ariane.map((item, index) => {
                 const isLast = index === ariane.length - 1;
                 const className = isLast ? 'text-blue-dark' : '';
-                console.log(item.state)
+
                 return (
                     <span key={index}>
                         {item.url ? (

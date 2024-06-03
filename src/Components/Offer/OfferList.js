@@ -39,7 +39,6 @@ export default function OfferList({ type }) {
         if (selectedStudyLevel) {
             sl = `&study_level=${selectedStudyLevel}`
         }
-        console.log(`${process.env.REACT_APP_API_URL}/api/offers?type=${type}${d}${jp}${sl}&order[${name}]=${value}`)
 
         fetch(`${process.env.REACT_APP_API_URL}/api/offers?type=${type}${d}${jp}${sl}&order[${name}]=${value}`, {
             method: "GET",
