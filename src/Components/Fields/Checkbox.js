@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import checkboxChecked from "../../Images/Icons/checkbox-checked.svg";
-const Checkbox = ({ label, checked, onChange }) => {
+const Checkbox = ({ label, checked, name, value, activeCheckEvent, onChange }) => {
   const [isChecked, setIsChecked] = useState(checked);
 
   useEffect(() => {
@@ -8,7 +8,9 @@ const Checkbox = ({ label, checked, onChange }) => {
   }, [checked]);
 
   const handleCheckboxChange = () => {
-    setIsChecked(!isChecked);
+    if(activeCheckEvent) {
+      setIsChecked(!isChecked)
+    }
     onChange(!isChecked);
   };
 
@@ -19,6 +21,8 @@ const Checkbox = ({ label, checked, onChange }) => {
         checked={isChecked} 
         onChange={handleCheckboxChange} 
         className="hidden" 
+        name={name? name : ''}
+        value={value? value : ''}
       />
       <div className={`w-6 h-6 flex items-center justify-center rounded bg-blue-600 ${isChecked ? 'bg-blue-600' : 'bg-gray-200'}`}>
         {isChecked && (

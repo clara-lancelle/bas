@@ -298,10 +298,10 @@ export default function OfferApply() {
                         </div>
                         <div className="flex gap-x-[52px] text-grey-dark">
                             <div className="flex gap-x-[10px]">
-                                <Checkbox label={'J’ai le permis de conduire'} checked={false} onChange={(isChecked) => handleCheckboxChange('hasDrivingLicense', isChecked)} />
+                                <Checkbox label={'J’ai le permis de conduire'} checked={false} activeCheckEvent={true} onChange={(isChecked) => handleCheckboxChange('hasDrivingLicense', isChecked)} />
                             </div>
                             <div className="flex gap-x-[10px]">
-                                <Checkbox label={'J’ai une forme de handicap'} checked={false} onChange={(isChecked) => handleCheckboxChange('isHandicap', isChecked)} />
+                                <Checkbox label={'J’ai une forme de handicap'} checked={false} activeCheckEvent={true} onChange={(isChecked) => handleCheckboxChange('isHandicap', isChecked)} />
                             </div>
                         </div>
                     </div>
@@ -352,7 +352,7 @@ export default function OfferApply() {
                             <RichTextEditor name="motivations" className="border-white-light border p-4 h-[150px]" editorState={editorState} setEditorState={setEditorState}></RichTextEditor>
                         </div>
                         <div className="flex items-center gap-x-[10px] pt-8 border-t mb-8">
-                            <Checkbox label={'Créer mon compte membre pour éviter de ressaisir ces informations la fois prochaine'} checked={false} onChange={(isChecked) => handleCheckboxChange('isCreateAccount', isChecked)} />
+                            <Checkbox label={'Créer mon compte membre pour éviter de ressaisir ces informations la fois prochaine'} checked={false} activeCheckEvent={true} onChange={(isChecked) => handleCheckboxChange('isCreateAccount', isChecked)} />
                         </div>
                         <button className="w-full btn-blue-dark">Postuler</button>
                     </div>

@@ -30,13 +30,13 @@ export default function OfferList({ type }) {
         let d = ''
         let jp = ''
         let sl = ''
-        if (selectedDuration) {
+        if (selectedDuration && selectedDuration.length !== 0) {
             d = `&duration=${selectedDuration}`
         }
-        if (selectedJobProfile) {
+        if (selectedJobProfile && selectedJobProfile.length !== 0) {
             jp = `&job_profiles=${selectedJobProfile}`
         }
-        if (selectedStudyLevel) {
+        if (selectedStudyLevel && selectedStudyLevel.length !== 0) {
             sl = `&study_level=${selectedStudyLevel}`
         }
 
