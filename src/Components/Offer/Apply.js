@@ -155,7 +155,12 @@ export default function OfferApply() {
             console.error('EditorState is null');
         }
 
-        console.log(formData)
+        // Call API en post pour envoyer les data dans la table référençant les postulations
+        // console.log(formData)
+        // Une fois le call API terminé
+        if(formData.isCreateAccount){
+            navigate("/finaliser-inscription", { state: { formData: formData } });
+        }
     };
     
     const handleGoBack = () => {
@@ -208,8 +213,8 @@ export default function OfferApply() {
                                             <div className="pr-2 border-r">
                                                 <span className="text-blue-dark tag-contract">{offer.type}</span>
                                             </div>
-                                            {offer.job_profiles?.map((profile) => (
-                                                <JobProfiles profile={profile} />
+                                            {offer.job_profiles?.map((profile, index) => (
+                                                <JobProfiles key={index} profile={profile} />
                                             ))}
                                         </div>
                                     </div>

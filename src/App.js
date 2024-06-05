@@ -9,7 +9,8 @@ import OfferApply from './Components/Offer/Apply';
 import './index.css';
 import { Routes, Route } from "react-router-dom";
 import OfferList from './Components/Offer/OfferList';
-import SignIn from './Components/Account/SignIn';
+import SignIn from './Components/Authentication/SignIn';
+import SignInCompletion from './Components/Authentication/SignInCompletion';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/entreprises" element={<CompanyList />} />
         <Route path="/entreprise/:id" element={<CompanyDetail />} />
         <Route path="/inscription" element={<SignIn />} />
+        <Route path="/finaliser-inscription" element={<SignInCompletion />} />
       </Routes>
       <Footer />
     </>
