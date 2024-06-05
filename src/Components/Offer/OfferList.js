@@ -81,7 +81,7 @@ export default function OfferList({ type }) {
                         </div>
                         <div>
                             <span className="text-gray-dark opacity-70">Trier par :</span>
-                            <select className="border-r pr-2 font-medium" value={selectedSort}
+                            <select className="border-r pr-2 font-medium cursor-pointer bg-transparent" value={selectedSort}
                                 onChange={e => (setSelectedSort(e.target.value))}>
                                 <option value={1}>Date de publication (plus récente)</option>
                                 <option value={2}>Date de publication (plus ancienne)</option>

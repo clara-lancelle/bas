@@ -78,7 +78,7 @@ export default function CompanyList() {
                         </div>
                         <div>
                             <span className="text-grey-dark opacity-70">Trier par :</span>
-                            <select className="border-r pr-2 font-medium" value={selectedSort}
+                            <select className="border-r pr-2 font-medium cursor-pointer bg-transparent" value={selectedSort}
                                 onChange={e => (setSelectedSort(e.target.value))}>
                                 <option value={1}>Nom (A-Z)</option>
                                 <option value={2}>Nom (Z-A)</option>
