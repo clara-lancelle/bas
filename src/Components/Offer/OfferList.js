@@ -99,7 +99,17 @@ export default function OfferList({ type }) {
                                     <img alt={`${companyName} image`} src={`${process.env.REACT_APP_API_URL}/assets/images/companies/${picto_image}`} className="w-16 h-16 object-contain"></img>
                                     <div className="ms-6">
                                         <h3 className="mb-2 font-semibold text-xl">{name}</h3>
-                                        <p className="mb-2"><span className="font-bold">{companyName}</span> • {city} • Du {start_date} au {end_date} ({calculatedDuration} jours)</p>
+                                        <p className="mb-2 block">
+                                            <span className="font-bold">{companyName}</span>
+                                            • {city} • Du {start_date} au {end_date} ({calculatedDuration} jours)
+                                            {type == 'Stage' && Number(calculatedDuration) > 44 && (
+                                                <span className="text-[#FF007A] items-center flex gap-x-2">
+                                                    <span className="block bg-[#FF007A] rounded h-[10px] w-[10px]"></span>
+                                                    Rémunéré
+                                                </span>
+                                            )}
+
+                                        </p>
                                         <div className="flex items-center">
                                             <span className="text-blue-dark tag-contract">{type}</span>
                                             <div className="border-l pl-2 flex justify-between ml-1 gap-x-2">
@@ -113,7 +123,7 @@ export default function OfferList({ type }) {
                                 <div className="w-1/5">
                                     <div className="flex flex-col">
                                         <div className="flex items-center justify-center btn-blue-dark mb-4">
-                                            <Link to={`/offre/${id}`} state={{offerId: id}}>En savoir plus</Link>
+                                            <Link to={`/offre/${id}`} state={{ offerId: id }}>En savoir plus</Link>
                                         </div>
                                         <ProgressBar limitDays={calculatedLimitDays} />
                                         <span className="text-xs">Reste {calculatedLimitDays} jours pour postuler</span>
