@@ -20,7 +20,6 @@ export default function CompanyList() {
     ]
     const setters = {
         setSelectedActivity, selectedActivity, selectedCategory, setSelectedCategory, selectedWorkforce, setSelectedWorkforce
-
     }
 
     useEffect(() => {
@@ -28,16 +27,15 @@ export default function CompanyList() {
         let a = ''
         let c = ''
         let w = ''
-        if (selectedWorkforce) {
+        if (selectedWorkforce && selectedWorkforce.length !== 0) {
             w = `&workforce_range=${selectedWorkforce}`
         }
-        if (selectedActivity) {
+        if (selectedActivity && selectedActivity.length !== 0) {
             a = `&activity=${selectedActivity}`
         }
-        if (selectedCategory) {
+        if (selectedCategory && selectedCategory.length !== 0) {
             c = `&category=${selectedCategory}`
         }
-
         fetch(`${process.env.REACT_APP_API_URL}/api/companies?${w}${a}${c}&order[${name}]=${value}`, {
             method: "GET",
         })
