@@ -30,7 +30,6 @@ export default function SignIn() {
 
     const handleSubmitSignIn = (event) => {
         event.preventDefault();
-        console.log()
     }
 
     return (
@@ -50,12 +49,16 @@ export default function SignIn() {
 
             <div className="bg-white m-10">
                 <div className="container flex flex-col items-center">
-                    <h2 className="text-5xl font-semibold text-grey-dark leading-110">Inscription</h2>
-                    <form className="flex flex-col justify-center gap-y-4 max-w-[400px] w-full">
-                        <label className="flex flex-col justify-start">Prénom<input className="border" type={'text'} name={'firstname'} onChange={handleChange}></input></label>
-                        <label className="flex flex-col justify-start">Nom<input className="border" type={'text'} name={'lastname'} onChange={handleChange}></input></label>
-                        <label className="flex flex-col justify-start">E-mail<input className="border" type={'email'} name={'email'} onChange={handleChange}></input></label>
-                        <label className="flex flex-col justify-start">Mot de passe<input className="border" type={'password'} name={'password'} onChange={handleChange}></input></label>
+                    <h2 className="text-3xl font-semibold text-grey-dark leading-110">Inscription</h2>
+                    <form className="mt-4 flex flex-col justify-center gap-y-8 max-w-[800px] w-full">
+                        <div className="flex justify-between gap-x-8">
+                            <label className="flex flex-col justify-start w-full gap-y-2">Prénom<input className="border input-apply" type={'text'} name={'firstname'} onChange={handleChange}></input></label>
+                            <label className="flex flex-col justify-start w-full gap-y-2">Nom<input className="border input-apply" type={'text'} name={'lastname'} onChange={handleChange}></input></label>
+                        </div>
+                        <div className="flex justify-between gap-x-8">
+                            <label className="flex flex-col justify-start w-full gap-y-2">E-mail<input className="border input-apply" type={'email'} name={'email'} onChange={handleChange}></input></label>
+                            <label className="flex flex-col justify-start w-full gap-y-2">Mot de passe<input className="border input-apply" type={'password'} name={'password'} onChange={handleChange}></input></label>
+                        </div>
                         <button className="btn-blue-dark" onClick={handleSubmitSignIn}>Créer mon compte</button>
                     </form>
                 </div>
