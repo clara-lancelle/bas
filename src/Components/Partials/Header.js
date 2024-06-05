@@ -46,7 +46,7 @@ export default function Header() {
                     </div>
                     <div className="border h-3/4"></div>
                     <div className="flex items-center btn-blue-dark h-3/4">
-                        <Link to="/">Créer un compte</Link>
+                        <Link to="/inscription">Créer un compte</Link>
                     </div>
                 </div>
             </div>

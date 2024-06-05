@@ -9,6 +9,7 @@ import OfferApply from './Components/Offer/Apply';
 import './index.css';
 import { Routes, Route } from "react-router-dom";
 import OfferList from './Components/Offer/OfferList';
+import SignIn from './Components/Account/SignIn';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/offres/alternance" element={<OfferList type={"Alternance"} />} />
         <Route path="/entreprises" element={<CompanyList />} />
         <Route path="/entreprise/:id" element={<CompanyDetail />} />
+        <Route path="/inscription" element={<SignIn />} />
       </Routes>
       <Footer />
     </>
