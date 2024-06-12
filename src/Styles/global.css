@@ -105,3 +105,23 @@
     border: 1px solid var(--main-white-light);
     height: 50px;
 }
+
+.list-style-logo {
+    list-style-type: none; 
+}
+
+.list-style-logo li {
+    position: relative;
+    padding-left: 20px; 
+    margin-bottom : 15px;
+}
+
+.list-style-logo li::before {
+    content: "";
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    margin-right: 10px;
+    background: url('../Images/Icons/logo-sm.png') no-repeat center center;
+    background-size: contain;
+}

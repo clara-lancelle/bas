@@ -6,6 +6,9 @@ import './header.css';
 import logo from '../../Images/logo.svg';
 
 export default function Header() {
+    function handleSignIn() {
+        
+    }
     return (
         <header className="p-3 pb-0 bg-grey h-20">
             <div className='flex items-center justify-between container h-full'>
@@ -45,8 +48,8 @@ export default function Header() {
                         <Link to="/" className="text-blue-dark">Se connecter</Link>
                     </div>
                     <div className="border h-3/4"></div>
-                    <div className="flex items-center btn-blue-dark h-3/4">
-                        <Link to="/inscription">Créer un compte</Link>
+                    <div className="flex items-center h-3/4">
+                        <button className="btn-blue-dark" onClick={handleSignIn()}>Créer un compte</button>
                     </div>
                 </div>
             </div>
