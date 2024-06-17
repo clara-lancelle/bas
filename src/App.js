@@ -11,6 +11,7 @@ import { Routes, Route } from "react-router-dom";
 import OfferList from './Components/Offer/OfferList';
 import SignIn from './Components/Authentication/SignIn';
 import SignInCompletion from './Components/Authentication/SignInCompletion';
+import Connection from './Components/Connection';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
         <Route path="/inscription" element={<SignIn />} />
         <Route path="/finaliser-inscription" element={<SignInCompletion />} />
       </Routes>
+      <Connection />
       <Footer />
     </>
   );
