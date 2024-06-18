@@ -37,16 +37,6 @@ export default function SignIn() {
         }
     }, [location.state])
 
-    // const handleSignInChoice = (type) => {
-    //     if (type == "company") {
-    //         setCompanyForm(true)
-    //     } else {
-    //         setStudentForm(true)
-
-    //     }
-    //     console.log(type)
-    // }
-
     if (formChoice) {
         return (
             <>

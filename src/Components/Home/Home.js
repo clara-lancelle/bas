@@ -13,14 +13,31 @@ export default function Home() {
     const [lastOffers, setLastOffers] = useState([])
     const [lastRequests, setLastRequests] = useState([])
 
+    // useEffect(() => {
+    //     fetch(`${REACT_APP_API_URL}/api/offers/count`, {
+    //         method: "GET",
+    //     })
+    //         .then(response => response.json())
+    //         .then(response => setOfferCount({ ...response }))
+    //         .catch(err => console.error(err));
+    // }, [REACT_APP_API_URL])
+
     useEffect(() => {
-        fetch(`${REACT_APP_API_URL}/api/offers/count`, {
-            method: "GET",
-        })
-            .then(response => response.json())
-            .then(response => setOfferCount({ ...response }))
-            .catch(err => console.error(err));
-    }, [REACT_APP_API_URL])
+        const fetchOfferCount = async () => {
+            try {
+                const response = await fetch(`${REACT_APP_API_URL}/api/offers/count`);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                setOfferCount(data.count);
+            } catch (error) {
+                console.error('Failed to fetch', error);
+            }
+        };
+
+        fetchOfferCount();
+    }, []);
 
     useEffect(() => {
         fetch(`${REACT_APP_API_URL}/api/companies/mostOffersList`, {

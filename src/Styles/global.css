@@ -125,3 +125,20 @@
     background: url('../Images/Icons/logo-sm.png') no-repeat center center;
     background-size: contain;
 }
+
+.ReactModal__Overlay {
+    background-color: rgba(0, 0, 0, 0.75) !important;
+}
+
+.required-field span{
+    position: relative;
+    width: fit-content;
+}
+
+.required-field span::after{
+    content: '*';
+    color: red;
+    position: absolute;
+    right: -10px;
+    top : 0;
+}
