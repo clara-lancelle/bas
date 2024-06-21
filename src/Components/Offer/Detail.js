@@ -76,7 +76,7 @@ export default function OfferDetail() {
 
         fetchData();
     }, [REACT_APP_API_URL, location.state.offerId]);
-
+    console.log(company)
     const scrollToTop = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
@@ -117,7 +117,7 @@ export default function OfferDetail() {
                                     </div>
 
                                     <div className="flex items-center text-white font-bold bg-blue-dark">
-                                        <Link to="postuler" className="px-14 py-4" state={{offerId: offer.id}}>Postuler</Link>
+                                        <Link to="postuler" className="px-14 py-4" state={{ offerId: offer.id }}>Postuler</Link>
                                     </div>
                                 </div>
                             </div>
@@ -206,18 +206,25 @@ export default function OfferDetail() {
 
             <div className="mt-18 flex container">
                 <div className="w-1/2 mr-11">
-                    <Link to={`/entreprise/${company.id}`} state={{companyId: company.id}}><img alt={`${company.name} image`} src={`${process.env.REACT_APP_API_URL}/assets/images/companies/${company.large_image}`} className="max-w-full mb-8"></img></Link>
+                    <Link to={`/entreprise/${company.id}`} state={{ companyId: company.id }}><img alt={`${company.name} image`} src={`${process.env.REACT_APP_API_URL}/assets/images/companies/${company.large_image}`} className="max-w-full mb-8"></img></Link>
                     <p className="mb-8">
                         {company.description}
                     </p>
-                    <Link to={`/entreprise/${company.id}`} state={{companyId: company.id}} className="text-blue-dark flex items-center font-semibold mt-6">En savoir plus sur {company.name} <img src={arrowRight} className="ms-2" /></Link>
+                    <Link to={`/entreprise/${company.id}`} state={{ companyId: company.id }} className="text-blue-dark flex items-center font-semibold mt-6">En savoir plus sur {company.name} <img src={arrowRight} className="ms-2" /></Link>
                 </div>
                 <div className="w-1/2 flex justify-between">
-                    <div className="w-1/3 flex flex-col gap-y-4 mr-4">
-                        <img src={tempCompanyImg} className="w-full max-h-[130px]"></img>
-                        <img src={tempCompanyImg} className="w-full max-h-[130px]"></img>
-                        <img src={tempCompanyImg} className="w-full max-h-[130px]"></img>
-                    </div>
+                    {company.companyImages && company.companyImages.length >= 3 && (
+                        <div className="w-1/3 flex flex-col gap-y-4 mr-4">
+                            {company.companyImages.slice(0, 3).map((image, index) => (
+                                <img
+                                    key={image['@id']}
+                                    src={`${process.env.REACT_APP_API_URL}/assets/images/companies/${image.path}`}
+                                    className="w-full max-h-[130px]"
+                                    alt={image.name}
+                                />
+                            ))}
+                        </div>
+                    )}
                     <div className="w-2/3">
                         <img src={tempCompanyMap} className="h-[422px] object-cover"></img>
                     </div>
