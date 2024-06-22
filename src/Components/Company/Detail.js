@@ -77,7 +77,6 @@ export default function CompanyDetail() {
     };
 
     const companyAge = getCompanyAge(company.creation_date)
-console.log(company)
     return (
         <>
             <div className="bg-light-grey">

@@ -71,7 +71,7 @@ export default function OfferDetail() {
 
         fetchData();
     }, [REACT_APP_API_URL, location.state.offerId]);
-    console.log(company)
+
     const scrollToTop = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
