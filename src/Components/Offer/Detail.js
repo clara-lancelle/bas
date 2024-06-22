@@ -188,7 +188,7 @@ export default function OfferDetail() {
                         </div>
                     </div>
 
-                    <div className="py-10 border-b">
+                    <div className="py-10">
                         <h2 className="text-blue-dark text-2xl font-semibold mb-6">Compétences recherchées</h2>
                         <div className="flex flex-wrap justify-start gap-2">
                             {offer.skills.map((skill) => (

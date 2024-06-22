@@ -24,6 +24,7 @@ import SocialLinks from "../SocialLinks/SocialLinks";
 export default function CompanyDetail() {
 
     const [company, setCompany] = useState([])
+    const [apprenticeshipOffers, setApprenticeshipOffers] = useState([])
     const [internshipOffers, setInternshipOffers] = useState([])
     const [loading, setLoading] = useState(true)
     const { REACT_APP_API_URL } = process.env;
@@ -37,7 +38,11 @@ export default function CompanyDetail() {
                 const companyData = await companyResponse.json();
                 setCompany(companyData);
 
-                const internshipOffersResponse = await fetch(`${REACT_APP_API_URL}/api/offers?order[created_at]=asc}`);
+                const apprenticeshipOffersResponse = await fetch(`${REACT_APP_API_URL}/api/offers?type=Alternance&order[created_at]=asc}`);
+                const apprenticeshipOffersData = await apprenticeshipOffersResponse.json()
+                setApprenticeshipOffers(apprenticeshipOffersData['hydra:member'] || []);
+                
+                const internshipOffersResponse = await fetch(`${REACT_APP_API_URL}/api/offers?type=Stage&order[created_at]=asc}`);
                 const internshipOffersData = await internshipOffersResponse.json()
                 setInternshipOffers(internshipOffersData['hydra:member'] || []);
 
@@ -225,7 +230,7 @@ console.log(company)
 
                     <h2 className="text-[32px] font-semibold text-grey-dark leading-110 mt-13">Offres d'alternance proposées</h2>
                     <div className="mt-12 mb-18 offer-container">
-                        {internshipOffers?.slice(0, 4)?.map(({ company: { picto_image, name: companyName, city, ...rest }, type, id, description, name, job_profiles, ...items }) => (
+                        {apprenticeshipOffers?.slice(0, 4)?.map(({ company: { picto_image, name: companyName, city, ...rest }, type, id, description, name, job_profiles, ...items }) => (
                             <Link to={`/offre/${id}`} state={{ offerId: id }} key={id} className="offer-card border h-[283px] overflow-hidden justify-between flex flex-col">
                                 <div>
                                     <h3 className="font-semibold text-[18px]">{name}</h3>{/* Intitulé du poste */}
