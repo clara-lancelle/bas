@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Ariane from '../Partials/Ariane';
-import JobProfiles from "../JobProfiles/JobProfiles";
 import CompanyDetailPictures from './CompanyDetailPictures';
+import JobProfiles from "../JobProfiles/JobProfiles";
+import MapComponent from '../Partials/MapComponent'
 import arrowRight from '../../Images/Icons/arrow-right-dark.svg'
 import check from '../../Images/Icons/check-rounded.svg'
 import fire from '../../Images/Icons/fire.svg'
@@ -17,24 +18,17 @@ import mail from '../../Images/Icons/mail-blue.svg'
 import mwLogo from '../../Images/Company/mw-logo-large.png'
 import mwPicture from '../../Images/Temp/company-1.png'
 import './companyList.css';
+import SocialLinks from "../SocialLinks/SocialLinks";
 
 
 export default function CompanyDetail() {
 
     const [company, setCompany] = useState([])
+    const [apprenticeshipOffers, setApprenticeshipOffers] = useState([])
     const [internshipOffers, setInternshipOffers] = useState([])
     const [loading, setLoading] = useState(true)
     const { REACT_APP_API_URL } = process.env;
     const location = useLocation();
-
-    // Temporaire, le temps d'ajouter la gallerie photo d'une entreprise en base de données
-    const pictures = [
-        { url: mwPicture },
-        { url: mwPicture },
-        { url: mwPicture },
-        { url: mwPicture },
-        { url: mwPicture },
-    ]
 
     useEffect(() => {
         const fetchData = async () => {
@@ -44,7 +38,11 @@ export default function CompanyDetail() {
                 const companyData = await companyResponse.json();
                 setCompany(companyData);
 
-                const internshipOffersResponse = await fetch(`${REACT_APP_API_URL}/api/offers?order[created_at]=asc}`);
+                const apprenticeshipOffersResponse = await fetch(`${REACT_APP_API_URL}/api/offers?type=Alternance&order[created_at]=asc}`);
+                const apprenticeshipOffersData = await apprenticeshipOffersResponse.json()
+                setApprenticeshipOffers(apprenticeshipOffersData['hydra:member'] || []);
+                
+                const internshipOffersResponse = await fetch(`${REACT_APP_API_URL}/api/offers?type=Stage&order[created_at]=asc}`);
                 const internshipOffersData = await internshipOffersResponse.json()
                 setInternshipOffers(internshipOffersData['hydra:member'] || []);
 
@@ -79,7 +77,6 @@ export default function CompanyDetail() {
     };
 
     const companyAge = getCompanyAge(company.creation_date)
-
     return (
         <>
             <div className="bg-light-grey">
@@ -92,51 +89,55 @@ export default function CompanyDetail() {
                     <div className="mt-8 mb-6">
                         <h1 className="text-5xl font-bold text-grey-dark">{company.name}</h1>
                         {company.website_url ?
-                            <Link to={company.website_url} target="_blank" className="bg-white px-3 py-2 mt-4 text-blue-dark font-semibold flex items-center w-fit rounded-md"><span>mentalworks.fr</span><img src={arrowRight} className="ms-4 text-blue-dark" width="16px" style={{ fill: '#4640DE' }}></img></Link>
+                            <Link to={company.website_url} target="_blank" className="bg-white px-3 py-2 mt-4 text-blue-dark font-semibold flex items-center w-fit rounded-md"><span>Site web de l'entreprise</span><img src={arrowRight} className="ms-4 text-blue-dark" width="16px" style={{ fill: '#4640DE' }}></img></Link>
                             : ''}
                     </div>
                     <div className="flex gap-10 justify-start">
-                        <div className="flex gap-4">
+                        <div className="flex items-start gap-4">
                             <div className="bg-white rounded-3xl flex items-center justify-center p-3">
                                 <img src={check} width="24" />
                             </div>
                             <div className="flex flex-col justify-between">
-                                <span>Activité</span>
-                                <span className="font-semibold">{company.activity.name}</span>
+                                <span>Activités</span>
+                                <div className="flex flex-col gap-x-2">
+                                    {company.activities.map((activity) => (
+                                        <span className="font-semibold" key={activity.name}>{activity.name}</span>
+                                    ))}
+                                </div>
                             </div>
                         </div>
-                        <div className="flex gap-4">
+                        <div className="flex items-start gap-4">
                             <div className="bg-white rounded-3xl flex items-center justify-center p-3">
                                 <img src={fire} width="24" />
                             </div>
-                            <div className="flex flex-col justify-between">
+                            <div className="flex flex-col justify-start">
                                 <span>Ancienneté</span>
                                 <span className="font-semibold">{companyAge}</span>
                             </div>
                         </div>
-                        <div className="flex gap-4">
+                        <div className="flex items-start gap-4">
                             <div className="bg-white rounded-3xl flex items-center justify-center p-3">
                                 <img src={users} width="24" />
                             </div>
-                            <div className="flex flex-col justify-between">
+                            <div className="flex flex-col justify-start">
                                 <span>Effectifs</span>
                                 <span className="font-semibold">{company.workforce}</span>
                             </div>
                         </div>
-                        <div className="flex gap-4">
+                        <div className="flex items-start gap-4">
                             <div className="bg-white rounded-3xl flex items-center justify-center p-3">
                                 <img src={cash} width="24" />
                             </div>
-                            <div className="flex flex-col justify-between">
+                            <div className="flex flex-col justify-start">
                                 <span>Chiffre d'affaire</span>
                                 <span className="font-semibold">1,2 M€</span>{/* A ajouter en base */}
                             </div>
                         </div>
-                        <div className="flex gap-4">
+                        <div className="flex items-start gap-4">
                             <div className="bg-white rounded-3xl flex items-center justify-center p-3">
                                 <img src={mapPoint} width="24" />
                             </div>
-                            <div className="flex flex-col justify-between">
+                            <div className="flex flex-col justify-start">
                                 <span>Situation</span>
                                 <span className="font-semibold">{company.city} ({company.zip_code})</span>
                             </div>
@@ -154,50 +155,41 @@ export default function CompanyDetail() {
                     <div className="mb-10">
                         <h2 className="font-semibold mb-6 text-3xl">Réseaux sociaux</h2>
                         <div className="flex gap-4 justify-start">
-                            <Link to="https://linkedin.com" className="border border-blue-dark p-2 flex gap-3 text-blue-dark items-center">
-                                <img src={linkedin} width="24px"></img>
-                                <span>linkedin.com</span>
-                            </Link>
-                            <Link to="https://twitter.com" className="border border-blue-dark p-2 flex gap-3 text-blue-dark items-center">
-                                <img src={twitter} width="24px"></img>
-                                <span>twitter.com</span>
-                            </Link>
-                            <Link to="https://facebook.com" className="border border-blue-dark p-2 flex gap-3 text-blue-dark items-center">
-                                <img src={facebook} width="24px"></img>
-                                <span>facebook.com</span>
-                            </Link>
-                            <Link to="https://instagram.com" className="border border-blue-dark p-2 flex gap-3 text-blue-dark items-center">
-                                <img src={instagram} width="24px"></img>
-                                <span>Instagram</span>
-                            </Link>
+                            <SocialLinks links={company.socialLinks} />
                         </div>
                     </div>
 
-                    <div className="">
-                        <CompanyDetailPictures pictures={pictures} />
+                    <div>
+                        <CompanyDetailPictures pictures={company.companyImages} />
                     </div>
                 </div>
 
                 <div className="w-1/3">
-                    <img src={`${process.env.REACT_APP_API_URL}/assets/images/companies/${company.large_image}`} className="max-w-full max-h-[80px] mb-10" />
+                    <img src={`${REACT_APP_API_URL}/assets/images/companies/${company.large_image}`} className="max-w-full max-h-[80px] mb-10" />
                     <div className="mb-4">
                         <h2 className="text-[32px] font-semibold mb-4 text-grey-dark">Situation</h2>
                         <div className="flex flex-col opacity-70">
                             <span className="font-bold">{company.name}</span>
                             <span>{company.adress}</span>
-                            <span>Bâtiment Millenium</span>{/* Comp. adresse de l'entreprise a ajouter en base de données */}
+                            {company.additional_address && ( <span>{company.additional_address}</span> )}
                             <span>{company.zip_code} {company.city}</span>
                         </div>
                     </div>
-                    <div className="pb-4 mb-10 border-b">
-                        <Link to="#" state={{ companyId: company.id }} className="text-blue-dark flex items-center font-semibold mb-2">Voir sur la carte <img src={arrowRight} className="ms-2" /></Link>
-                        {/* Composant map une fois l'adresse obtenue */}
+                    <div className="pb-4 mb-10 border-b flex flex-col gap-y-4">
+                        <MapComponent
+                            name={company.name}
+                            address={company.address}
+                            city={company.city}
+                            postalCode={company.zip_code}
+                            isMapUrl={true}
+                            className="h-[420px]"
+                        />
                     </div>
                     <div className="mb-10 pb-10 border-b">
                         <h2 className="text-[32px] font-semibold mb-4 text-grey-dark">Nous joindre</h2>
                         <div className="flex flex-col opacity-70">
-                            <span>Téléphone: {company.phone_num}</span>{/* Téléphone */}
-                            <span>Du lundi au vendredi de 8h30 à 18h30</span>{/* Horaires */}
+                            <span>Téléphone: {company.phone_num}</span>
+                            <span>{company.schedule}</span>
                         </div>
                         <Link to="#" state={{ companyId: company.id }} className="text-blue-dark flex items-center font-semibold mt-6">Nous envoyer un message <img src={arrowRight} className="ms-2" /></Link>
                     </div>
@@ -228,7 +220,7 @@ export default function CompanyDetail() {
                                 <p className="!max-h-16 opacity-50 text-md relative txt-elipsis">{description}</p>{/* Description de l'offre (raccourci a l'espace)*/}
                                 <div className="flex justify-start items-center flex-wrap gap-2">
                                     {job_profiles?.map((profile) => (
-                                        <JobProfiles profile={profile} />
+                                        <JobProfiles key={profile.name} profile={profile} />
                                     ))}
                                 </div>
                             </Link>
@@ -237,7 +229,7 @@ export default function CompanyDetail() {
 
                     <h2 className="text-[32px] font-semibold text-grey-dark leading-110 mt-13">Offres d'alternance proposées</h2>
                     <div className="mt-12 mb-18 offer-container">
-                        {internshipOffers?.slice(0, 4)?.map(({ company: { picto_image, name: companyName, city, ...rest }, type, id, description, name, job_profiles, ...items }) => (
+                        {apprenticeshipOffers?.slice(0, 4)?.map(({ company: { picto_image, name: companyName, city, ...rest }, type, id, description, name, job_profiles, ...items }) => (
                             <Link to={`/offre/${id}`} state={{ offerId: id }} key={id} className="offer-card border h-[283px] overflow-hidden justify-between flex flex-col">
                                 <div>
                                     <h3 className="font-semibold text-[18px]">{name}</h3>{/* Intitulé du poste */}
@@ -246,7 +238,7 @@ export default function CompanyDetail() {
                                 <p className="!max-h-16 opacity-50 text-md relative txt-elipsis">{description}</p>{/* Description de l'offre (raccourci a l'espace)*/}
                                 <div className="flex justify-start items-center flex-wrap gap-2">
                                     {job_profiles?.map((profile) => (
-                                        <JobProfiles profile={profile} />
+                                        <JobProfiles key={profile.name} profile={profile} />
                                     ))}
                                 </div>
                             </Link>

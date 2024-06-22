@@ -31,7 +31,7 @@ export default function CompanyList() {
             w = `&workforce_range=${selectedWorkforce}`
         }
         if (selectedActivity && selectedActivity.length !== 0) {
-            a = `&activity=${selectedActivity}`
+            a = `&activities=${selectedActivity}`
         }
         if (selectedCategory && selectedCategory.length !== 0) {
             c = `&category=${selectedCategory}`
@@ -87,7 +87,7 @@ export default function CompanyList() {
                     </div>
 
                     <div className="flex flex-wrap gap-6">
-                        {companies?.map(({ name, city, picto_image, id, description, offers, activity, ...items }) => (
+                        {companies?.map(({ name, city, picto_image, id, description, offers, activities, ...items }) => (
                             <Link to={`/entreprise/${id}`} state={{ companyId: id }} className="companyCard" key={name + id}>
                                 <div className="p-6 border border-white-light h-full">
                                     <div className="flex justify-between items-start">
@@ -110,8 +110,10 @@ export default function CompanyList() {
                                         <p className="font-semibold h-[80px] text-2xl mb-3">{name}</p>
                                         <p className="mb-3 h-[100px] overflow-hidden">{description}</p>
                                     </div>
-                                    <div className="mt-2">
+                                    <div className="mt-2 flex flex-wrap gap-2">
+                                        {activities.map((activity) => (
                                         <span className="px-3 py-2 border rounded-full border-green-400	text-green-400">{activity.name}</span>
+                                    ))}
                                     </div>
                                 </div>
                             </Link>
