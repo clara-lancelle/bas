@@ -212,7 +212,7 @@ export default function OfferDetail() {
                     </p>
                     <Link to={`/entreprise/${company.id}`} state={{ companyId: company.id }} className="text-blue-dark flex items-center font-semibold mt-6">En savoir plus sur {company.name} <img src={arrowRight} className="ms-2" /></Link>
                 </div>
-                <div className="w-1/2 flex justify-between">
+                <div className="w-1/2 flex justify-end">
                     {company.companyImages && company.companyImages.length >= 3 && (
                         <div className="w-1/3 flex flex-col gap-y-4 mr-4">
                             {company.companyImages.slice(0, 3).map((image, index) => (
