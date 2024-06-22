@@ -2,13 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Ariane from "../Partials/Ariane";
 import JobProfiles from "../JobProfiles/JobProfiles";
+import MapComponent from '../Partials/MapComponent'
 import ProgressBar from "../ProgressBar/ProgressBar";
 import Skill from "../Skill/Skill";
-import share from "../../Images/Icons/share.svg";
 import arrowRight from '../../Images/Icons/arrow-right-dark.svg'
-import mwLogo from '../../Images/Company/mw-logo-large.png'
-import tempCompanyImg from '../../Images/Temp/company-1.png'
-import tempCompanyMap from '../../Images/Temp/map.png'
+import share from "../../Images/Icons/share.svg";
 
 export default function OfferDetail() {
     const [internshipOffers, setInternshipOffers] = useState([])
@@ -52,12 +50,10 @@ export default function OfferDetail() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // Fetch the offer
                 const offerResponse = await fetch(`${REACT_APP_API_URL}/api/offers/${location.state.offerId}`);
                 const offerData = await offerResponse.json();
                 setOffer(offerData);
 
-                // Fetch the company using the company ID from the offer
                 const companyResponse = await fetch(`${REACT_APP_API_URL}/api/companies/${offerData.company.id}`);
                 const companyData = await companyResponse.json();
                 setCompany(companyData);
@@ -66,7 +62,6 @@ export default function OfferDetail() {
                 const internshipOffersData = await internshipOffersResponse.json()
                 setInternshipOffers(internshipOffersData['hydra:member'] || []);
 
-                // Set loading to false after all data is fetched
                 setLoading(false);
             } catch (error) {
                 console.error(error);
@@ -76,7 +71,7 @@ export default function OfferDetail() {
 
         fetchData();
     }, [REACT_APP_API_URL, location.state.offerId]);
-
+    console.log(company)
     const scrollToTop = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
@@ -117,7 +112,7 @@ export default function OfferDetail() {
                                     </div>
 
                                     <div className="flex items-center text-white font-bold bg-blue-dark">
-                                        <Link to="postuler" className="px-14 py-4" state={{offerId: offer.id}}>Postuler</Link>
+                                        <Link to="postuler" className="px-14 py-4" state={{ offerId: offer.id }}>Postuler</Link>
                                     </div>
                                 </div>
                             </div>
@@ -206,20 +201,33 @@ export default function OfferDetail() {
 
             <div className="mt-18 flex container">
                 <div className="w-1/2 mr-11">
-                    <Link to={`/entreprise/${company.id}`} state={{companyId: company.id}}><img alt={`${company.name} image`} src={`${process.env.REACT_APP_API_URL}/assets/images/companies/${company.large_image}`} className="max-w-full mb-8"></img></Link>
+                    <Link to={`/entreprise/${company.id}`} state={{ companyId: company.id }}><img alt={`${company.name} image`} src={`${process.env.REACT_APP_API_URL}/assets/images/companies/${company.large_image}`} className="max-w-full mb-8"></img></Link>
                     <p className="mb-8">
                         {company.description}
                     </p>
-                    <Link to={`/entreprise/${company.id}`} state={{companyId: company.id}} className="text-blue-dark flex items-center font-semibold mt-6">En savoir plus sur {company.name} <img src={arrowRight} className="ms-2" /></Link>
+                    <Link to={`/entreprise/${company.id}`} state={{ companyId: company.id }} className="text-blue-dark flex items-center font-semibold mt-6">En savoir plus sur {company.name} <img src={arrowRight} className="ms-2" /></Link>
                 </div>
-                <div className="w-1/2 flex justify-between">
-                    <div className="w-1/3 flex flex-col gap-y-4 mr-4">
-                        <img src={tempCompanyImg} className="w-full max-h-[130px]"></img>
-                        <img src={tempCompanyImg} className="w-full max-h-[130px]"></img>
-                        <img src={tempCompanyImg} className="w-full max-h-[130px]"></img>
-                    </div>
-                    <div className="w-2/3">
-                        <img src={tempCompanyMap} className="h-[422px] object-cover"></img>
+                <div className="w-1/2 flex justify-end">
+                    {company.companyImages && company.companyImages.length >= 3 && (
+                        <div className="w-1/3 flex flex-col gap-y-4 mr-4">
+                            {company.companyImages.slice(0, 3).map((image, index) => (
+                                <img
+                                    key={image['@id']}
+                                    src={`${process.env.REACT_APP_API_URL}/assets/images/companies/${image.path}`}
+                                    className="w-full h-[130px] object-cover"
+                                    alt={image.name}
+                                />
+                            ))}
+                        </div>
+                    )}
+                    <div className="w-2/3 h-[422px]">
+                        <MapComponent
+                            name={company.name}
+                            address={company.address}
+                            city={company.city}
+                            postalCode={company.zip_code}
+                            className="h-[422px]"
+                        />
                     </div>
                 </div>
             </div>
@@ -231,15 +239,15 @@ export default function OfferDetail() {
                         {internshipOffers?.slice(0, 8)?.map(({ company: { picto_image, name: companyName, city, ...rest }, type, id, description, name, job_profiles, ...items }) => (
                             <Link to={`/offre/${id}`} state={{ offerId: id }} key={id} onClick={scrollToTop()} className="bg-white offer-card border h-[283px] overflow-hidden justify-between flex flex-col">
                                 <div className="flex justify-between items-start">
-                                    <img alt={`${companyName} image`} src={`${REACT_APP_API_URL}/assets/images/companies/${picto_image}`} className="object-contain w-12 h-12" /> {/* Image de l'entreprise */}
-                                    <span className="text-blue-dark tag-contract">{type}</span> {/* Type de contrat */}
+                                    <img alt={`${companyName} image`} src={`${REACT_APP_API_URL}/assets/images/companies/${picto_image}`} className="object-contain w-12 h-12" />
+                                    <span className="text-blue-dark tag-contract">{type}</span>
                                 </div>
 
                                 <div className="my-2">
-                                    <h3 className="font-semibold text-[18px]">{name}</h3>{/* Intitulé du poste */}
-                                    <p className="offer-informations text-md text-wrap">{companyName} • {city}</p>{/* Nom de l'entreprise + Ville */}
+                                    <h3 className="font-semibold text-[18px]">{name}</h3>
+                                    <p className="offer-informations text-md text-wrap">{companyName} • {city}</p>
                                 </div>
-                                <p className="opacity-50 text-md relative txt-elipsis">{description}</p>{/* Description de l'offre */}
+                                <p className="opacity-50 text-md relative txt-elipsis">{description}</p>
                                 <div className="flex justify-start items-center flex-wrap gap-2">
                                     {job_profiles?.map((profile) => (
                                         <JobProfiles profile={profile} />
