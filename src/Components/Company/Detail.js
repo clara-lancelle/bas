@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Ariane from '../Partials/Ariane';
-import JobProfiles from "../JobProfiles/JobProfiles";
 import CompanyDetailPictures from './CompanyDetailPictures';
+import JobProfiles from "../JobProfiles/JobProfiles";
+import MapComponent from '../Partials/MapComponent'
 import arrowRight from '../../Images/Icons/arrow-right-dark.svg'
 import check from '../../Images/Icons/check-rounded.svg'
 import fire from '../../Images/Icons/fire.svg'
@@ -101,8 +102,12 @@ export default function CompanyDetail() {
                                 <img src={check} width="24" />
                             </div>
                             <div className="flex flex-col justify-between">
-                                <span>Activité</span>
-                                <span className="font-semibold">{company.activity.name}</span>
+                                <span>Activités</span>
+                                <div className="flex gap-x-2">
+                                    {company.activities.map((activity) => (
+                                        <span className="font-semibold" key={activity.name}>{activity.name}</span>
+                                    ))}
+                                </div>
                             </div>
                         </div>
                         <div className="flex gap-4">
@@ -173,7 +178,7 @@ export default function CompanyDetail() {
                         </div>
                     </div>
 
-                    <div className="">
+                    <div>
                         <CompanyDetailPictures pictures={pictures} />
                     </div>
                 </div>
@@ -185,13 +190,19 @@ export default function CompanyDetail() {
                         <div className="flex flex-col opacity-70">
                             <span className="font-bold">{company.name}</span>
                             <span>{company.adress}</span>
-                            <span>Bâtiment Millenium</span>{/* Comp. adresse de l'entreprise a ajouter en base de données */}
+                            <span>Bâtiment Millenium</span>
                             <span>{company.zip_code} {company.city}</span>
                         </div>
                     </div>
-                    <div className="pb-4 mb-10 border-b">
-                        <Link to="#" state={{ companyId: company.id }} className="text-blue-dark flex items-center font-semibold mb-2">Voir sur la carte <img src={arrowRight} className="ms-2" /></Link>
-                        {/* Composant map une fois l'adresse obtenue */}
+                    <div className="pb-4 mb-10 border-b flex flex-col gap-y-4">
+                        <MapComponent
+                            name={company.name}
+                            address={company.address}
+                            city={company.city}
+                            postalCode={company.zip_code}
+                            isMapUrl={true}
+                            className="h-[420px]"
+                        />
                     </div>
                     <div className="mb-10 pb-10 border-b">
                         <h2 className="text-[32px] font-semibold mb-4 text-grey-dark">Nous joindre</h2>
@@ -228,7 +239,7 @@ export default function CompanyDetail() {
                                 <p className="!max-h-16 opacity-50 text-md relative txt-elipsis">{description}</p>{/* Description de l'offre (raccourci a l'espace)*/}
                                 <div className="flex justify-start items-center flex-wrap gap-2">
                                     {job_profiles?.map((profile) => (
-                                        <JobProfiles profile={profile} />
+                                        <JobProfiles key={profile.name} profile={profile} />
                                     ))}
                                 </div>
                             </Link>
@@ -246,7 +257,7 @@ export default function CompanyDetail() {
                                 <p className="!max-h-16 opacity-50 text-md relative txt-elipsis">{description}</p>{/* Description de l'offre (raccourci a l'espace)*/}
                                 <div className="flex justify-start items-center flex-wrap gap-2">
                                     {job_profiles?.map((profile) => (
-                                        <JobProfiles profile={profile} />
+                                        <JobProfiles key={profile.name} profile={profile} />
                                     ))}
                                 </div>
                             </Link>

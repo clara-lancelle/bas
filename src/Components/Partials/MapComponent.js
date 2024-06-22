@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from "react-router-dom";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import arrowRight from '../../Images/Icons/arrow-right-dark.svg'
 
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -24,8 +26,9 @@ const MapUpdater = ({ location }) => {
   return null;
 };
 
-const MapComponent = ({ name, address, city, postalCode, apiKey }) => {
+const MapComponent = ({ name, address, city, postalCode, isMapUrl }) => {
   const [location, setLocation] = useState(null);
+  const [mapUrl, setMapUrl] = useState('');
   const { REACT_APP_LOCATION_IQ_API_KEY } = process.env;
 
   useEffect(() => {
@@ -45,6 +48,7 @@ const MapComponent = ({ name, address, city, postalCode, apiKey }) => {
             lat: parseFloat(location.lat),
             lon: parseFloat(location.lon)
           });
+          setMapUrl(`https://www.openstreetmap.org/?mlat=${location.lat}&mlon=${location.lon}#map=18/${location.lat}/${location.lon}`);
         } else {
           console.error('Aucune adresse pour :', query);
         }
@@ -57,25 +61,30 @@ const MapComponent = ({ name, address, city, postalCode, apiKey }) => {
   }, [address, city, postalCode, REACT_APP_LOCATION_IQ_API_KEY]);
 
   return (
-    <MapContainer
-      center={[48.8566, 2.3522]}
-      zoom={13}
-      style={{ height: "422px", width: "100%" }}
-    >
-      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
-      {location && (
-        <>
-          <Marker position={[location.lat, location.lon]}>
-            <Popup>
-              <b>{location.name}</b><br />
-              {location.address}<br />
-              {location.city}, {location.postalCode}
-            </Popup>
-          </Marker>
-          <MapUpdater location={location} />
-        </>
-      )}
-    </MapContainer>
+    <>
+    {isMapUrl && (
+      <Link to={mapUrl} target="_blank" className="text-blue-dark flex items-center font-semibold mb-2">Voir sur la carte <img src={arrowRight} className="ms-2" /></Link>
+    )}
+      <MapContainer
+        center={[48.8566, 2.3522]}
+        zoom={13}
+        style={{ height: "422px", width: "100%" }}
+      >
+        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+        {location && (
+          <>
+            <Marker position={[location.lat, location.lon]}>
+              <Popup>
+                <b>{location.name}</b><br />
+                {location.address}<br />
+                {location.city}, {location.postalCode}
+              </Popup>
+            </Marker>
+            <MapUpdater location={location} />
+          </>
+        )}
+      </MapContainer>
+    </>
   );
 };
 
