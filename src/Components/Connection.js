@@ -8,19 +8,19 @@ const Connection = () => {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                "email": "admin@test.com",
-                "password": "pass_1234"
+                "email": "student@test.com",
+                "password": "pass_student_1234"
             })
         })
             .then(response => response.json())
             .then(response => (
                 // get {token : tokenString} or {code: 401, message: 'Identifiants invalides.'}
+                console.log(response),
                 response.token && (setToken(response.token) && setMessage("")) || setMessage(response.message)
             ))
             .catch(err => console.error(err));
     }, [process.env.REACT_APP_API_URL])
-    console.log('token : ' + token)
-    console.log('message : ' + message)
+
     return (
         <div className='bg-light-grey text-blue-dark'>
             test connection
