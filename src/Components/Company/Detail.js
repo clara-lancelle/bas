@@ -38,14 +38,6 @@ export default function CompanyDetail() {
                 const companyData = await companyResponse.json();
                 setCompany(companyData);
 
-                const apprenticeshipOffersResponse = await fetch(`${REACT_APP_API_URL}/api/offers?type=Alternance&order[created_at]=asc}`);
-                const apprenticeshipOffersData = await apprenticeshipOffersResponse.json()
-                setApprenticeshipOffers(apprenticeshipOffersData['hydra:member'] || []);
-                
-                const internshipOffersResponse = await fetch(`${REACT_APP_API_URL}/api/offers?type=Stage&order[created_at]=asc}`);
-                const internshipOffersData = await internshipOffersResponse.json()
-                setInternshipOffers(internshipOffersData['hydra:member'] || []);
-
                 // Set loading to false after all data is fetched
                 setLoading(false);
             } catch (error) {
@@ -56,6 +48,24 @@ export default function CompanyDetail() {
 
         fetchData();
     }, [REACT_APP_API_URL, location.state.companyId]);
+
+    useEffect(() => {
+        const fetchOffers = async () => {
+            try {
+
+                const apprenticeshipOffersResponse = await fetch(`${REACT_APP_API_URL}/api/offers?company=${company.id}&type=Alternance&order[created_at]=asc}`);
+                const apprenticeshipOffersData = await apprenticeshipOffersResponse.json()
+                setApprenticeshipOffers(apprenticeshipOffersData['hydra:member'] || []);
+
+                const internshipOffersResponse = await fetch(`${REACT_APP_API_URL}/api/offers?company=${company.id}&type=Stage&order[created_at]=asc}`);
+                const internshipOffersData = await internshipOffersResponse.json()
+                setInternshipOffers(internshipOffersData['hydra:member'] || []);
+            } catch (error) {
+                console.error(error)
+            }
+        };
+        fetchOffers()
+    }, [company])
 
     if (loading) {
         return <p>Chargement...</p>;
@@ -171,7 +181,7 @@ export default function CompanyDetail() {
                         <div className="flex flex-col opacity-70">
                             <span className="font-bold">{company.name}</span>
                             <span>{company.adress}</span>
-                            {company.additional_address && ( <span>{company.additional_address}</span> )}
+                            {company.additional_address && (<span>{company.additional_address}</span>)}
                             <span>{company.zip_code} {company.city}</span>
                         </div>
                     </div>
@@ -207,45 +217,54 @@ export default function CompanyDetail() {
                 </div>
             </div>
 
-            <div className="mt-16 pb-20 pt-18 last-request-container">
-                <div className="container">
-                    <h2 className="text-[32px] font-semibold text-grey-dark leading-110">Offres de stage proposées</h2>
-                    <div className="mt-12 mb-18 offer-container">
-                        {internshipOffers?.slice(0, 4)?.map(({ company: { picto_image, name: companyName, city, ...rest }, type, id, description, name, job_profiles, ...items }) => (
-                            <Link to={`/offre/${id}`} state={{ offerId: id }} key={id} className="offer-card border h-[283px] overflow-hidden justify-between flex flex-col">
-                                <div>
-                                    <h3 className="font-semibold text-[18px]">{name}</h3>{/* Intitulé du poste */}
-                                    <p className="offer-informations text-md text-wrap">{companyName} • {city}</p>{/* Durée du stage */}
-                                </div>
-                                <p className="!max-h-16 opacity-50 text-md relative txt-elipsis">{description}</p>{/* Description de l'offre (raccourci a l'espace)*/}
-                                <div className="flex justify-start items-center flex-wrap gap-2">
-                                    {job_profiles?.map((profile) => (
-                                        <JobProfiles key={profile.name} profile={profile} />
+            {(internshipOffers.length > 0 || apprenticeshipOffers.length > 0) && (
+                <div className="mt-16 pb-20 pt-18 last-request-container">
+                    <div className="container">
+                        {internshipOffers.length > 0 &&
+                            <>
+                                <h2 className="text-[32px] font-semibold text-grey-dark leading-110">Offres de stage proposées</h2>
+                                <div className="mt-12 mb-18 offer-container">
+                                    {internshipOffers?.slice(0, 4)?.map(({ company: { picto_image, name: companyName, city, ...rest }, type, id, description, name, job_profiles, ...items }) => (
+                                        <Link to={`/offre/${id}`} state={{ offerId: id }} key={id} className="offer-card border h-[283px] overflow-hidden justify-between flex flex-col">
+                                            <div>
+                                                <h3 className="font-semibold text-[18px]">{name}</h3>
+                                                <p className="offer-informations text-md text-wrap">{companyName} • {city}</p>
+                                            </div>
+                                            <p className="!max-h-16 opacity-50 text-md relative txt-elipsis">{description}</p>
+                                            <div className="flex justify-start items-center flex-wrap gap-2">
+                                                {job_profiles?.map((profile) => (
+                                                    <JobProfiles key={profile.name} profile={profile} />
+                                                ))}
+                                            </div>
+                                        </Link>
                                     ))}
                                 </div>
-                            </Link>
-                        ))}
-                    </div>
-
-                    <h2 className="text-[32px] font-semibold text-grey-dark leading-110 mt-13">Offres d'alternance proposées</h2>
-                    <div className="mt-12 mb-18 offer-container">
-                        {apprenticeshipOffers?.slice(0, 4)?.map(({ company: { picto_image, name: companyName, city, ...rest }, type, id, description, name, job_profiles, ...items }) => (
-                            <Link to={`/offre/${id}`} state={{ offerId: id }} key={id} className="offer-card border h-[283px] overflow-hidden justify-between flex flex-col">
-                                <div>
-                                    <h3 className="font-semibold text-[18px]">{name}</h3>{/* Intitulé du poste */}
-                                    <p className="offer-informations text-md text-wrap">{companyName} • {city}</p>{/* Durée du stage */}
-                                </div>
-                                <p className="!max-h-16 opacity-50 text-md relative txt-elipsis">{description}</p>{/* Description de l'offre (raccourci a l'espace)*/}
-                                <div className="flex justify-start items-center flex-wrap gap-2">
-                                    {job_profiles?.map((profile) => (
-                                        <JobProfiles key={profile.name} profile={profile} />
-                                    ))}
-                                </div>
-                            </Link>
-                        ))}
+                            </>
+                        }
+                        {apprenticeshipOffers.length > 0 &&
+                            <>
+                        <h2 className="text-[32px] font-semibold text-grey-dark leading-110 mt-13">Offres d'alternance proposées</h2>
+                        <div className="mt-12 mb-18 offer-container">
+                            {apprenticeshipOffers?.slice(0, 4)?.map(({ company: { picto_image, name: companyName, city, ...rest }, type, id, description, name, job_profiles, ...items }) => (
+                                <Link to={`/offre/${id}`} state={{ offerId: id }} key={id} className="offer-card border h-[283px] overflow-hidden justify-between flex flex-col">
+                                    <div>
+                                        <h3 className="font-semibold text-[18px]">{name}</h3>
+                                        <p className="offer-informations text-md text-wrap">{companyName} • {city}</p>
+                                    </div>
+                                    <p className="!max-h-16 opacity-50 text-md relative txt-elipsis">{description}</p>
+                                    <div className="flex justify-start items-center flex-wrap gap-2">
+                                        {job_profiles?.map((profile) => (
+                                            <JobProfiles key={profile.name} profile={profile} />
+                                        ))}
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                        </>
+}
                     </div>
                 </div>
-            </div>
+            )}
         </>
     )
 }

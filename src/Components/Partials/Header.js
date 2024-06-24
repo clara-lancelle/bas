@@ -1,56 +1,135 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { Link } from "react-router-dom";
+import Modal from 'react-modal';
+import SignIn from '../Form/SignInChoice';
+import { toast } from 'react-toastify';
 import '../../Styles/root.css';
 import '../../Styles/global.css';
 import './header.css';
 import logo from '../../Images/logo.svg';
+import chevDown from '../../Images/Icons/down-chevron.svg';
+
+Modal.setAppElement('#root');
 
 export default function Header() {
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+    useEffect(() => {
+        const token = sessionStorage.getItem('token');
+        console.log(token)
+        if (token) {
+            setIsAuthenticated(true);
+
+        }
+    }, []);
+
+    const handleLogout = () => {
+        sessionStorage.clear();
+        setIsAuthenticated(false);
+        notify('Vous êtes déconnecté !', 'success')
+    }
+
+    const notify = (message, type) => {
+        if (type === 'error') {
+            toast.error(message, {
+                position: "top-right"
+            });
+        }
+        if (type === 'success') {
+            toast.success(message, {
+                position: "top-right"
+            });
+        }
+    }
+
+    const openModal = () => {
+        setModalIsOpen(true);
+    };
+
+    const closeModal = ({message, type}) => {
+        setModalIsOpen(false);
+        if(message && type) {
+            notify(message, type);
+        }
+    };
+    
     return (
-        <header className="p-3 pb-0 bg-grey h-20">
-            <div className='flex items-center justify-between container h-full'>
-                <div className="flex justify-between items-center gap-12 h-full">
-                    <img src={logo} alt="Bourses aux stages" className="logo"></img>
+        <>
+            <header className="p-3 pb-0 bg-grey h-20">
+                <div className='flex items-center justify-between container h-full'>
+                    <div className="flex justify-between items-center gap-12 h-full">
+                        <img src={logo} alt="Bourses aux stages" className="logo"></img>
 
-                    <ul className="flex justify-center items-center space-x-5 h-full">
-                        <li className="h-full flex items-center relative nav-item"><Link to="/" className="nav-item__link">Accueil</Link></li>
-                        <li className="h-full flex items-center relative nav-item">
-                            <span className="nav-item__link">Offres</span>
+                        <ul className="flex justify-center items-center space-x-5 h-full">
+                            <li className="h-full flex items-center relative nav-item"><Link to="/" className="nav-item__link">Accueil</Link></li>
+                            <li className="h-full flex items-center relative nav-item">
+                                <span className="nav-item__link">Offres</span>
+                                <ul className="dropdown">
+                                    <li className="h-full relative nav-item dropdown-item">
+                                        <Link to="/offres/stage">Offres de stage</Link>
+                                    </li>
+                                    <li className="h-full relative nav-item dropdown-item">
+                                        <Link to="/offres/alternance">Offres d'alternance</Link>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li className="h-full flex items-center relative nav-item">
+                                <span className="nav-item__link">Demandes</span>
+                                <ul className="dropdown">
+                                    <li className="h-full relative nav-item dropdown-item">
+                                        <Link to="#">Demandes de stage</Link>
+                                    </li>
+                                    <li className="h-full relative nav-item dropdown-item">
+                                        <Link to="#">Demandes d'alternance</Link>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li className="h-full flex items-center relative nav-item"><Link to="/entreprises" className="nav-item__link">Entreprises</Link></li>
+                            <li className="h-full flex items-center relative nav-item"><Link to="#" className="nav-item__link">Etudiants</Link></li>
+                        </ul>
+                    </div>
+                    {!isAuthenticated && (
+                    <div className="flex items-center h-full gap-4">
+                        <div className="flex items-center font-bold border-right h-3/4">
+                            <Link to="/" className="text-blue-dark">Se connecter</Link>
+                        </div>
+                        <div className="border h-3/4"></div>
+                        <div className="flex items-center h-3/4">
+                            <button className="btn-blue-dark" onClick={openModal}>Créer un compte</button>
+                        </div>
+                    </div>
+                    )}
+                    {isAuthenticated && (
+                        <div className="flex justify-end relative nav-item">
+                            <img src={''}></img>
+                            <div className="flex flex-col items-end">
+                                <p>Prénom Nom</p>
+                                <p>Rôle</p>
+                            </div>
+                            <img src={chevDown} width="18px"/>
                             <ul className="dropdown">
                                 <li className="h-full relative nav-item dropdown-item">
-                                    <Link to="/offres/stage">Offres de stage</Link>
+                                    <Link to="#">Mon compte</Link>
                                 </li>
                                 <li className="h-full relative nav-item dropdown-item">
-                                    <Link to="/offres/alternance">Offres d'alternance</Link>
+                                    <span style={{cursor: 'pointer'}} onClick={() => handleLogout()}>Déconnexion</span>
                                 </li>
                             </ul>
-                        </li>
-                        <li className="h-full flex items-center relative nav-item">
-                            <span className="nav-item__link">Demandes</span>
-                            <ul className="dropdown">
-                                <li className="h-full relative nav-item dropdown-item">
-                                    <Link to="#">Demandes de stage</Link>
-                                </li>
-                                <li className="h-full relative nav-item dropdown-item">
-                                    <Link to="#">Demandes d'alternance</Link>
-                                </li>
-                            </ul>
-                        </li>
-                        <li className="h-full flex items-center relative nav-item"><Link to="/entreprises" className="nav-item__link">Entreprises</Link></li>
-                        <li className="h-full flex items-center relative nav-item"><Link to="#" className="nav-item__link">Etudiants</Link></li>
-                    </ul>
+                        </div>
+                    )}
                 </div>
-                <div className="flex items-center h-full gap-4">
-                    <div className="flex items-center font-bold border-right h-3/4">
-                        <Link to="/" className="text-blue-dark">Se connecter</Link>
-                    </div>
-                    <div className="border h-3/4"></div>
-                    <div className="flex items-center btn-blue-dark h-3/4">
-                        <Link to="/inscription">Créer un compte</Link>
-                    </div>
+            </header>
+            <Modal
+                isOpen={modalIsOpen}
+                onRequestClose={closeModal}
+                contentLabel="Sign In Modal"
+            >
+                <div className="flex justify-end">
+                    <button onClick={closeModal}>Fermer</button>
                 </div>
-            </div>
-
-        </header>
+                <SignIn closeModal={closeModal}/>
+            </Modal>
+        </>
     )
 }
