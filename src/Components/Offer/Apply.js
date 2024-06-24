@@ -45,20 +45,35 @@ export default function OfferApply() {
 
     const [editorState, setEditorState] = useState(EditorState.createEmpty()); // Assurez-vous que l'état est initialisé
     const [offer, setOffer] = useState([]);
+    const [studyLevels, setStudyLevels] = useState([]);
     const [checked, setChecked] = useState(false);
     const [loading, setLoading] = useState(true);
-    const {REACT_APP_API_URL} = process.env;
+    const { REACT_APP_API_URL } = process.env;
     const navigate = useNavigate();
     const location = useLocation();
 
     useEffect(() => {
+        const fetchStudyLevels = async () => {
+            try {
+                const studyLevelsResponse = await fetch(`${REACT_APP_API_URL}/api/offers/studyLevels`);
+                const studyLevelsData = await studyLevelsResponse.json();
+                setStudyLevels(studyLevelsData['hydra:member']);
+
+            } catch (error) {
+                console.error(error);
+                setLoading(false);
+            }
+        };
+
+        fetchStudyLevels();
+        
         const fetchData = async () => {
             try {
                 const offerResponse = await fetch(`${REACT_APP_API_URL}/api/offers/${location.state.offerId}`);
                 const offerData = await offerResponse.json();
                 setOffer(offerData);
-
                 setLoading(false);
+
             } catch (error) {
                 console.error(error);
                 setLoading(false);
@@ -66,8 +81,10 @@ export default function OfferApply() {
         };
 
         fetchData();
-    }, [REACT_APP_API_URL, location.state.offerId]);
 
+        
+    }, [REACT_APP_API_URL, location.state.offerId]);
+    
     const [formData, setFormData] = useState({
         gender: '',
         firstname: '',
@@ -158,11 +175,11 @@ export default function OfferApply() {
         // Call API en post pour envoyer les data dans la table référençant les postulations
         // console.log(formData)
         // Une fois le call API terminé
-        if(formData.isCreateAccount){
+        if (formData.isCreateAccount) {
             navigate("/finaliser-inscription", { state: { formData: formData } });
         }
     };
-    
+
     const handleGoBack = () => {
         navigate(-1); // Va vers la page précédente dans l'historique
     };
@@ -184,7 +201,7 @@ export default function OfferApply() {
                     { url: '/', text: 'Accueil' },
                     { text: 'Offres' },
                     { url: '/offres/', text: 'Alternance' },
-                    { url: '/offre/' + offerId, text: offerName, state: {offerId: location.state.offerId} },
+                    { url: '/offre/' + offerId, text: offerName, state: { offerId: location.state.offerId } },
                     { url: '/offre/' + offerId + '/postuler', text: 'Postuler' },
                 ]} />
             )
@@ -240,8 +257,10 @@ export default function OfferApply() {
                             <div className="w-1/5 flex flex-col">
                                 <label className="required font-semibold">Genre</label>
                                 <select name="gender" className="input-apply" onChange={handleChange}>
-                                    <option value={"male"} default defaultValue>Homme</option>
-                                    <option value={"female"}>Femme</option>
+                                    <option hidden defaultValue>-</option>
+                                    <option value={"Homme"} default defaultValue>Homme</option>
+                                    <option value={"Femme"}>Femme</option>
+                                    <option value={"Autre"}>Autre</option>
                                 </select>
                             </div>
                             <div className="w-2/5 flex flex-col">
@@ -316,31 +335,19 @@ export default function OfferApply() {
                             <div className="w-1/4 flex flex-col">
                                 <label className="required font-semibold">Niveau d'études</label>
                                 <select name="graduation" className="input-apply" onChange={handleChange}>
-                                    <option value={'8'}>Doctorat</option>
-                                    <option value={'7'}>Master, DEA, DESS, Mastère, Ingénieur</option>
-                                    <option value={'6'}>Maitrise</option>
-                                    <option value={'6'}>Licence</option>
-                                    <option value={'5'}>BTS, DUT, DEUG, DEUST</option>
-                                    <option value={'4'}>BAC, BT, BP+3</option>
-                                    <option value={'3'}>CAP, BEP</option>
-                                    <option value={'3'}>CPA, CFA</option>
-                                    <option value={'2'}>Brevet des collèges</option>
-                                    <option value={'1'}>Sans diplôme</option>
+                                    <option default hidden>-</option>
+                                    {studyLevels.length > 0 && studyLevels.map((studyLevel) => (
+                                        <option value={studyLevel}>{studyLevel}</option>
+                                    ))}
                                 </select>
                             </div>
                             <div className="w-1/3 flex flex-col">
                                 <label className="font-semibold">Diplôme préparé</label>
                                 <select name="graduationNext" className="input-apply" onChange={handleChange}>
-                                    <option value={'8'}>Doctorat</option>
-                                    <option value={'7'}>Master, DEA, DESS, Mastère, Ingénieur</option>
-                                    <option value={'6'}>Maitrise</option>
-                                    <option value={'6'}>Licence</option>
-                                    <option value={'5'}>BTS, DUT, DEUG, DEUST</option>
-                                    <option value={'4'}>BAC, BT, BP+3</option>
-                                    <option value={'3'}>CAP, BEP</option>
-                                    <option value={'3'}>CPA, CFA</option>
-                                    <option value={'2'}>Brevet des collèges</option>
-                                    <option value={'1'}>Sans diplôme</option>
+                                    <option default hidden>-</option>
+                                    {studyLevels.length > 0 && studyLevels.map((studyLevel) => (
+                                        <option value={studyLevel}>{studyLevel}</option>
+                                    ))}
                                 </select>
                             </div>
                             <div className="w-5/12 flex flex-col">
@@ -362,7 +369,7 @@ export default function OfferApply() {
                         <button className="w-full btn-blue-dark">Postuler</button>
                     </div>
                     <div className="my-8">
-                        <p>En validant ce formulaire, vous confirmez que vous acceptez nos <Link to="#" state={{offerId: offer.id}} className="text-blue-dark underline">Conditions Générales d’Utilisation</Link> et notre <Link to="#" state={{offerId: offer.id}} className="text-blue-dark underline">politique de confidentialité</Link>.</p>
+                        <p>En validant ce formulaire, vous confirmez que vous acceptez nos <Link to="#" state={{ offerId: offer.id }} className="text-blue-dark underline">Conditions Générales d’Utilisation</Link> et notre <Link to="#" state={{ offerId: offer.id }} className="text-blue-dark underline">politique de confidentialité</Link>.</p>
                     </div>
 
                     <button onClick={handleGoBack} className="flex items-center w-fit px-8 py-3 border border-grey-dark">

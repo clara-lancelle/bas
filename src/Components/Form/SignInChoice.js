@@ -6,7 +6,7 @@ import SignInCompany from "../Form/SignInCompany";
 import companyBlue from "../../Images/company-blue.jpg"
 import studentBlue from "../../Images/student-blue.jpg"
 
-export default function SignInChoice() {
+export default function SignInChoice({ closeModal }) {
     const [formChoice, setFormChoice] = useState(true);
     const [companyForm, setCompanyForm] = useState(false);
     const [studentForm, setStudentForm] = useState(false);
@@ -61,7 +61,7 @@ export default function SignInChoice() {
                 <div className="bg-white m-10">
                     <div className="container flex flex-col items-center">
                         <h2 className="text-3xl font-semibold text-grey-dark leading-110">Vous êtes un étudiant</h2>
-                        <SignInStudent />
+                        <SignInStudent closeModal={closeModal}/>
                     </div>
                 </div>
             </>
@@ -74,7 +74,7 @@ export default function SignInChoice() {
                 <div className="bg-white m-10">
                     <div className="container flex flex-col items-center">
                         <h2 className="text-3xl font-semibold text-grey-dark leading-110">Vous êtes une entreprise</h2>
-                        <SignInCompany />
+                        <SignInCompany closeModal={closeModal}/>
                     </div>
                 </div>
             </>

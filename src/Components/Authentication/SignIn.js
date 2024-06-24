@@ -14,7 +14,6 @@ export default function SignIn() {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        console.log(location.state)
         fetch(`${process.env.REACT_APP_API_URL}/api/offers/count`, {
             method: "GET",
         })
