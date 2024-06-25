@@ -8,16 +8,16 @@ import '../../Styles/global.css';
 import './header.css';
 import logo from '../../Images/logo.svg';
 import chevDown from '../../Images/Icons/down-chevron.svg';
+import useToken from "../useToken";
 
 Modal.setAppElement('#root');
 
 export default function Header() {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const {token, setToken} = useToken()
 
     useEffect(() => {
-        const token = sessionStorage.getItem('token');
-        console.log(token)
         if (token) {
             setIsAuthenticated(true);
 
