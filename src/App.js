@@ -11,6 +11,7 @@ import { Routes, Route } from "react-router-dom";
 import OfferList from './Components/Offer/OfferList';
 import SignIn from './Components/Authentication/SignIn';
 import SignInCompletion from './Components/Authentication/SignInCompletion';
+import BackofficeCompanyOffers from './Components/Backoffice/CompanyOffers';
 import Connection from './Components/Connection';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -31,6 +32,7 @@ function App() {
         <Route path="/entreprise/:id" element={<CompanyDetail />} />
         <Route path="/inscription" element={<SignIn />} />
         <Route path="/finaliser-inscription" element={<SignInCompletion />} />
+        <Route path="/backoffice/entreprise/offres" element={<BackofficeCompanyOffers />} />
       </Routes>
       <Connection />
       <Footer />

@@ -18,6 +18,9 @@ module.exports = {
         '15': '3.75rem',
         '18': '4.5rem',
       },
+      colors: {
+        'blue-dark': '#4640DE',
+      }
     },
   },
   plugins: [],
