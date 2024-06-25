@@ -12,30 +12,85 @@ import offersGrey from "../../../Images/Icons/offers-grey.svg"
 import settingsGrey from "../../../Images/Icons/settings-grey.svg"
 
 export default function Sidebar() {
+    const [hovered, setHovered] = useState({
+        messages: false,
+        company: false,
+        users: false,
+        offers: false,
+    });
+
+    const handleMouseEnter = (key) => {
+        setHovered((prevHovered) => ({
+            ...prevHovered,
+            [key]: true,
+        }));
+    };
+
+    const handleMouseLeave = (key) => {
+        setHovered((prevHovered) => ({
+            ...prevHovered,
+            [key]: false,
+        }));
+    };
     return (
         <div className="w-2/12 bg-light-grey h-full py-8 border-r">
             <h2 className="px-8 text-2xl text-grey-dark font-semibold">Mon compte</h2>
-            <div className="my-8 pb-8 border-b">
-                <Link className="h-[48px] px-8 flex items-center gap-x-4 hover:bg-slate-200">
-                    <img src={messageGrey}></img>
+            <div className="my-8 px-6 pb-8 border-b">
+                <Link
+                    className="h-[48px] px-2 flex items-center gap-x-4 hover:bg-blue-dark/10 hover:text-blue-dark hover:border-y-2"
+                    onMouseEnter={() => handleMouseEnter('messages')}
+                    onMouseLeave={() => handleMouseLeave('messages')}
+                >
+                    <img
+                        src={hovered.messages ? messageBlue : messageGrey}
+                        alt="Messages"
+                    />
                     <span>Messages</span>
                 </Link>
-                <Link className="h-[48px] px-8 flex items-center gap-x-4 hover:bg-slate-200">
-                    <img src={companyGrey}></img>
+                <Link
+                    className="h-[48px] px-2 flex items-center gap-x-4 hover:bg-blue-dark/10 hover:text-blue-dark hover:border-y-2"
+                    onMouseEnter={() => handleMouseEnter('company')}
+                    onMouseLeave={() => handleMouseLeave('company')}
+                >
+                    <img
+                        src={hovered.company ? companyBlue : companyGrey}
+                        alt="Fiche entreprise"
+                    />
                     <span>Fiche entreprise</span>
                 </Link>
-                <Link className="h-[48px] px-8 flex items-center gap-x-4 hover:bg-slate-200">
-                    <img src={usersGrey}></img>
+                <Link
+                    className="h-[48px] px-2 flex items-center gap-x-4 hover:bg-blue-dark/10 hover:text-blue-dark hover:border-y-2"
+                    onMouseEnter={() => handleMouseEnter('users')}
+                    onMouseLeave={() => handleMouseLeave('users')}
+                >
+                    <img
+                        src={hovered.users ? usersBlue : usersGrey}
+                        alt="Candidatures"
+                    />
                     <span>Candidatures</span>
                 </Link>
-                <Link className="h-[48px] px-8 flex items-center gap-x-4 hover:bg-slate-200">
-                    <img src={offersGrey}></img>
+                <Link
+                    className="h-[48px] px-2 flex items-center gap-x-4 hover:bg-blue-dark/10 hover:text-blue-dark hover:border-y-2"
+                    onMouseEnter={() => handleMouseEnter('offers')}
+                    onMouseLeave={() => handleMouseLeave('offers')}
+                >
+                    <img
+                        src={hovered.offers ? offersBlue : offersGrey}
+                        alt="Offres"
+                    />
                     <span>Offres</span>
                 </Link>
             </div>
-
-            <Link className="h-[48px] px-8 mb-5 flex items-center gap-x-4 hover:bg-slate-200">
-                <img src={settingsGrey}></img>
+            <div className="my-8 px-6 pb-8">
+            <Link
+                className="h-[48px] px-2 mb-4 flex items-center gap-x-4 hover:bg-blue-dark/10 hover:text-blue-dark hover:border-y-2"
+                onMouseEnter={() => handleMouseEnter('settings')}
+                onMouseLeave={() => handleMouseLeave('settings')}
+            >
+                <img
+                    src={hovered.settings ? settingsBlue : settingsGrey}
+                    alt="settings"
+                />
                 <span>Paramètres</span>
             </Link>
 
@@ -46,6 +101,7 @@ export default function Sidebar() {
                     <span>Administrateur</span>
                 </div>
             </Link>
+            </div>
         </div>
     )
 }
