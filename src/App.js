@@ -13,6 +13,7 @@ import SignIn from './Components/Authentication/SignIn';
 import SignInCompletion from './Components/Authentication/SignInCompletion';
 import BackofficeCompanyOffers from './Components/Backoffice/CompanyOffers';
 import Connection from './Components/Connection';
+import CompanyInscription from './Components/CompanyInscription';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -35,6 +36,7 @@ function App() {
         <Route path="/backoffice/entreprise/offres" element={<BackofficeCompanyOffers />} />
       </Routes>
       <Connection />
+      <CompanyInscription />
       <Footer />
     </>
   );
