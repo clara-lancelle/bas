@@ -11,12 +11,13 @@ import messageGrey from "../../../Images/Icons/message-grey.svg"
 import offersGrey from "../../../Images/Icons/offers-grey.svg"
 import settingsGrey from "../../../Images/Icons/settings-grey.svg"
 
-export default function Sidebar() {
+export default function Sidebar({activeItem}) {
     const [hovered, setHovered] = useState({
         messages: false,
         company: false,
         users: false,
         offers: false,
+        settings: false,
     });
 
     const handleMouseEnter = (key) => {
@@ -32,50 +33,53 @@ export default function Sidebar() {
             [key]: false,
         }));
     };
+
+    const isActive = (key) => hovered[key] || activeItem === key;
+
     return (
         <div className="w-2/12 bg-light-grey h-full py-8 border-r">
             <h2 className="px-8 text-2xl text-grey-dark font-semibold">Mon compte</h2>
             <div className="my-8 px-6 pb-8 border-b">
                 <Link
-                    className="h-[48px] px-2 flex items-center gap-x-4 hover:bg-blue-dark/10 hover:text-blue-dark hover:border-y-2"
+                    className={`h-[48px] px-2 flex items-center gap-x-4 ${isActive('messages') ? 'bg-blue-dark/10 text-blue-dark border-y-2' : ''}`}
                     onMouseEnter={() => handleMouseEnter('messages')}
                     onMouseLeave={() => handleMouseLeave('messages')}
                 >
                     <img
-                        src={hovered.messages ? messageBlue : messageGrey}
+                        src={isActive('messages') ? messageBlue : messageGrey}
                         alt="Messages"
                     />
                     <span>Messages</span>
                 </Link>
                 <Link
-                    className="h-[48px] px-2 flex items-center gap-x-4 hover:bg-blue-dark/10 hover:text-blue-dark hover:border-y-2"
+                    className={`h-[48px] px-2 flex items-center gap-x-4 ${isActive('company') ? 'bg-blue-dark/10 text-blue-dark border-y-2' : ''}`}
                     onMouseEnter={() => handleMouseEnter('company')}
                     onMouseLeave={() => handleMouseLeave('company')}
                 >
                     <img
-                        src={hovered.company ? companyBlue : companyGrey}
+                        src={isActive('company') ? companyBlue : companyGrey}
                         alt="Fiche entreprise"
                     />
                     <span>Fiche entreprise</span>
                 </Link>
                 <Link
-                    className="h-[48px] px-2 flex items-center gap-x-4 hover:bg-blue-dark/10 hover:text-blue-dark hover:border-y-2"
+                    className={`h-[48px] px-2 flex items-center gap-x-4 ${isActive('users') ? 'bg-blue-dark/10 text-blue-dark border-y-2' : ''}`}
                     onMouseEnter={() => handleMouseEnter('users')}
                     onMouseLeave={() => handleMouseLeave('users')}
                 >
                     <img
-                        src={hovered.users ? usersBlue : usersGrey}
+                        src={isActive('users') ? usersBlue : usersGrey}
                         alt="Candidatures"
                     />
                     <span>Candidatures</span>
                 </Link>
                 <Link
-                    className="h-[48px] px-2 flex items-center gap-x-4 hover:bg-blue-dark/10 hover:text-blue-dark hover:border-y-2"
+                    className={`h-[48px] px-2 flex items-center gap-x-4 ${isActive('offers') ? 'bg-blue-dark/10 text-blue-dark border-y-2' : ''}`}
                     onMouseEnter={() => handleMouseEnter('offers')}
                     onMouseLeave={() => handleMouseLeave('offers')}
                 >
                     <img
-                        src={hovered.offers ? offersBlue : offersGrey}
+                        src={isActive('offers') ? offersBlue : offersGrey}
                         alt="Offres"
                     />
                     <span>Offres</span>
@@ -83,12 +87,12 @@ export default function Sidebar() {
             </div>
             <div className="my-8 px-6 pb-8">
             <Link
-                className="h-[48px] px-2 mb-4 flex items-center gap-x-4 hover:bg-blue-dark/10 hover:text-blue-dark hover:border-y-2"
+                className={`h-[48px] px-2 flex items-center gap-x-4 ${isActive('settings') ? 'bg-blue-dark/10 text-blue-dark border-y-2' : ''}`}
                 onMouseEnter={() => handleMouseEnter('settings')}
                 onMouseLeave={() => handleMouseLeave('settings')}
             >
                 <img
-                    src={hovered.settings ? settingsBlue : settingsGrey}
+                    src={isActive('settings') ? settingsBlue : settingsGrey}
                     alt="settings"
                 />
                 <span>Paramètres</span>
