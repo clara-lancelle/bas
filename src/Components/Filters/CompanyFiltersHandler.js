@@ -25,7 +25,7 @@ export default function CompanyFiltersHandler(setters) {
     }, [process.env.REACT_APP_API_URL])
 
     useEffect(() => {
-        fetch(`${process.env.REACT_APP_API_URL}/api/companies/workforce_ranges`, {
+        fetch(`${process.env.REACT_APP_API_URL}/api/companies/workforceRanges`, {
             method: "GET",
         })
             .then(response => response.json())
