@@ -12,11 +12,16 @@ import OfferList from './Components/Offer/OfferList';
 import SignIn from './Components/Authentication/SignIn';
 import SignInCompletion from './Components/Authentication/SignInCompletion';
 import BackofficeCompanyOffers from './Components/Backoffice/CompanyOffers';
+import Connection from './Components/Connection';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 function App() {
   return (
     <>
       <Header />
+      <ToastContainer />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/offre/:id" element={<OfferDetail />} />
@@ -29,6 +34,7 @@ function App() {
         <Route path="/finaliser-inscription" element={<SignInCompletion />} />
         <Route path="/backoffice/entreprise/offres" element={<BackofficeCompanyOffers />} />
       </Routes>
+      <Connection />
       <Footer />
     </>
   );
