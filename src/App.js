@@ -11,10 +11,8 @@ import { Routes, Route } from "react-router-dom";
 import OfferList from './Components/Offer/OfferList';
 import SignInCompletion from './Components/Authentication/SignInCompletion';
 import BackofficeCompanyOffers from './Components/Backoffice/CompanyOffers';
-import Connection from './Components/Connection';
 import useToken from "./Components/useToken";
 import { ToastContainer, toast } from 'react-toastify';
-import CompanyInscription from './Components/CompanyInscription';
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
@@ -84,12 +82,9 @@ function App() {
         <Route path="/offres/alternance" element={<OfferList type={"Alternance"} />} />
         <Route path="/entreprises" element={<CompanyList />} />
         <Route path="/entreprise/:id" element={<CompanyDetail />} />
-        {/* <Route path="/inscription" element={<SignIn />} /> */}
         <Route path="/finaliser-inscription" element={<SignInCompletion />} />
         <Route path="/backoffice/entreprise/offres" element={<BackofficeCompanyOffers />} />
       </Routes>
-      <Connection />
-      <CompanyInscription />
       <Footer />
     </>
   );
