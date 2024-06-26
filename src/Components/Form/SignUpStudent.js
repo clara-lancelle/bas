@@ -2,24 +2,11 @@ import React, { useEffect, useState } from "react";
 import { toast } from 'react-toastify';
 import useToken from '../useToken';
 
-export default function SignInStudent({ closeModal, setIsAuthenticated, setUserInfo }) {
+export default function SignUpStudent({ closeModal, setIsAuthenticated, setUserInfo, notify }) {
     const { REACT_APP_API_URL } = process.env;
     const [isPasswordFocused, setIsPasswordFocused] = useState(false);
     const [loading, setLoading] = useState(false);
     const { token, setToken, updateUserInfo } = useToken()
-
-    const notify = (message, type) => {
-        if (type === 'error') {
-            toast.error(message, {
-                position: "top-right"
-            });
-        }
-        if (type === 'success') {
-            toast.success(message, {
-                position: "top-right"
-            });
-        }
-    }
 
     const [formData, setFormData] = useState({
         gender: '',
@@ -35,7 +22,7 @@ export default function SignInStudent({ closeModal, setIsAuthenticated, setUserI
         zipCode: '',
         city: '',
         study_level: '',
-        diplome_prepare: '',
+        prepared_degree: '',
         school_name: '',
     })
 
@@ -53,7 +40,7 @@ export default function SignInStudent({ closeModal, setIsAuthenticated, setUserI
         zipCode: 'Code postal',
         city: 'Ville',
         study_level: 'Niveau d\'étude',
-        diplome_prepare: 'Diplôme préparé',
+        prepared_degree: 'Diplôme préparé',
         school_name: 'Nom de l\'établissement',
     };
 
@@ -222,7 +209,7 @@ export default function SignInStudent({ closeModal, setIsAuthenticated, setUserI
                                     </select>
                                 </label>
                                 <label className="flex flex-col justify-start gap-y-2 w-1/4">Diplôme préparé
-                                    <select className="border input-apply" name={'diplome_prepare'} onChange={handleChange}>
+                                    <select className="border input-apply" name={'prepared_degree'} onChange={handleChange}>
                                         <option default hidden>-</option>
                                         <option value="Bac">Baccalauréat</option>
                                         <option value="CAP, BEP">CAP, BEP</option>

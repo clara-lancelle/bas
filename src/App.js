@@ -9,7 +9,6 @@ import OfferApply from './Components/Offer/Apply';
 import './index.css';
 import { Routes, Route } from "react-router-dom";
 import OfferList from './Components/Offer/OfferList';
-// import SignIn from './Components/Authentication/SignIn';
 import SignInCompletion from './Components/Authentication/SignInCompletion';
 import BackofficeCompanyOffers from './Components/Backoffice/CompanyOffers';
 import Connection from './Components/Connection';
@@ -74,7 +73,8 @@ function App() {
         setIsAuthenticated={setIsAuthenticated}
         userInfo={userInfo}
         setUserInfo={setUserInfo}
-        handleLogout={handleLogout} />
+        handleLogout={handleLogout}
+        notify={notify} />
       <ToastContainer />
       <Routes>
         <Route path="/" element={<Home />} />
