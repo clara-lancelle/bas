@@ -1,12 +1,10 @@
 import React, { useState } from "react";
-import Ariane from "../Partials/Ariane";
-import { Link } from "react-router-dom";
-import SignInStudent from "../Form/SignInStudent";
-import SignInCompany from "../Form/SignInCompany";
+import SignInStudent from "./SignUpStudent";
+import SignInCompany from "./SignUpCompany";
 import companyBlue from "../../Images/company-blue.jpg"
 import studentBlue from "../../Images/student-blue.jpg"
 
-export default function SignInChoice({ closeModal }) {
+export default function SignInChoice({ closeModal, isAuthenticated, userInfo, setIsAuthenticated, setUserInfo }) {
     const [formChoice, setFormChoice] = useState(true);
     const [companyForm, setCompanyForm] = useState(false);
     const [studentForm, setStudentForm] = useState(false);
@@ -22,7 +20,7 @@ export default function SignInChoice({ closeModal }) {
             setStudentForm(true);
         }
     }
-    
+
     if (formChoice) {
         return (
             <>
@@ -61,7 +59,11 @@ export default function SignInChoice({ closeModal }) {
                 <div className="bg-white m-10">
                     <div className="container flex flex-col items-center">
                         <h2 className="text-3xl font-semibold text-grey-dark leading-110">Vous êtes un étudiant</h2>
-                        <SignInStudent closeModal={closeModal}/>
+                        <SignInStudent closeModal={closeModal} 
+                            isAuthenticated={isAuthenticated}
+                            setIsAuthenticated={setIsAuthenticated}
+                            userInfo={userInfo}
+                            setUserInfo={setUserInfo} />
                     </div>
                 </div>
             </>
@@ -74,7 +76,7 @@ export default function SignInChoice({ closeModal }) {
                 <div className="bg-white m-10">
                     <div className="container flex flex-col items-center">
                         <h2 className="text-3xl font-semibold text-grey-dark leading-110">Vous êtes une entreprise</h2>
-                        <SignInCompany closeModal={closeModal}/>
+                        <SignInCompany closeModal={closeModal} />
                     </div>
                 </div>
             </>

@@ -1,59 +1,41 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Modal from 'react-modal';
-import SignIn from '../Form/SignInChoice';
-import { toast } from 'react-toastify';
+import SignUp from '../Form/SignUpChoice';
+import SignIn from '../Form/SignIn';
 import '../../Styles/root.css';
 import '../../Styles/global.css';
 import './header.css';
 import logo from '../../Images/logo.svg';
 import chevDown from '../../Images/Icons/down-chevron.svg';
-import useToken from "../useToken";
 
 Modal.setAppElement('#root');
 
-export default function Header() {
-    const [modalIsOpen, setModalIsOpen] = useState(false);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const {token, setToken} = useToken()
-
-    useEffect(() => {
-        if (token) {
-            setIsAuthenticated(true);
-
-        }
-    }, []);
-
-    const handleLogout = () => {
-        sessionStorage.clear();
-        setIsAuthenticated(false);
-        notify('Vous êtes déconnecté !', 'success')
-    }
-
-    const notify = (message, type) => {
-        if (type === 'error') {
-            toast.error(message, {
-                position: "top-right"
-            });
-        }
-        if (type === 'success') {
-            toast.success(message, {
-                position: "top-right"
-            });
-        }
-    }
-
-    const openModal = () => {
-        setModalIsOpen(true);
+export default function Header({ openModal, closeModal, modalIsOpen, isAuthenticated, setIsAuthenticated, userInfo, setUserInfo, handleLogout }) {
+    const [modalContent, setModalContent] = useState(null);
+    const customStyles = {
+        content: {
+            top: '50%',
+            left: '50%',
+            right: '50%',
+            bottom: '50%',
+            transform: 'translate(-50%, -50%)',
+            maxWidth: '500px',
+            width: '100%',
+            height: 'fit-content',
+            padding: '80px 0',
+        },
+    };
+    const openSignUpModal = () => {
+        setModalContent('signUp');
+        openModal();
     };
 
-    const closeModal = ({message, type}) => {
-        setModalIsOpen(false);
-        if(message && type) {
-            notify(message, type);
-        }
+    const openSignInModal = () => {
+        setModalContent('signIn');
+        openModal();
     };
-    
+
     return (
         <>
             <header className="p-3 pb-0 bg-grey h-20">
@@ -90,46 +72,67 @@ export default function Header() {
                         </ul>
                     </div>
                     {!isAuthenticated && (
-                    <div className="flex items-center h-full gap-4">
-                        <div className="flex items-center font-bold border-right h-3/4">
-                            <Link to="/" className="text-blue-dark">Se connecter</Link>
+                        <div className="flex items-center h-full gap-4">
+                            <div className="flex items-center font-bold border-right h-3/4">
+                                <button className="text-blue-dark" onClick={openSignInModal}>Se connecter</button>
+                            </div>
+                            <div className="border h-3/4"></div>
+                            <div className="flex items-center h-3/4">
+                                <button className="btn-blue-dark" onClick={openSignUpModal}>Créer un compte</button>
+                            </div>
                         </div>
-                        <div className="border h-3/4"></div>
-                        <div className="flex items-center h-3/4">
-                            <button className="btn-blue-dark" onClick={openModal}>Créer un compte</button>
-                        </div>
-                    </div>
                     )}
                     {isAuthenticated && (
                         <div className="flex justify-end relative nav-item">
                             <img src={''}></img>
                             <div className="flex flex-col items-end">
-                                <p>Prénom Nom</p>
-                                <p>Rôle</p>
+                                <p>{userInfo.firstName} {userInfo.lastName}</p>
+                                <p>{userInfo.userType}</p>
                             </div>
-                            <img src={chevDown} width="18px"/>
+                            <img src={chevDown} width="18px" />
                             <ul className="dropdown">
                                 <li className="h-full relative nav-item dropdown-item">
                                     <Link to="#">Mon compte</Link>
                                 </li>
                                 <li className="h-full relative nav-item dropdown-item">
-                                    <span style={{cursor: 'pointer'}} onClick={() => handleLogout()}>Déconnexion</span>
+                                    <span style={{ cursor: 'pointer' }} onClick={() => handleLogout()}>Déconnexion</span>
                                 </li>
                             </ul>
                         </div>
                     )}
                 </div>
             </header>
-            <Modal
-                isOpen={modalIsOpen}
-                onRequestClose={closeModal}
-                contentLabel="Sign In Modal"
-            >
-                <div className="flex justify-end">
-                    <button onClick={closeModal}>Fermer</button>
-                </div>
-                <SignIn closeModal={closeModal}/>
-            </Modal>
+            {modalContent === 'signUp' && (
+                <Modal
+                    isOpen={modalIsOpen}
+                    onRequestClose={closeModal}
+                    contentLabel="Sign Up Modal"
+                >
+                    <div className="flex justify-end">
+                        <button onClick={closeModal}>Fermer</button>
+                    </div>
+                    <SignUp closeModal={closeModal}
+                        isAuthenticated={isAuthenticated}
+                        setIsAuthenticated={setIsAuthenticated}
+                        userInfo={userInfo}
+                        setUserInfo={setUserInfo} />
+                </Modal>
+
+            )}
+            {modalContent === 'signIn' && (
+                <Modal
+                    isOpen={modalIsOpen}
+                    onRequestClose={closeModal}
+                    contentLabel="Sign In Modal"
+                    style={customStyles}
+                >
+                    <SignIn closeModal={closeModal}
+                        isAuthenticated={isAuthenticated}
+                        setIsAuthenticated={setIsAuthenticated}
+                        userInfo={userInfo}
+                        setUserInfo={setUserInfo} />
+                </Modal>
+            )}
         </>
     )
 }
