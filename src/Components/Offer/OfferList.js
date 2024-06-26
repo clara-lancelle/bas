@@ -25,6 +25,15 @@ export default function OfferList({ type }) {
 
     }
 
+    const getFormattedDate = () => {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+        const day = String(today.getDate()).padStart(2, '0');
+
+        return `${year}-${month}-${day}`;
+    }
+
     useEffect(() => {
         let [name, value] = sorter[(selectedSort - 1)]
         let d = ''
@@ -39,8 +48,7 @@ export default function OfferList({ type }) {
         if (selectedStudyLevel && selectedStudyLevel.length !== 0) {
             sl = `&study_level=${selectedStudyLevel}`
         }
-
-        fetch(`${process.env.REACT_APP_API_URL}/api/offers?type=${type}${d}${jp}${sl}&order[${name}]=${value}`, {
+        fetch(`${process.env.REACT_APP_API_URL}/api/offers?application_limit_date[after]=${getFormattedDate()}&type=${type}${d}${jp}${sl}&order[${name}]=${value}`, {
             method: "GET",
         })
             .then(response => response.json())

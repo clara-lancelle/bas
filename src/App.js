@@ -15,6 +15,7 @@ import BackofficeCompanyOffers from './Components/Backoffice/CompanyOffers';
 import Connection from './Components/Connection';
 import useToken from "./Components/useToken";
 import { ToastContainer, toast } from 'react-toastify';
+import CompanyInscription from './Components/CompanyInscription';
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
@@ -88,6 +89,7 @@ function App() {
         <Route path="/backoffice/entreprise/offres" element={<BackofficeCompanyOffers />} />
       </Routes>
       <Connection />
+      <CompanyInscription />
       <Footer />
     </>
   );
