@@ -9,7 +9,7 @@ import OfferApply from './Components/Offer/Apply';
 import './index.css';
 import { Routes, Route } from "react-router-dom";
 import OfferList from './Components/Offer/OfferList';
-import SignIn from './Components/Authentication/SignIn';
+// import SignIn from './Components/Authentication/SignIn';
 import SignInCompletion from './Components/Authentication/SignInCompletion';
 import BackofficeCompanyOffers from './Components/Backoffice/CompanyOffers';
 import Connection from './Components/Connection';
@@ -83,7 +83,7 @@ function App() {
         <Route path="/offres/alternance" element={<OfferList type={"Alternance"} />} />
         <Route path="/entreprises" element={<CompanyList />} />
         <Route path="/entreprise/:id" element={<CompanyDetail />} />
-        <Route path="/inscription" element={<SignIn />} />
+        {/* <Route path="/inscription" element={<SignIn />} /> */}
         <Route path="/finaliser-inscription" element={<SignInCompletion />} />
         <Route path="/backoffice/entreprise/offres" element={<BackofficeCompanyOffers />} />
       </Routes>

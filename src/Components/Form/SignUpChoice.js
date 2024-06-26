@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import SignInStudent from "../Form/SignInStudent";
-import SignInCompany from "../Form/SignInCompany";
+import SignInStudent from "./SignUpStudent";
+import SignInCompany from "./SignUpCompany";
 import companyBlue from "../../Images/company-blue.jpg"
 import studentBlue from "../../Images/student-blue.jpg"
 

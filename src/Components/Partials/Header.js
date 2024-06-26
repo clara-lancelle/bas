@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Modal from 'react-modal';
-import SignIn from '../Form/SignInChoice';
+import SignUp from '../Form/SignUpChoice';
+import SignIn from '../Form/SignIn';
 import '../../Styles/root.css';
 import '../../Styles/global.css';
 import './header.css';
@@ -11,6 +12,30 @@ import chevDown from '../../Images/Icons/down-chevron.svg';
 Modal.setAppElement('#root');
 
 export default function Header({ openModal, closeModal, modalIsOpen, isAuthenticated, setIsAuthenticated, userInfo, setUserInfo, handleLogout }) {
+    const [modalContent, setModalContent] = useState(null);
+    const customStyles = {
+        content: {
+            top: '50%',
+            left: '50%',
+            right: '50%',
+            bottom: '50%',
+            transform: 'translate(-50%, -50%)',
+            maxWidth: '500px',
+            width: '100%',
+            height: 'fit-content',
+            padding: '80px 0',
+        },
+    };
+    const openSignUpModal = () => {
+        setModalContent('signUp');
+        openModal();
+    };
+
+    const openSignInModal = () => {
+        setModalContent('signIn');
+        openModal();
+    };
+
     return (
         <>
             <header className="p-3 pb-0 bg-grey h-20">
@@ -49,11 +74,11 @@ export default function Header({ openModal, closeModal, modalIsOpen, isAuthentic
                     {!isAuthenticated && (
                         <div className="flex items-center h-full gap-4">
                             <div className="flex items-center font-bold border-right h-3/4">
-                                <Link to="/" className="text-blue-dark">Se connecter</Link>
+                                <button className="text-blue-dark" onClick={openSignInModal}>Se connecter</button>
                             </div>
                             <div className="border h-3/4"></div>
                             <div className="flex items-center h-3/4">
-                                <button className="btn-blue-dark" onClick={openModal}>Créer un compte</button>
+                                <button className="btn-blue-dark" onClick={openSignUpModal}>Créer un compte</button>
                             </div>
                         </div>
                     )}
@@ -77,20 +102,37 @@ export default function Header({ openModal, closeModal, modalIsOpen, isAuthentic
                     )}
                 </div>
             </header>
-            <Modal
-                isOpen={modalIsOpen}
-                onRequestClose={closeModal}
-                contentLabel="Sign In Modal"
-            >
-                <div className="flex justify-end">
-                    <button onClick={closeModal}>Fermer</button>
-                </div>
-                <SignIn closeModal={closeModal} 
-                    isAuthenticated={isAuthenticated}
-                    setIsAuthenticated={setIsAuthenticated}
-                    userInfo={userInfo}
-                    setUserInfo={setUserInfo} />
-            </Modal>
+            {modalContent === 'signUp' && (
+                <Modal
+                    isOpen={modalIsOpen}
+                    onRequestClose={closeModal}
+                    contentLabel="Sign Up Modal"
+                >
+                    <div className="flex justify-end">
+                        <button onClick={closeModal}>Fermer</button>
+                    </div>
+                    <SignUp closeModal={closeModal}
+                        isAuthenticated={isAuthenticated}
+                        setIsAuthenticated={setIsAuthenticated}
+                        userInfo={userInfo}
+                        setUserInfo={setUserInfo} />
+                </Modal>
+
+            )}
+            {modalContent === 'signIn' && (
+                <Modal
+                    isOpen={modalIsOpen}
+                    onRequestClose={closeModal}
+                    contentLabel="Sign In Modal"
+                    style={customStyles}
+                >
+                    <SignIn closeModal={closeModal}
+                        isAuthenticated={isAuthenticated}
+                        setIsAuthenticated={setIsAuthenticated}
+                        userInfo={userInfo}
+                        setUserInfo={setUserInfo} />
+                </Modal>
+            )}
         </>
     )
 }

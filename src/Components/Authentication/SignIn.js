@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Ariane from "../Partials/Ariane";
 import SignInChoice from "../Form/SignInChoice";
-import SignInStudent from "../Form/SignInStudent";
-import SignInCompany from "../Form/SignInCompany";
+import SignInStudent from "../Form/SignUpStudent";
+import SignInCompany from "../Form/SignUpCompany";
 
-export default function SignIn() {
+export default function SignInOld() {
     const [offerCount, setOfferCount] = useState();
     const [formChoice, setFormChoice] = useState(false);
     const [companyForm, setCompanyForm] = useState(false);
