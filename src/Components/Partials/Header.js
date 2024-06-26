@@ -11,7 +11,7 @@ import chevDown from '../../Images/Icons/down-chevron.svg';
 
 Modal.setAppElement('#root');
 
-export default function Header({ openModal, closeModal, modalIsOpen, isAuthenticated, setIsAuthenticated, userInfo, setUserInfo, handleLogout }) {
+export default function Header({ openModal, closeModal, modalIsOpen, isAuthenticated, setIsAuthenticated, userInfo, setUserInfo, handleLogout, notify }) {
     const [modalContent, setModalContent] = useState(null);
     const customStyles = {
         content: {
@@ -115,7 +115,8 @@ export default function Header({ openModal, closeModal, modalIsOpen, isAuthentic
                         isAuthenticated={isAuthenticated}
                         setIsAuthenticated={setIsAuthenticated}
                         userInfo={userInfo}
-                        setUserInfo={setUserInfo} />
+                        setUserInfo={setUserInfo} 
+                        notify={notify} />
                 </Modal>
 
             )}
@@ -130,7 +131,8 @@ export default function Header({ openModal, closeModal, modalIsOpen, isAuthentic
                         isAuthenticated={isAuthenticated}
                         setIsAuthenticated={setIsAuthenticated}
                         userInfo={userInfo}
-                        setUserInfo={setUserInfo} />
+                        setUserInfo={setUserInfo}
+                        notify={notify} />
                 </Modal>
             )}
         </>
