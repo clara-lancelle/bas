@@ -110,8 +110,8 @@ export default function Home() {
                                 <h3 className="font-semibold text-[18px]">{name}</h3>{/* Intitulé du poste */}
                                 <p className="offer-informations text-md text-wrap">{companyName} • {city}</p>{/* Nom de l'entreprise + Ville */}
                             </div>
-                            <p className="opacity-50 text-md relative txt-elipsis">{description}</p>{/* Description de l'offre */}
-                            <div className="flex justify-start items-center flex-wrap gap-2">
+                            <p className="opacity-50 mb-2 text-md relative txt-elipsis">{description}</p>{/* Description de l'offre */}
+                            <div className="flex justify-start overflow-hidden items-center flex-wrap gap-2">
                                 {job_profiles?.map((profile) => (
                                     <JobProfiles profile={profile} />
                                 ))}
