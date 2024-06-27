@@ -3,14 +3,13 @@ import { useState } from 'react'
 const useToken = () => {
     const getToken = () => {
         const tokenString = sessionStorage.getItem('token')
-        const userToken = JSON.parse(tokenString)
-        return userToken || ""
+        return tokenString || ""
     }
     const [token, setToken] = useState(getToken())
     const saveToken = async (userToken, email) => {
         const {REACT_APP_API_URL} = process.env;
 
-        sessionStorage.setItem('token', JSON.stringify(userToken))
+        sessionStorage.setItem('token', userToken)
         setToken(userToken)
 
         try {
@@ -25,7 +24,7 @@ const useToken = () => {
             if (response.ok) {
                 const data = await response.json();
                 const userData = data['hydra:member'][0];
-                sessionStorage.setItem('userEmail', JSON.stringify(userData.email))
+                sessionStorage.setItem('userEmail', userData.email)
                 sessionStorage.setItem('userFirstName', JSON.stringify(userData.firstname))
                 sessionStorage.setItem('userLastName', JSON.stringify(userData.name))
                 sessionStorage.setItem('userType', JSON.stringify(userData['@type']))
@@ -61,6 +60,7 @@ const useToken = () => {
         setToken: saveToken,
         token,
         updateUserInfo,
+        getToken,
     };
 }
 

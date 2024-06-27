@@ -13,6 +13,7 @@ Modal.setAppElement('#root');
 
 export default function Header({ openModal, closeModal, modalIsOpen, isAuthenticated, setIsAuthenticated, userInfo, setUserInfo, handleLogout, notify }) {
     const [modalContent, setModalContent] = useState(null);
+    const { REACT_APP_API_URL } = process.env;
     const customStyles = {
         content: {
             top: '50%',
@@ -83,9 +84,9 @@ export default function Header({ openModal, closeModal, modalIsOpen, isAuthentic
                         </div>
                     )}
                     {isAuthenticated && (
-                        <div className="flex justify-end relative nav-item">
-                            <img src={''}></img>
-                            <div className="flex flex-col items-end">
+                        <div className="flex justify-end relative nav-item h-full pb-2">
+                            <img src={userInfo.profile_image ? userInfo.profile_image : `${REACT_APP_API_URL}/assets/images/users/usr.png`} className="rounded-full h-full"></img>
+                            <div className="flex flex-col items-end justify-center">
                                 <p>{userInfo.firstName} {userInfo.lastName}</p>
                                 <p>{userInfo.userType}</p>
                             </div>
