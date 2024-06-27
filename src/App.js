@@ -19,14 +19,27 @@ function App() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userInfo, setUserInfo] = useState({
-    firstName: '',
-    lastName: '',
-    userType: ''
+    gender: '',
+    firstname: '',
+    name: '',
+    birthdate: '',
+    cellphone: '',
+    email: '',
+    emailConfirm: '',
+    address: '',
+    additionalAddress: '',
+    zipCode: '',
+    city: ''
   });
   const { token, setToken } = useToken()
 
   useEffect(() => {
     if (token) {
+      setUserInfo({
+        firstName: JSON.parse(sessionStorage.getItem('userFirstName')),
+        lastName: JSON.parse(sessionStorage.getItem('userLastName')),
+        userType: JSON.parse(sessionStorage.getItem('userType'))
+      });
       setIsAuthenticated(true);
     }
   }, []);
@@ -47,9 +60,21 @@ function App() {
   const handleLogout = () => {
     sessionStorage.clear();
     setIsAuthenticated(false);
-    notify('Vous êtes déconnecté !', 'success')
-  }
-
+    setUserInfo({
+      gender: '',
+      firstname: '',
+      name: '',
+      birthdate: '',
+      cellphone: '',
+      email: '',
+      emailConfirm: '',
+      address: '',
+      additionalAddress: '',
+      zipCode: '',
+      city: ''
+    });
+    notify('Vous êtes déconnecté !', 'success');
+  };
   const openModal = () => {
     setModalIsOpen(true);
   };
@@ -77,7 +102,10 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/offre/:id" element={<OfferDetail />} />
-        <Route path="/offre/:id/postuler" element={<OfferApply />} />
+        <Route path="/offre/:id/postuler" element={<OfferApply
+          isAuthenticated={isAuthenticated}
+          userInfo={userInfo}
+          setUserInfo={setUserInfo} />} />
         <Route path="/offres/stage" element={<OfferList type={"Stage"} />} />
         <Route path="/offres/alternance" element={<OfferList type={"Alternance"} />} />
         <Route path="/entreprises" element={<CompanyList />} />

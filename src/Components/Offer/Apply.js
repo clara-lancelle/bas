@@ -10,10 +10,9 @@ import LanguageLevelList from '../Fields/LanguageLevelList';
 import ExperienceAdderList from '../Fields/ExperienceAdderList';
 import FileUploader from '../Fields/FileUploader';
 import Checkbox from '../Fields/Checkbox';
-import share from "../../Images/Icons/share.svg";
 import arrow from '../../Images/Icons/arrow-right-grey-dark.svg'
-import mwLogo from '../../Images/Company/mw-logo-large.png'
 import ImageUploader from "../Fields/ImageUploader";
+import useToken from "../useToken";
 
 const LinkEditor = (props) => {
     const { url } = props.contentState.getEntity(props.entityKey).getData();
@@ -41,16 +40,112 @@ const decorator = new CompositeDecorator([
     },
 ]);
 
-export default function OfferApply() {
+export default function OfferApply({ isAuthenticated, userInfo, setUserInfo }) {
 
     const [editorState, setEditorState] = useState(EditorState.createEmpty()); // Assurez-vous que l'état est initialisé
     const [offer, setOffer] = useState([]);
     const [studyLevels, setStudyLevels] = useState([]);
-    const [checked, setChecked] = useState(false);
     const [loading, setLoading] = useState(true);
     const { REACT_APP_API_URL } = process.env;
+    const { token, getToken } = useToken();
     const navigate = useNavigate();
     const location = useLocation();
+
+    const [formData, setFormData] = useState({
+        gender: '',
+        firstname: '',
+        name: '',
+        birthdate: '',
+        cellphone: '',
+        email: '',
+        emailConfirm: '',
+        address: '',
+        additionalAddress: '',
+        zipCode: '',
+        city: '',
+        websiteUrl: '',
+        linkedinUrl: '',
+        graduation: '',
+        graduationNext: '',
+        schoolName: '',
+        formationName: '',
+        motivations: '',
+        profileImage: [],
+        experiences: [],
+        cv: [],
+        motivationLetter: [],
+        otherFile: [],
+        hasDrivingLicense: false,
+        isHandicap: false,
+        isCreateAccount: false,
+    });
+
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0'); 
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
+    const checkIsAuthenticated = async () => {
+        const userToken = sessionStorage.getItem('token')
+        const userEmail = sessionStorage.getItem('userEmail');
+        try {
+            const response = await fetch(`${REACT_APP_API_URL}/api/security/students/?email=${encodeURIComponent(userEmail)}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/Id+json',
+                    'Authorization': `Bearer ${userToken}`,
+                },
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                const userData = data['hydra:member'][0];
+                
+                console.log(data)
+
+                setFormData({
+                    ...formData,
+                    gender: userData.gender || '',
+                    firstname: userData.firstname || '',
+                    name: userData.name || '',
+                    birthdate: formatDate(userData.birthdate) || '',
+                    cellphone: userData.cellphone || '',
+                    email: userData.email || '',
+                    emailConfirm: userData.email || '',
+                    address: userData.address || '',
+                    additionalAddress: userData.additionalAddress || '',
+                    zipCode: userData.zipCode || '',
+                    city: userData.city || '',
+                    profileImage: userData.profileImage ? [userData.profileImage] : [],
+                })
+            }
+        } catch (error) {
+            console.error(error)
+        }
+    }
+    
+    useEffect(() => {
+        if (isAuthenticated && getToken() !== '') {
+            checkIsAuthenticated();
+        } else {
+            setFormData({
+                gender: '',
+                firstname: '',
+                name: '',
+                birthdate: '',
+                cellphone: '',
+                email: '',
+                emailConfirm: '',
+                address: '',
+                additionalAddress: '',
+                zipCode: '',
+                city: ''
+            });
+        }
+    }, [isAuthenticated, token]);
 
     useEffect(() => {
         const fetchStudyLevels = async () => {
@@ -61,12 +156,11 @@ export default function OfferApply() {
 
             } catch (error) {
                 console.error(error);
-                setLoading(false);
             }
         };
 
         fetchStudyLevels();
-        
+
         const fetchData = async () => {
             try {
                 const offerResponse = await fetch(`${REACT_APP_API_URL}/api/offers/${location.state.offerId}`);
@@ -82,37 +176,8 @@ export default function OfferApply() {
 
         fetchData();
 
-        
+
     }, [REACT_APP_API_URL, location.state.offerId]);
-    
-    const [formData, setFormData] = useState({
-        gender: '',
-        firstname: '',
-        lastname: '',
-        birthdate: '',
-        mobilePhone: '',
-        email: '',
-        emailConfirm: '',
-        address: '',
-        addressComplement: '',
-        zipcode: '',
-        city: '',
-        websiteUrl: '',
-        linkedinUrl: '',
-        graduation: '',
-        graduationNext: '',
-        schoolName: '',
-        formationName: '',
-        motivations: '',
-        profilePicture: [],
-        experiences: [],
-        cv: [],
-        motivationLetter: [],
-        otherFile: [],
-        hasDrivingLicense: false,
-        isHandicap: false,
-        isCreateAccount: false,
-    });
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -173,7 +238,7 @@ export default function OfferApply() {
         }
 
         // Call API en post pour envoyer les data dans la table référençant les postulations
-        // console.log(formData)
+        console.log(formData)
         // Une fois le call API terminé
         if (formData.isCreateAccount) {
             navigate("/finaliser-inscription", { state: { formData: formData } });
@@ -256,7 +321,7 @@ export default function OfferApply() {
                         <div className="flex gap-x-[25px] mb-8">
                             <div className="w-1/5 flex flex-col">
                                 <label className="required font-semibold">Genre</label>
-                                <select name="gender" className="input-apply" onChange={handleChange}>
+                                <select name="gender" className="input-apply" value={formData.gender} disabled={!!formData.gender} onChange={handleChange}>
                                     <option hidden defaultValue>-</option>
                                     <option value={"Homme"} default defaultValue>Homme</option>
                                     <option value={"Femme"}>Femme</option>
@@ -265,67 +330,67 @@ export default function OfferApply() {
                             </div>
                             <div className="w-2/5 flex flex-col">
                                 <label className="required font-semibold">Prénom</label>
-                                <input type="text" name="firstname" className="input-apply" placeholder="Jean" onChange={handleChange}></input>
+                                <input type="text" name="firstname" className="input-apply" placeholder="Jean" value={formData.firstname} disabled={!!formData.firstname} onChange={handleChange}></input>
                             </div>
                             <div className="w-2/5 flex flex-col">
                                 <label className="required font-semibold">Nom</label>
-                                <input type="text" name="lastname" className="input-apply" placeholder="Dupont" onChange={handleChange}></input>
+                                <input type="text" name="name" className="input-apply" placeholder="Dupont" value={formData.name} disabled={!!formData.name} onChange={handleChange}></input>
                             </div>
                         </div>
                         <div className="flex gap-x-[25px] mb-8">
                             <div className="w-1/2 flex flex-col">
                                 <label className="required font-semibold">Date de naissance</label>
-                                <input type="date" name="birthdate" className="input-apply" onChange={handleChange}></input>
+                                <input type="date" name="birthdate" className="input-apply" value={formData.birthdate} disabled={!!formData.birthdate} onChange={handleChange}></input>
                             </div>
                             <div className="w-1/2 flex flex-col">
                                 <label className="required font-semibold">Téléphone mobile</label>
-                                <input type="phone" name="mobilePhone" className="input-apply" placeholder="06 70 61 95 99" onChange={handleChange}></input>
+                                <input type="phone" name="cellphone" className="input-apply" placeholder="06 70 61 95 99" value={formData.cellphone} disabled={!!formData.cellphone} onChange={handleChange}></input>
                             </div>
                         </div>
                         <div className="flex gap-x-[25px] mb-8">
                             <div className="w-1/2 flex flex-col">
                                 <label className="required font-semibold">Email</label>
-                                <input type="email" name="email" className="input-apply" placeholder="jean.dupont@gmail.com" onChange={handleChange}></input>
+                                <input type="email" name="email" className="input-apply" placeholder="jean.dupont@gmail.com" value={formData.email} disabled={!!formData.email} onChange={handleChange}></input>
                             </div>
                             <div className="w-1/2 flex flex-col">
                                 <label className="required font-semibold">Confirmez votre email</label>
-                                <input type="email" name="emailConfirm" className="input-apply" placeholder="jean.dupont@gmail.com" onChange={handleChange}></input>
+                                <input type="email" name="emailConfirm" className="input-apply" placeholder="jean.dupont@gmail.com" value={formData.emailConfirm} disabled={!!formData.emailConfirm} onChange={handleChange}></input>
                             </div>
                         </div>
                         <div className="flex gap-x-[25px] mb-8">
                             <div className="w-1/2 flex flex-col">
                                 <label className="font-semibold">Adresse</label>
-                                <input type="text" name="address" className="input-apply" placeholder="12 Avenue du Maréchal Joffre" onChange={handleChange}></input>
+                                <input type="text" name="address" className="input-apply" placeholder="12 Avenue du Maréchal Joffre" value={formData.address} disabled={!!formData.address} onChange={handleChange}></input>
                             </div>
                             <div className="w-1/2 flex flex-col">
                                 <label className="font-semibold">Complément d’adresse</label>
-                                <input type="text" name="addressComplement" className="input-apply" placeholder="Bat A, apt 7" onChange={handleChange}></input>
+                                <input type="text" name="additionalAddress" className="input-apply" placeholder="Bat A, apt 7" value={formData.additionalAddress} disabled={!!formData.additionalAddress} onChange={handleChange}></input>
                             </div>
                         </div>
                         <div className="flex gap-x-[25px] mb-8">
                             <div className="w-1/2 flex flex-col">
                                 <label className="font-semibold">Code postal</label>
-                                <input type="text" name="zipcode" className="input-apply" placeholder="60200" pattern="[0-9]{5}" onChange={handleChange}></input>
+                                <input type="text" name="zipCode" className="input-apply" placeholder="60200" pattern="[0-9]{5}" value={formData.zipCode} disabled={!!formData.zipCode} onChange={handleChange}></input>
                             </div>
                             <div className="w-1/2 flex flex-col">
                                 <label className="font-semibold">Ville</label>
-                                <input type="text" name="city" className="input-apply" placeholder="Compiègne" onChange={handleChange}></input>
+                                <input type="text" name="city" className="input-apply" placeholder="Compiègne" value={formData.city} disabled={!!formData.city} onChange={handleChange}></input>
                             </div>
                         </div>
                         <div className="w-full flex flex-col mb-8">
                             <label className="font-semibold">Adresse de votre site web personnel</label>
-                            <input type="text" name="websiteUrl" className="input-apply" placeholder="https://www.jeandupont.fr" onChange={handleChange}></input>
+                            <input type="text" name="websiteUrl" className="input-apply" placeholder="https://www.jeandupont.fr" value={formData.websiteUrl} disabled={!!formData.websiteUrl}  onChange={handleChange}></input>
                         </div>
                         <div className="w-full flex flex-col mb-8">
                             <label className="font-semibold">Lien vers votre page Linkedin</label>
-                            <input type="text" name="linkedinUrl" className="input-apply" placeholder="https://www.linkedin.com/in/jean-dupont" onChange={handleChange}></input>
+                            <input type="text" name="linkedinUrl" className="input-apply" placeholder="https://www.linkedin.com/in/jean-dupont" value={formData.linkedinUrl} disabled={!!formData.linkedinUrl}  onChange={handleChange}></input>
                         </div>
                         <div className="flex gap-x-[52px] text-grey-dark">
                             <div className="flex gap-x-[10px]">
-                                <Checkbox label={'J’ai le permis de conduire'} checked={false} activeCheckEvent={true} onChange={(isChecked) => handleCheckboxChange('hasDrivingLicense', isChecked)} />
+                                <Checkbox label={'J’ai le permis de conduire'} checked={!!formData.hasDrivingLicense || false} activeCheckEvent={true} onChange={(isChecked) => handleCheckboxChange('hasDrivingLicense', isChecked)} />
                             </div>
                             <div className="flex gap-x-[10px]">
-                                <Checkbox label={'J’ai une forme de handicap'} checked={false} activeCheckEvent={true} onChange={(isChecked) => handleCheckboxChange('isHandicap', isChecked)} />
+                                <Checkbox label={'J’ai une forme de handicap'} checked={!!formData.isHandicap || false} activeCheckEvent={true} onChange={(isChecked) => handleCheckboxChange('isHandicap', isChecked)} />
                             </div>
                         </div>
                     </div>
@@ -366,7 +431,7 @@ export default function OfferApply() {
                         <div className="flex items-center gap-x-[10px] pt-8 border-t mb-8">
                             <Checkbox label={'Créer mon compte membre pour éviter de ressaisir ces informations la fois prochaine'} checked={false} activeCheckEvent={true} onChange={(isChecked) => handleCheckboxChange('isCreateAccount', isChecked)} />
                         </div>
-                        <button className="w-full btn-blue-dark">Postuler</button>
+                        <button type={'submit'}className="w-full btn-blue-dark">Postuler</button>
                     </div>
                     <div className="my-8">
                         <p>En validant ce formulaire, vous confirmez que vous acceptez nos <Link to="#" state={{ offerId: offer.id }} className="text-blue-dark underline">Conditions Générales d’Utilisation</Link> et notre <Link to="#" state={{ offerId: offer.id }} className="text-blue-dark underline">politique de confidentialité</Link>.</p>
@@ -381,10 +446,10 @@ export default function OfferApply() {
                     <div className="pb-5 border-b">
                         <p className="text-2xl text-blue-dark font-semibold mb-4">Votre photo</p>
                         <p className="text-grey-dark mb-4">Ajouter votre photo à votre profil est apprécié par les entreprises et augmente vos chances</p>
-                        <ImageUploader name={'profilePicture'} onUpload={(files) => handleFileUpload('profilePicture', files)} />
+                        <ImageUploader name={'profilePicture'} onUpload={(files) => handleFileUpload('profilePicture', files)} userImage={formData.profileImage} apiUrl={REACT_APP_API_URL}/>
                     </div>
                     <div className="py-5 border-b">
-                        <p className="text-2xl text-blue-dark font-semibold mb-4">Votre compétences</p>
+                        <p className="text-2xl text-blue-dark font-semibold mb-4">Vos compétences</p>
                         <p className="text-grey-dark mb-4">Ajoutez jusqu’à 10 compétences :</p>
                         <SkillsList name={'skills'} onSkillsChange={handleSkillsChange} />
                     </div>
