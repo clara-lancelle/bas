@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import useToken from "../useToken";
 
-export default function SignIn({ closeModal, setIsAuthenticated, setUserInfo }) {
+export default function SignIn({ closeModal, setIsAuthenticated, setUserInfo, notify }) {
     const { REACT_APP_API_URL } = process.env;
     const { token, setToken, updateUserInfo } = useToken()
     const [loading, setLoading] = useState(false);
@@ -37,6 +37,7 @@ export default function SignIn({ closeModal, setIsAuthenticated, setUserInfo }) 
 
                 if (!authResponse.ok) {
                     const authErrorData = await authResponse.json();
+                    notify(authErrorData.message, 'error');
                     console.error('Erreur lors de l\'authentification', authErrorData);
                     return;
                 }

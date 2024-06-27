@@ -8,11 +8,13 @@ import '../../Styles/global.css';
 import './header.css';
 import logo from '../../Images/logo.svg';
 import chevDown from '../../Images/Icons/down-chevron.svg';
+import useToken from '../useToken';
 
 Modal.setAppElement('#root');
 
 export default function Header({ openModal, closeModal, modalIsOpen, isAuthenticated, setIsAuthenticated, userInfo, setUserInfo, handleLogout, notify }) {
     const [modalContent, setModalContent] = useState(null);
+    const {token, getToken} = useToken();
     const { REACT_APP_API_URL } = process.env;
     const customStyles = {
         content: {
@@ -37,6 +39,11 @@ export default function Header({ openModal, closeModal, modalIsOpen, isAuthentic
         openModal();
     };
 
+    useEffect(() => {
+        console.log(userInfo.userImage)
+    }, [userInfo, token, getToken])
+
+    console.log(userInfo, `${REACT_APP_API_URL}/assets/images/users/${userInfo.userImage}`)
     return (
         <>
             <header className="p-3 pb-0 bg-grey h-20">
@@ -84,8 +91,8 @@ export default function Header({ openModal, closeModal, modalIsOpen, isAuthentic
                         </div>
                     )}
                     {isAuthenticated && (
-                        <div className="flex justify-end relative nav-item h-full pb-2">
-                            <img src={userInfo.profile_image ? userInfo.profile_image : `${REACT_APP_API_URL}/assets/images/users/usr.png`} className="rounded-full h-full"></img>
+                        <div className="flex justify-end relative nav-item h-full pb-2 gap-x-2">
+                            <img src={userInfo.userImage == null ? `${REACT_APP_API_URL}/assets/images/users/usr.png` : `${REACT_APP_API_URL}/assets/images/users/${userInfo.userImage}`} className="rounded-full h-full w-16 object-cover"></img>
                             <div className="flex flex-col items-end justify-center">
                                 <p>{userInfo.firstName} {userInfo.lastName}</p>
                                 <p>{userInfo.userType}</p>

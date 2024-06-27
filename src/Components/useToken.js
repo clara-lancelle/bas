@@ -24,10 +24,12 @@ const useToken = () => {
             if (response.ok) {
                 const data = await response.json();
                 const userData = data['hydra:member'][0];
-                sessionStorage.setItem('userEmail', userData.email)
-                sessionStorage.setItem('userFirstName', JSON.stringify(userData.firstname))
-                sessionStorage.setItem('userLastName', JSON.stringify(userData.name))
-                sessionStorage.setItem('userType', JSON.stringify(userData['@type']))
+                console.log(userData)
+                userData.email ? sessionStorage.setItem('userEmail', userData.email) : sessionStorage.setItem('userEmail', null)
+                userData.firstname ? sessionStorage.setItem('userFirstName', userData.firstname) : sessionStorage.setItem('userFirstName', null)
+                userData.name ? sessionStorage.setItem('userLastName', userData.name) : sessionStorage.setItem('userLastName', null)
+                userData.profileImage ? sessionStorage.setItem('userImage', userData.profileImage): sessionStorage.setItem('userImage', null)
+                sessionStorage.setItem('userType', userData['@type'])
             } else {
                 console.error('Failed to fetch user info');
             }
@@ -41,16 +43,19 @@ const useToken = () => {
         if (token) {
             setIsAuthenticated(true);
             setUserInfo({
-                firstName: JSON.parse(sessionStorage.getItem('userFirstName')),
-                lastName: JSON.parse(sessionStorage.getItem('userLastName')),
-                userType: JSON.parse(sessionStorage.getItem('userType'))
+                firstName: sessionStorage.getItem('userFirstName'),
+                lastName: sessionStorage.getItem('userLastName'),
+                userType: sessionStorage.getItem('userType'),
+                userImage: sessionStorage.getItem('userImage')
+                
             });
         } else {
             setIsAuthenticated(false);
             setUserInfo({
                 firstName: '',
                 lastName: '',
-                userType: ''
+                userType: '',
+                userImage: ''
             });
         }
     };
