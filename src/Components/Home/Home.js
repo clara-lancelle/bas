@@ -6,7 +6,7 @@ import arrowRight from '../../Images/Icons/arrow-right.svg'
 import JobProfiles from "../JobProfiles/JobProfiles";
 
 
-export default function Home() {
+export default function Home({openSignUpModal}) {
     const { REACT_APP_API_URL } = process.env;
     const [offerCount, setOfferCount] = useState()
     const [companiesWithTheMostOffers, setCompaniesWithTheMostOffers] = useState([])
@@ -82,7 +82,7 @@ export default function Home() {
                             <h2 className="mb-6 font-semibold text-4xl leading-110">Entreprises,<br />déposez vos offres <br />gratuitement</h2>
                             <h3 className="mb-6">Vous pourrez gérer votre planning d’accueil et bénéficier de nombreux services intégrés.</h3>
                             <div className="flex items-center btn-white w-fit">
-                                <Link to="/">Créer votre compte</Link>
+                                <button onClick={openSignUpModal}>Créer votre compte</button>
                             </div>
                         </div>
                         <img alt="image d'un dashboard" src={dashboardCompany} />

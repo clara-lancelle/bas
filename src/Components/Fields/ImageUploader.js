@@ -7,7 +7,6 @@ const ImageUploader = ({name, onUpload, userImage, apiUrl}) => {
   const [imageIndicatorText, setImageIndicatorText] = useState(true)
 
   useEffect(() => {
-    console.log(userImage)
     if (userImage && userImage.length > 0) {
       setImagePreview(`${apiUrl}/assets/images/users/${userImage}`);
       setImageIndicatorText(false)

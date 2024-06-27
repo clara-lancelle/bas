@@ -24,7 +24,6 @@ const useToken = () => {
             if (response.ok) {
                 const data = await response.json();
                 const userData = data['hydra:member'][0];
-                console.log(userData)
                 userData.email ? sessionStorage.setItem('userEmail', userData.email) : sessionStorage.setItem('userEmail', null)
                 userData.firstname ? sessionStorage.setItem('userFirstName', userData.firstname) : sessionStorage.setItem('userFirstName', null)
                 userData.name ? sessionStorage.setItem('userLastName', userData.name) : sessionStorage.setItem('userLastName', null)
