@@ -1,0 +1,7 @@
+.group:hover .absolute {
+    opacity: 0.5;
+}
+
+/* .group:hover .hidden {
+    display: block;
+} */
