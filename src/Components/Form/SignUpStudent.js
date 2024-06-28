@@ -191,7 +191,7 @@ export default function SignUpStudent({ closeModal, setIsAuthenticated, setUserI
                                                 <li>8 caractères</li>
                                                 <li>1 majuscule</li>
                                                 <li>1 minuscule</li>
-                                                <li>1 caractère spécial (_, -, !, ?, *, &)</li>
+                                                <li>1 caractère spécial (@, $, !, %, #, *, ?, &)</li>
                                             </ul>
                                         </div>
                                     )}

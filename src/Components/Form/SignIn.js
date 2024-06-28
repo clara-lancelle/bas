@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import useToken from "../useToken";
+import { useNavigate } from "react-router-dom";
 
 export default function SignIn({ closeModal, setIsAuthenticated, setUserInfo, notify }) {
     const { REACT_APP_API_URL } = process.env;
     const { token, setToken, updateUserInfo } = useToken()
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -50,6 +52,11 @@ export default function SignIn({ closeModal, setIsAuthenticated, setUserInfo, no
                     await updateUserInfo(setIsAuthenticated, setUserInfo)
                     setLoading(false)
                     closeModal({ message: 'Vous êtes connecté(e) !', type: 'success' })
+
+                    const userType = sessionStorage.getItem('userType');
+                    if (userType === 'Student') {
+                        navigate('/mon-compte');
+                    }
                 }
             } catch (error) {
                 console.error('Erreur réseau ou serveur', error);
