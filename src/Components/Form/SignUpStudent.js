@@ -45,6 +45,11 @@ export default function SignUpStudent({ closeModal, setIsAuthenticated, setUserI
     };
 
     const requiredFields = ['firstname', 'name', 'email', 'password', 'passwordConfirm', 'cellphone', 'birthdate', 'address', 'zipCode', 'city', 'study_level'];
+    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%#*?&])[A-Za-zÀ-ż\d@$!#%*?&]{8,}$/;
+
+    const validatePassword = (password) => {
+        return passwordPattern.test(password);
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -75,11 +80,19 @@ export default function SignUpStudent({ closeModal, setIsAuthenticated, setUserI
             }
         }
 
-        // Vérifications de la correspondance des mots de passe
-        if (isValid && formData.password !== formData.passwordConfirm) {
-            notify('Les mots de passe ne correspondent pas.', 'error');
-            isValid = false;
+        // Vérifications de la correspondance des mots de passe & respect de la structure
+        if (isValid){
+            if(formData.password !== formData.passwordConfirm) {
+                notify('Les mots de passe ne correspondent pas.', 'error');
+                isValid = false;
+            }
+            if(!validatePassword(formData.password)){
+                notify('Le mot de passe doit contenir minimum 8 caractères, 1 majuscule, 1 minuscule et 1 caractère spécial.', 'error');
+                isValid = false;
+            }
         }
+
+        
 
         // Vérification du format du numéro de téléphone
         if (isValid && (!/^\d{10}$/.test(formData.cellphone) || formData.cellphone[0] !== '0')) {
@@ -178,7 +191,7 @@ export default function SignUpStudent({ closeModal, setIsAuthenticated, setUserI
                                                 <li>8 caractères</li>
                                                 <li>1 majuscule</li>
                                                 <li>1 minuscule</li>
-                                                <li>1 caractère spécial (_, -, !, ?, *, &)</li>
+                                                <li>1 caractère spécial (@, $, !, %, #, *, ?, &)</li>
                                             </ul>
                                         </div>
                                     )}

@@ -11,8 +11,10 @@ import ExperienceAdderList from '../Fields/ExperienceAdderList';
 import FileUploader from '../Fields/FileUploader';
 import Checkbox from '../Fields/Checkbox';
 import arrow from '../../Images/Icons/arrow-right-grey-dark.svg'
+import arrowBlueDark from '../../Images/Icons/arrow-blue-dark.svg'
 import ImageUploader from "../Fields/ImageUploader";
 import useToken from "../useToken";
+import Modal from 'react-modal';
 
 const LinkEditor = (props) => {
     const { url } = props.contentState.getEntity(props.entityKey).getData();
@@ -46,6 +48,8 @@ export default function OfferApply({ isAuthenticated, userInfo, setUserInfo }) {
     const [offer, setOffer] = useState([]);
     const [studyLevels, setStudyLevels] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [isOpenModal, setIsOpenModal] = useState(false);
+    const [isBlocked, setIsBlocked] = useState(false);
     const { REACT_APP_API_URL } = process.env;
     const { token, getToken } = useToken();
     const navigate = useNavigate();
@@ -79,6 +83,21 @@ export default function OfferApply({ isAuthenticated, userInfo, setUserInfo }) {
         isHandicap: false,
         isCreateAccount: false,
     });
+
+    const customStyles = {
+        content: {
+            top: '50%',
+            left: '50%',
+            right: '50%',
+            bottom: '50%',
+            transform: 'translate(-50%, -50%)',
+            maxWidth: '700px',
+            width: '100%',
+            height: 'fit-content',
+            padding: '80px 80px',
+            zIndex: 2,
+        },
+    };
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -129,7 +148,13 @@ export default function OfferApply({ isAuthenticated, userInfo, setUserInfo }) {
     
     useEffect(() => {
         if (isAuthenticated && getToken() !== '') {
-            checkIsAuthenticated();
+            console.log(sessionStorage.getItem('userType') == 'CompanyUser', sessionStorage.getItem('userType'), userInfo)
+            if(sessionStorage.getItem('userType') == 'CompanyUser'){
+                setIsOpenModal(true)
+                setIsBlocked(true)
+            }else{
+                checkIsAuthenticated();
+            }
         } else {
             setFormData({
                 gender: '',
@@ -178,6 +203,14 @@ export default function OfferApply({ isAuthenticated, userInfo, setUserInfo }) {
 
 
     }, [REACT_APP_API_URL, location.state.offerId]);
+
+    const handleScroll = (e) => {
+        console.log(e)
+        if(isBlocked){
+            console.log('bloqué')
+            e.preventDefault();
+        }
+    }
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -279,7 +312,7 @@ export default function OfferApply({ isAuthenticated, userInfo, setUserInfo }) {
 
     return (
         <>
-            <div className="bg-light-grey">
+            <div className="bg-light-grey" onScroll={handleScroll}>
                 <div className="container flex flex-col pt-3 pb-11">
 
                     {ariane(offer.type, offer.name, offer.id)}
@@ -426,7 +459,7 @@ export default function OfferApply({ isAuthenticated, userInfo, setUserInfo }) {
                         </div>
                         <div className="flex flex-col gap-x-[25px] mb-8">
                             <label className="font-semibold">Vos atouts & motivations pour postuler à cette offre de stage</label>
-                            <RichTextEditor name="motivations" className="border-white-light border p-4 h-[150px]" editorState={editorState} setEditorState={setEditorState}></RichTextEditor>
+                            <RichTextEditor name="motivations" className="border-white-light border p-4 h-[150px] z-[1]" editorState={editorState} setEditorState={setEditorState}></RichTextEditor>
                         </div>
                         <div className="flex items-center gap-x-[10px] pt-8 border-t mb-8">
                             <Checkbox label={'Créer mon compte membre pour éviter de ressaisir ces informations la fois prochaine'} checked={false} activeCheckEvent={true} onChange={(isChecked) => handleCheckboxChange('isCreateAccount', isChecked)} />
@@ -482,6 +515,19 @@ export default function OfferApply({ isAuthenticated, userInfo, setUserInfo }) {
                     </div>
                 </div>
             </form>
+
+            <Modal
+                    isOpen={isOpenModal}
+                    contentLabel="Accès non autorisé"
+                    style={customStyles}
+                >
+                    <div className="flex flex-col items-center">
+                        <p className="text-3xl font-semibold mb-4">Accès non autorisé</p>
+                        <p className="text-center mb-2">En tant qu'administrateur d'entreprise, vous n'avez pas l'autorisation d'accéder à la postulation.</p>
+                        <p className="text-center">Nous vous prions de bien vouloir créer un compte personnel afin de pouvoir postuler.</p>
+                        <Link to={`/offre/${offer.id}`} state={{ offerId: offer.id }} className="self-start mt-6 text-blue-dark font-semibold flex items-center gap-x-2"><img src={arrowBlueDark} />Retourner à l'offre</Link>
+                    </div>
+                </Modal>
         </>
     )
 }

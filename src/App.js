@@ -7,17 +7,22 @@ import CompanyDetail from './Components/Company/Detail';
 import OfferDetail from './Components/Offer/Detail';
 import OfferApply from './Components/Offer/Apply';
 import './index.css';
-import { Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, useNavigate, useLocation } from "react-router-dom";
 import OfferList from './Components/Offer/OfferList';
 import SignInCompletion from './Components/Authentication/SignInCompletion';
-import BackofficeCompanyOffers from './Components/Backoffice/CompanyOffers';
 import useToken from "./Components/useToken";
+import Modal from 'react-modal';
 import { ToastContainer, toast } from 'react-toastify';
+import SignUp from './Components/Form/SignUpChoice';
+import SignIn from './Components/Form/SignIn';
+import PrivateRoute from './Components/Authentication/PrivateRoute';
+import { restrictedRoutes } from './Routes/Restricted';
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [modalContent, setModalContent] = useState(null);
   const [userInfo, setUserInfo] = useState({
     gender: '',
     firstname: '',
@@ -29,16 +34,33 @@ function App() {
     address: '',
     additionalAddress: '',
     zipCode: '',
-    city: ''
+    city: '',
   });
   const { token, setToken } = useToken()
+  const customStyles = {
+    content: {
+      top: '50%',
+      left: '50%',
+      right: '50%',
+      bottom: '50%',
+      transform: 'translate(-50%, -50%)',
+      maxWidth: '500px',
+      width: '100%',
+      height: 'fit-content',
+      padding: '80px 0',
+    },
+  };
+
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     if (token) {
       setUserInfo({
-        firstName: JSON.parse(sessionStorage.getItem('userFirstName')),
-        lastName: JSON.parse(sessionStorage.getItem('userLastName')),
-        userType: JSON.parse(sessionStorage.getItem('userType'))
+        firstName: sessionStorage.getItem('userFirstName'),
+        lastName: sessionStorage.getItem('userLastName'),
+        userType: sessionStorage.getItem('userType'),
+        userImage: sessionStorage.getItem('userImage') ? sessionStorage.getItem('userImage') : null
       });
       setIsAuthenticated(true);
     }
@@ -74,7 +96,23 @@ function App() {
       city: ''
     });
     notify('Vous êtes déconnecté !', 'success');
+
+    const restrictedPaths = restrictedRoutes.filter(route => route.restricted).map(route => route.path);
+    if (restrictedPaths.includes(location.pathname)) {
+      navigate('/');
+    }
   };
+
+  const openSignUpModal = () => {
+    setModalContent('signUp');
+    openModal();
+  };
+
+  const openSignInModal = () => {
+    setModalContent('signIn');
+    openModal();
+  };
+
   const openModal = () => {
     setModalIsOpen(true);
   };
@@ -86,11 +124,19 @@ function App() {
     }
   };
 
+  const createElementWithProps = (element, props) => {
+    return React.cloneElement(element, props);
+  };
+
+  Modal.setAppElement('#root');
+
   return (
     <>
       <Header
         openModal={openModal}
         closeModal={closeModal}
+        openSignUpModal={openSignUpModal}
+        openSignInModal={openSignInModal}
         modalIsOpen={modalIsOpen}
         isAuthenticated={isAuthenticated}
         setIsAuthenticated={setIsAuthenticated}
@@ -100,7 +146,7 @@ function App() {
         notify={notify} />
       <ToastContainer />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home openSignUpModal={openSignUpModal} />} />
         <Route path="/offre/:id" element={<OfferDetail />} />
         <Route path="/offre/:id/postuler" element={<OfferApply
           isAuthenticated={isAuthenticated}
@@ -111,8 +157,52 @@ function App() {
         <Route path="/entreprises" element={<CompanyList />} />
         <Route path="/entreprise/:id" element={<CompanyDetail />} />
         <Route path="/finaliser-inscription" element={<SignInCompletion />} />
-        <Route path="/backoffice/entreprise/offres" element={<BackofficeCompanyOffers />} />
+        {restrictedRoutes.map((route, index) => {
+          if (route.restricted) {
+            return (
+              <Route key={index} element={<PrivateRoute notify={notify} openSignInModal={() => openModal('signIn')} />}>
+                <Route
+                  path={route.path}
+                  element={createElementWithProps(route.element, { ...route.props, userInfo, notify })}
+                />
+              </Route>
+            );
+          }
+          return <Route key={index} path={route.path} element={route.element} />;
+        })}
       </Routes>
+      {modalContent === 'signUp' && (
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={closeModal}
+          contentLabel="Sign Up Modal"
+        >
+          <div className="flex justify-end">
+            <button onClick={closeModal}>Fermer</button>
+          </div>
+          <SignUp closeModal={closeModal}
+            isAuthenticated={isAuthenticated}
+            setIsAuthenticated={setIsAuthenticated}
+            userInfo={userInfo}
+            setUserInfo={setUserInfo}
+            notify={notify} />
+        </Modal>
+      )}
+      {modalContent === 'signIn' && (
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={closeModal}
+          contentLabel="Sign In Modal"
+          style={customStyles}
+        >
+          <SignIn closeModal={closeModal}
+            isAuthenticated={isAuthenticated}
+            setIsAuthenticated={setIsAuthenticated}
+            userInfo={userInfo}
+            setUserInfo={setUserInfo}
+            notify={notify} />
+        </Modal>
+      )}
       <Footer />
     </>
   );

@@ -162,3 +162,8 @@
     transform: translateX(50%);
     margin: ;
 } */
+
+.ReactModalPortal{
+    z-index: 100;
+    position: relative;
+}

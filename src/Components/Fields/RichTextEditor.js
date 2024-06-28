@@ -148,7 +148,7 @@ const RichTextEditor = ({ editorState, setEditorState }) => {
 
   return (
     <>
-      <div className="border">
+      <div className="border z-[1]">
         <div className="editor-container">
           <Editor
             editorState={editorState}

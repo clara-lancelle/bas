@@ -19,7 +19,7 @@ export default function CompanyList() {
     ];
     return (
         <div className="h-full flex">
-            <Sidebar activeItem="offers"/>
+            <Sidebar userType={'administrator'} activeItem="offers"/>
             <div className="w-10/12">
                 <div className="mb-8 py-4 px-8 flex justify-between border-b">
                     <img></img>
