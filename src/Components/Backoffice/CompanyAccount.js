@@ -9,7 +9,7 @@ import CompanyOffersTable from "../Tables/CompanyOffersTable";
 import pen from "../../Images/Icons/pencil.svg";
 import placeholderLarge from "../../Images/Company/placeholderLarge.png";
 import useToken from "../useToken";
-// import identityForm from "../Form/Backoffice/CompanyIdentity";
+import IdentityForm from "../Form/Backoffice/CompanyIdentity";
 
 export default function CompanyAccount() {
     const { REACT_APP_API_URL } = process.env;
@@ -17,6 +17,7 @@ export default function CompanyAccount() {
     const userToken = sessionStorage.getItem('token');
     const [loading, setLoading] = useState(false);
     const [company, setCompany] = useState(false);
+    const [formData, setFormData] = useState({});
     const [editStates, setEditStates] = useState({
         identity: false,
         description: false,
@@ -46,20 +47,18 @@ export default function CompanyAccount() {
                 if (response.ok) {
                     const companyResponse = await response.json();
                     setCompany(companyResponse);
-                    // setFormData({
-                    //     ...formData,
-                    //     gender: userResponse.gender || '',
-                    //     firstname: userResponse.firstname || '',
-                    //     name: userResponse.name || '',
-                    //     birthdate: formatDateForForm(userResponse.birthdate) || '',
-                    //     cellphone: userResponse.cellphone || '',
-                    //     email: userResponse.email || '',
-                    //     address: userResponse.address || '',
-                    //     additionalAddress: userResponse.additionalAddress || '',
-                    //     zipCode: userResponse.zipCode || '',
-                    //     city: userResponse.city || '',
-                    //     profileImage: userResponse.profileImage ? [userResponse.profileImage] : [],
-                    // })
+                    setFormData({
+                        ...formData,
+                        companyName: companyResponse.name || '',
+                        siret: companyResponse.siret || '',
+                        activities: companyResponse.activities||[],
+                        category: companyResponse.category || '',
+                        address: companyResponse.address || '',
+                        additional_address: companyResponse.additional_address || '',
+                        zip_code: companyResponse.zip_code || '',
+                        city: companyResponse.city || '',
+                        phone_num: companyResponse.phone_num || '',
+                    })
                 } else {
                     console.error('Failed to fetch user data');
                 }
@@ -78,6 +77,7 @@ export default function CompanyAccount() {
     } else {
         return (
             <>
+            {console.log(formData)}
                 <div className="h-full flex">
                     <Sidebar userType={'administrator'} activeItem="company" />
                     <div className="w-10/12">
@@ -100,24 +100,24 @@ export default function CompanyAccount() {
                                                 <h2 className="font-semibold text-xl">Identité</h2>
                                                 <button className="btn-blue-dark flex items-center gap-x-2" onClick={() => toggleEditState('identity')}><img src={pen}></img> <span>Modifier</span></button>
                                             </div>
-                                            {/* {editStates.identity ? (
-                                            <IdentityForm formData={formData} />
-                                        ) : ( */}
-                                            <div className="w-full flex items-start gap-x-16 px-4 py-6">
-                                                <div className="flex flex-col gap-y-4">
-                                                    <p><span className="font-semibold">Nom : </span>{company.name}</p>
-                                                    <p><span className="font-semibold">SIRET : </span>{company.siret}</p>
-                                                    <p><span className="font-semibold">Catégorie : </span>{company.category && company.category.name ? company.category.name : 'Non renseigné'}</p>
-                                                    <p><span className="font-semibold">Téléphone : </span>{company.phone_num || 'Non renseigné'}</p>
+                                            {editStates.identity ? (
+                                                <IdentityForm formData={formData} />
+                                            ) : (
+                                                <div className="w-full flex items-start gap-x-16 px-4 py-6">
+                                                    <div className="flex flex-col gap-y-4">
+                                                        <p><span className="font-semibold">Nom : </span>{company.name}</p>
+                                                        <p><span className="font-semibold">SIRET : </span>{company.siret}</p>
+                                                        <p><span className="font-semibold">Catégorie : </span>{company.category && company.category.name ? company.category.name : 'Non renseigné'}</p>
+                                                        <p><span className="font-semibold">Téléphone : </span>{company.phone_num || 'Non renseigné'}</p>
+                                                    </div>
+                                                    <div className="flex flex-col gap-y-4">
+                                                        <p><span className="font-semibold">Adresse : </span>{company.address || 'Non renseigné'}</p>
+                                                        <p><span className="font-semibold">Complément d'adresse : </span>{company.additional_address || 'Non renseigné'}</p>
+                                                        <p><span className="font-semibold">Ville : </span>{company.city || 'Non renseigné'}</p>
+                                                        <p><span className="font-semibold">Code postal : </span>{company.zip_code || 'Non renseigné'}</p>
+                                                    </div>
                                                 </div>
-                                                <div className="flex flex-col gap-y-4">
-                                                    <p><span className="font-semibold">Adresse : </span>{company.address || 'Non renseigné'}</p>
-                                                    <p><span className="font-semibold">Complément d'adresse : </span>{company.additional_address || 'Non renseigné'}</p>
-                                                    <p><span className="font-semibold">Ville : </span>{company.city || 'Non renseigné'}</p>
-                                                    <p><span className="font-semibold">Code postal : </span>{company.zip_code || 'Non renseigné'}</p>
-                                                </div>
-                                            </div>
-                                            {/* )} */}
+                                            )}
                                         </div>
                                         <div className="border rounded-md mb-8">
                                             <div className="p-4 border-b w-full flex justify-between items-center">
@@ -157,7 +157,7 @@ export default function CompanyAccount() {
                                                     {company.companyImages ? (
                                                         <div className="flex">
                                                             {company.companyImages.map((image) => (
-                                                                <img src={`${REACT_APP_API_URL}/assets/images/companies/${image.path}`} className="w-1/5 max-h-48 object-cover px-4" />
+                                                                <img key={image.name}src={`${REACT_APP_API_URL}/assets/images/companies/${image.path}`} className="w-1/5 max-h-48 object-cover px-4" />
                                                             ))}
                                                         </div>
                                                     ) : (
@@ -177,13 +177,13 @@ export default function CompanyAccount() {
                                                 <div className="flex items-start gap-x-16">
                                                     <div className="flex flex-col gap-y-4">
                                                         <p><span className="font-semibold">Date de création : </span>{moment(company.creation_date).format('DD/MM/YYYY') || 'Non renseigné'}</p>
-                                                        <p className="flex "><span className="font-semibold">Secteur d'activité : </span>
+                                                        <div className="flex "><span className="font-semibold">Secteur d'activité : </span>
                                                             <ul className="list-style-logo">
                                                                 {company.activities && company.activities.map((activity) => (
                                                                     <li key={activity.id}>{activity.name}</li>
                                                                 )) || 'Non renseigné'}
                                                             </ul>
-                                                        </p>
+                                                        </div>
                                                         <p><span className="font-semibold">Effectif  : </span>{company.workforce || 'Non renseigné'}</p>
                                                         <p><span className="font-semibold">Chiffre d'affaire : </span>{(company.revenue / 1000000).toFixed(2) + 'M€' || 'Non renseigné'}</p>
                                                     </div>
@@ -198,7 +198,7 @@ export default function CompanyAccount() {
                                             <div className="flex justify-between items-start gap-x-6 px-4 py-6">
                                                 <div className="flex flex-col items-start gap-y-8">
                                                     {company.socialLinks && company.socialLinks.map((media) => (
-                                                        <p><span className="font-semibold">{media.social_network.name} : </span><Link to={media.url} className="text-blue-dark underline">Accéder</Link></p>
+                                                        <p key={media.id}><span className="font-semibold">{media.social_network.name} : </span><Link to={media.url} className="text-blue-dark underline">Accéder</Link></p>
                                                     ))}
                                                 </div>
                                             </div>
