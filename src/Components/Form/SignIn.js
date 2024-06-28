@@ -55,7 +55,7 @@ export default function SignIn({ closeModal, setIsAuthenticated, setUserInfo, no
 
                     const userType = sessionStorage.getItem('userType');
                     if (userType === 'Student') {
-                        navigate('/mon-compte');
+                        navigate('/backoffice/mon-compte');
                     }
                 }
             } catch (error) {

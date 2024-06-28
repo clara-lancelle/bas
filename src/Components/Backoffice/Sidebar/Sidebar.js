@@ -16,6 +16,12 @@ import cardBlue from "../../../Images/Icons/card-grey.svg"
 import cardGrey from "../../../Images/Icons/card-grey.svg"
 
 export default function Sidebar({ activeItem, userType }) {
+    const { REACT_APP_API_URL } = process.env;
+    const userCategory = userType ? userType == 'student' ? 'Étudiant' : 'Administrateur' : '';
+    const userFistname = sessionStorage.getItem("userLastName")
+    const userName = sessionStorage.getItem("userFirstName")
+    const userImage = sessionStorage.getItem('userImage')
+
     const [hovered, setHovered] = useState({
         messages: false,
         company: false,
@@ -59,6 +65,7 @@ export default function Sidebar({ activeItem, userType }) {
                             <span>Messages</span>
                         </Link>
                         <Link
+                            to={'/backoffice/mon-organisation'}
                             className={`h-[48px] px-2 flex items-center gap-x-4 ${isActive('company') ? 'bg-blue-dark/10 text-blue-dark border-y-2' : ''}`}
                             onMouseEnter={() => handleMouseEnter('company')}
                             onMouseLeave={() => handleMouseLeave('company')}
@@ -81,6 +88,7 @@ export default function Sidebar({ activeItem, userType }) {
                             <span>Candidatures</span>
                         </Link>
                         <Link
+                            to={'/backoffice/entreprise/offres'}
                             className={`h-[48px] px-2 flex items-center gap-x-4 ${isActive('offers') ? 'bg-blue-dark/10 text-blue-dark border-y-2' : ''}`}
                             onMouseEnter={() => handleMouseEnter('offers')}
                             onMouseLeave={() => handleMouseLeave('offers')}
@@ -105,11 +113,14 @@ export default function Sidebar({ activeItem, userType }) {
                             <span>Paramètres</span>
                         </Link>
 
-                        <Link className="h-[48px] px-8 mb-5 flex items-center gap-x-4">
-                            <img src=""></img>
+                        <Link to={'/backoffice/mon-compte'} className={`h-[48px] px-2 mt-4 flex items-center gap-x-4 ${isActive('user') ? 'bg-blue-dark/10 text-blue-dark' : ''}`}
+                            onMouseEnter={() => handleMouseEnter('user')}
+                            onMouseLeave={() => handleMouseLeave('user')}
+                        >
+                            <img src={userImage == 'null' ? `${REACT_APP_API_URL}/assets/images/users/usr.png` : `${REACT_APP_API_URL}/assets/images/users/${userImage}`} className="rounded-full h-full object-cover"></img>
                             <div className="flex flex-col">
-                                <span>Prénom NOM</span>
-                                <span>Administrateur</span>
+                                <span>{userFistname} {userName}</span>
+                                <span>{userCategory}</span>
                             </div>
                         </Link>
                     </div>

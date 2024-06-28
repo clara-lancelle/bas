@@ -1,6 +1,6 @@
 import BackofficeCompanyOffers from '../Components/Backoffice/CompanyOffers';
 import BackofficeUserAccount from '../Components/Backoffice/UserAccount';
-import BackofficeUserAccountTest from '../Components/Backoffice/UserAccounttest';
+import BackofficeCompanyAccount from '../Components/Backoffice/CompanyAccount';
 
 export const restrictedRoutes = [
     {
@@ -9,15 +9,15 @@ export const restrictedRoutes = [
         restricted: true,
     },
     {
-        path: '/mon-compte',
+        path: '/backoffice/mon-compte',
         element: <BackofficeUserAccount />,
         restricted: true,
         props: { userInfo: {}, notify: () => {} },
     },
 
     {
-        path: '/mon-compte-test',
-        element: <BackofficeUserAccountTest />,
+        path: '/backoffice/mon-organisation',
+        element: <BackofficeCompanyAccount />,
         restricted: true,
         props: { userInfo: {}, notify: () => {} },
     },

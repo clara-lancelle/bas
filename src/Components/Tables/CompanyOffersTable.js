@@ -55,7 +55,7 @@ export default function CompanyOffersTable({ data }) {
                                 {job.applications}
                             </td>
                             <td className="border-b border-gray-200">
-                                <span>...</span>
+                                <button className="px-2 py-1 border rounded-md tracking-widest">...</button>
                             </td>
                         </tr>
                     ))}

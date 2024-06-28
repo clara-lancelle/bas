@@ -10,6 +10,7 @@ import useToken from '../useToken';
 export default function Header({ isAuthenticated, userInfo, handleLogout, openSignUpModal, openSignInModal }) {
     const {token, getToken} = useToken();
     const { REACT_APP_API_URL } = process.env;
+    let userType = userInfo.userType ? userInfo.userType == 'CompanyUser' ? 'Administrateur' : 'Étudiant' : '';
 
     return (
         <>
@@ -62,13 +63,19 @@ export default function Header({ isAuthenticated, userInfo, handleLogout, openSi
                             <img src={userInfo.userImage == 'null' ? `${REACT_APP_API_URL}/assets/images/users/usr.png` : `${REACT_APP_API_URL}/assets/images/users/${userInfo.userImage}`} className="rounded-full h-full w-16 object-cover"></img>
                             <div className="flex flex-col items-end justify-center">
                                 <p>{userInfo.firstName} {userInfo.lastName}</p>
-                                <p>{userInfo.userType}</p>
+                                <p>{userType}</p>
                             </div>
-                            <img src={chevDown} width="18px" />
+                            <img src={chevDown} width="18px"/>
                             <ul className="dropdown">
                                 <li className="h-full relative nav-item dropdown-item">
-                                    <Link to="/mon-compte">Mon compte</Link>
+                                    <Link to="/backoffice/mon-compte">Mon compte</Link>
                                 </li>
+                                {userInfo.userType == 'CompanyUser' && (
+                                    <li className="h-full relative nav-item dropdown-item">
+                                    <Link to="/backoffice/mon-organisation">Mon organisation</Link>
+                                </li>
+                                )}
+
                                 <li className="h-full relative nav-item dropdown-item">
                                     <span style={{ cursor: 'pointer' }} onClick={() => handleLogout()}>Déconnexion</span>
                                 </li>
