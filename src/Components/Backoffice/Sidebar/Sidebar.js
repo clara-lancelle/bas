@@ -48,7 +48,7 @@ export default function Sidebar({ activeItem, userType }) {
     const isActive = (key) => hovered[key] || activeItem === key;
 
     return (
-        <div className="w-2/12 bg-light-grey h-full py-8 border-r">
+        <div className="w-2/12 bg-light-grey sidebar py-8 border-r">
             <h2 className="px-8 text-2xl text-grey-dark font-semibold">Mon compte</h2>
             {userType == 'administrator' && (
                 <>

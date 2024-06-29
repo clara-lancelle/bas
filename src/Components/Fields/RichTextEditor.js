@@ -40,7 +40,7 @@ const decorator = new CompositeDecorator([
   },
 ]);
 
-const RichTextEditor = ({ editorState, setEditorState }) => {
+const RichTextEditor = ({ editorState, setEditorState, placeholder }) => {
   const [showLinkInput, setShowLinkInput] = useState(false);
   const [urlValue, setUrlValue] = useState('');
 
@@ -155,7 +155,7 @@ const RichTextEditor = ({ editorState, setEditorState }) => {
             handleKeyCommand={handleKeyCommand}
             keyBindingFn={mapKeyToEditorCommand}
             onChange={setEditorState}
-            placeholder="Présentez vous et mettez en avant votre parcours, vos atouts, votre personnalité, vos centres d’intérêt, attentes, etc."
+            placeholder={placeholder}
             handleBeforeInput={handleBeforeInput}
             handlePastedText={handlePastedText}
           />

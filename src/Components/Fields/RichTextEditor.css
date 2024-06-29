@@ -8,7 +8,7 @@
     padding: 1rem;
   }
 
-  .editor-container .DraftEditor-root div{
+  .editor-container .DraftEditor-root{
     min-height: calc(150px - 32px);
   }
   

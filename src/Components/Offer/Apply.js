@@ -461,7 +461,10 @@ export default function OfferApply({ isAuthenticated, userInfo, setUserInfo }) {
                         </div>
                         <div className="flex flex-col gap-x-[25px] mb-8">
                             <label className="font-semibold">Vos atouts & motivations pour postuler à cette offre de stage</label>
-                            <RichTextEditor name="motivations" className="border-white-light border p-4 h-[150px] z-[1]" editorState={editorState} setEditorState={setEditorState}></RichTextEditor>
+                            <RichTextEditor name="motivations" className="border-white-light border p-4 h-[150px] z-[1]" 
+                            editorState={editorState} 
+                            setEditorState={setEditorState}
+                            placeholder="Présentez vous et mettez en avant votre parcours, vos atouts, votre personnalité, vos centres d’intérêt, attentes, etc."></RichTextEditor>
                         </div>
                         <div className="flex items-center gap-x-[10px] pt-8 border-t mb-8">
                             <Checkbox label={'Créer mon compte membre pour éviter de ressaisir ces informations la fois prochaine'} checked={false} activeCheckEvent={true} onChange={(isChecked) => handleCheckboxChange('isCreateAccount', isChecked)} />

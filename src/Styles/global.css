@@ -106,6 +106,10 @@
     height: 50px;
 }
 
+.editor-container .DraftEditor-root .DraftEditor-editorContainer{
+    width : calc(100% - 2rem);
+}
+
 .list-style-logo {
     list-style-type: none;
 }
@@ -156,14 +160,11 @@
     border-radius: 4px;
 }
 
-/* .ReactModal__Content {
-    position: absolute;
-    left: 50%;
-    transform: translateX(50%);
-    margin: ;
-} */
-
 .ReactModalPortal{
     z-index: 100;
     position: relative;
+}
+
+.sidebar{
+    height: calc(100vh - 80px);
 }
