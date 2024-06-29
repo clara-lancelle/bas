@@ -59,21 +59,25 @@ export default function CompanyUserAccount({ userInfo, notify }) {
                 if (response.ok) {
                     const data = await response.json();
                     const companyUserResponse = data['hydra:member'][0];
-
                     setCompanyUserData(companyUserResponse);
-                    setFormData({
-                        ...formData,
+                    setFormData(prevFormData => ({
+                        ...prevFormData,
                         officePhone: companyUserResponse.officePhone ? companyUserResponse.officePhone : '',
                         position: companyUserResponse.position ? companyUserResponse.position : '',
-                    })
+                    }));
                 } else {
-                    console.error('Failed to fetch user data');
+                    console.error('Failed to fetch company user data');
                 }
             } catch (error) {
                 console.error(error);
             }
         };
 
+        setLoading(true);
+        getCompanyUserData();
+    }, [userEmail, userToken]);
+
+    useEffect(() => {
         const getUserData = async () => {
             try {
                 const response = await fetch(`${process.env.REACT_APP_API_URL}/api/security/users/?email=${encodeURIComponent(userEmail)}`, {
@@ -89,8 +93,8 @@ export default function CompanyUserAccount({ userInfo, notify }) {
                     const userResponse = data['hydra:member'][0];
 
                     setUserData(userResponse);
-                    setFormData({
-                        ...formData,
+                    setFormData(prevFormData => ({
+                        ...prevFormData,
                         id: userResponse.id,
                         firstname: userResponse.firstname ? userResponse.firstname : '',
                         name: userResponse.name ? userResponse.name : '',
@@ -102,7 +106,7 @@ export default function CompanyUserAccount({ userInfo, notify }) {
                         city: userResponse.city ? userResponse.city : '',
                         cellphone: userResponse.cellphone ? userResponse.cellphone : '',
                         profileImage: userResponse.profileImage ? userResponse.profileImage : '',
-                    })
+                    }));
                 } else {
                     console.error('Failed to fetch user data');
                 }
@@ -110,13 +114,9 @@ export default function CompanyUserAccount({ userInfo, notify }) {
                 console.error(error);
             }
         };
-
-
-        setLoading(true)
         getUserData();
-        getCompanyUserData();
-    }, [userEmail, userToken])
-
+    }, [userEmail, userToken]);
+    
     const getCompanyData = async (companyId) => {
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/api/companies/${encodeURIComponent(companyId)}`, {
