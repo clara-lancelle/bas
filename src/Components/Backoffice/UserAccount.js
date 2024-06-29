@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "./Sidebar/Sidebar";
-import IdentityForm from "../Form/Backoffice/StudentIdentity"
+import IdentityForm from "../Form/Backoffice/Student/Identity"
 import moment from 'moment';
 import { Link } from "react-router-dom";
 import pen from "../../Images/Icons/pencil.svg";

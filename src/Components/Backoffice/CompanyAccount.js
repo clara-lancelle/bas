@@ -9,9 +9,11 @@ import CompanyOffersTable from "../Tables/CompanyOffersTable";
 import pen from "../../Images/Icons/pencil.svg";
 import placeholderLarge from "../../Images/Company/placeholderLarge.png";
 import useToken from "../useToken";
-import IdentityForm from "../Form/Backoffice/CompanyIdentity";
+import IdentityForm from "../Form/Backoffice/Company/Identity";
+import InformationsForm from "../Form/Backoffice/Company/Informations";
+import DescriptionForm from "../Form/Backoffice/Company/Description";
 
-export default function CompanyAccount() {
+export default function CompanyAccount({ notify }) {
     const { REACT_APP_API_URL } = process.env;
     const { token } = useToken();
     const userToken = sessionStorage.getItem('token');
@@ -49,15 +51,27 @@ export default function CompanyAccount() {
                     setCompany(companyResponse);
                     setFormData({
                         ...formData,
-                        companyName: companyResponse.name || '',
-                        siret: companyResponse.siret || '',
-                        activities: companyResponse.activities||[],
-                        category: companyResponse.category || '',
-                        address: companyResponse.address || '',
-                        additional_address: companyResponse.additional_address || '',
-                        zip_code: companyResponse.zip_code || '',
-                        city: companyResponse.city || '',
-                        phone_num: companyResponse.phone_num || '',
+                        category: companyResponse.category ? companyResponse.category : '',
+                        name: companyResponse.name ? companyResponse.name : '',
+                        siret: companyResponse.siret ? companyResponse.siret : '',
+                        activities: companyResponse.activities ? companyResponse.activities : [],
+                        address: companyResponse.address ? companyResponse.address : '',
+                        additional_address: companyResponse.additional_address ? companyResponse.additional_address : '',
+                        zip_code: companyResponse.zip_code ? companyResponse.zip_code : '',
+                        city: companyResponse.city ? companyResponse.city : '',
+                        phone_num: companyResponse.phone_num ? companyResponse.phone_num : '',
+                        creation_date: companyResponse.creation_date ? companyResponse.creation_date : '',
+                        workforce: companyResponse.workforce ? companyResponse.workforce : '',
+                        revenue: companyResponse.revenue ? companyResponse.revenue : '',
+                        companyImages: companyResponse.companyImages ? companyResponse.companyImages : [],
+                        description: companyResponse.description ? companyResponse.description : '',
+                        large_image: companyResponse.large_image ? companyResponse.large_image : '',
+                        offers: companyResponse.offers ? companyResponse.offers : [],
+                        picto_image: companyResponse.picto_image ? companyResponse.picto_image : '',
+                        schedule: companyResponse.schedule ? companyResponse.schedule : '',
+                        socialLinks: companyResponse.socialLinks ? companyResponse.socialLinks : [],
+                        social_reason: companyResponse.social_reason ? companyResponse.social_reason : '',
+                        workforce_range: companyResponse.workforce_range ? companyResponse.workforce_range : '',
                     })
                 } else {
                     console.error('Failed to fetch user data');
@@ -71,13 +85,11 @@ export default function CompanyAccount() {
         setLoading(false)
 
     }, [])
-
     if (loading) {
         return (<p>Loading ...</p>)
     } else {
         return (
             <>
-            {console.log(formData)}
                 <div className="h-full flex">
                     <Sidebar userType={'administrator'} activeItem="company" />
                     <div className="w-10/12">
@@ -101,20 +113,20 @@ export default function CompanyAccount() {
                                                 <button className="btn-blue-dark flex items-center gap-x-2" onClick={() => toggleEditState('identity')}><img src={pen}></img> <span>Modifier</span></button>
                                             </div>
                                             {editStates.identity ? (
-                                                <IdentityForm formData={formData} />
+                                                <IdentityForm formData={formData} setFormData={setFormData} toggleEditState={toggleEditState} notify={notify} />
                                             ) : (
                                                 <div className="w-full flex items-start gap-x-16 px-4 py-6">
                                                     <div className="flex flex-col gap-y-4">
-                                                        <p><span className="font-semibold">Nom : </span>{company.name}</p>
-                                                        <p><span className="font-semibold">SIRET : </span>{company.siret}</p>
-                                                        <p><span className="font-semibold">Catégorie : </span>{company.category && company.category.name ? company.category.name : 'Non renseigné'}</p>
-                                                        <p><span className="font-semibold">Téléphone : </span>{company.phone_num || 'Non renseigné'}</p>
+                                                        <p><span className="font-semibold">Nom : </span>{formData.name}</p>
+                                                        <p><span className="font-semibold">SIRET : </span>{formData.siret}</p>
+                                                        <p><span className="font-semibold">Catégorie : </span>{formData.category && formData.category.name ? formData.category.name : 'Non renseigné'}</p>
+                                                        <p><span className="font-semibold">Téléphone : </span>{formData.phone_num || 'Non renseigné'}</p>
                                                     </div>
                                                     <div className="flex flex-col gap-y-4">
-                                                        <p><span className="font-semibold">Adresse : </span>{company.address || 'Non renseigné'}</p>
-                                                        <p><span className="font-semibold">Complément d'adresse : </span>{company.additional_address || 'Non renseigné'}</p>
-                                                        <p><span className="font-semibold">Ville : </span>{company.city || 'Non renseigné'}</p>
-                                                        <p><span className="font-semibold">Code postal : </span>{company.zip_code || 'Non renseigné'}</p>
+                                                        <p><span className="font-semibold">Adresse : </span>{formData.address || 'Non renseigné'}</p>
+                                                        <p><span className="font-semibold">Complément d'adresse : </span>{formData.additional_address || 'Non renseigné'}</p>
+                                                        <p><span className="font-semibold">Ville : </span>{formData.city || 'Non renseigné'}</p>
+                                                        <p><span className="font-semibold">Code postal : </span>{formData.zip_code || 'Non renseigné'}</p>
                                                     </div>
                                                 </div>
                                             )}
@@ -125,7 +137,11 @@ export default function CompanyAccount() {
                                                 <button className="btn-blue-dark flex items-center gap-x-2" onClick={() => toggleEditState('description')}><img src={pen}></img> <span>Modifier</span></button>
                                             </div>
                                             <div className="flex justify-between items-start gap-x-6 px-4 py-6">
-                                                {company.description}
+                                                {editStates.description ? (
+                                                    <DescriptionForm formData={formData} setFormData={setFormData} toggleEditState={toggleEditState} notify={notify} />
+                                                ) : (
+                                                    <p>{ company.description ? company.description.replace(/<[^>]+>/g, '') : 'Pas de description' }</p>
+                                                )}
                                             </div>
                                         </div>
                                         <div className="border rounded-md mb-8">
@@ -157,7 +173,7 @@ export default function CompanyAccount() {
                                                     {company.companyImages ? (
                                                         <div className="flex">
                                                             {company.companyImages.map((image) => (
-                                                                <img key={image.name}src={`${REACT_APP_API_URL}/assets/images/companies/${image.path}`} className="w-1/5 max-h-48 object-cover px-4" />
+                                                                <img key={image.name} src={`${REACT_APP_API_URL}/assets/images/companies/${image.path}`} className="w-1/5 max-h-48 object-cover px-4" />
                                                             ))}
                                                         </div>
                                                     ) : (
@@ -173,22 +189,26 @@ export default function CompanyAccount() {
                                                 <h2 className="font-semibold text-xl">Informations</h2>
                                                 <button className="btn-blue-dark flex items-center gap-x-2" onClick={() => toggleEditState('informations')}><img src={pen}></img> <span>Modifier</span></button>
                                             </div>
-                                            <div className="flex justify-between items-start gap-x-6 px-4 py-6">
-                                                <div className="flex items-start gap-x-16">
-                                                    <div className="flex flex-col gap-y-4">
-                                                        <p><span className="font-semibold">Date de création : </span>{moment(company.creation_date).format('DD/MM/YYYY') || 'Non renseigné'}</p>
-                                                        <div className="flex "><span className="font-semibold">Secteur d'activité : </span>
-                                                            <ul className="list-style-logo">
-                                                                {company.activities && company.activities.map((activity) => (
-                                                                    <li key={activity.id}>{activity.name}</li>
-                                                                )) || 'Non renseigné'}
-                                                            </ul>
+                                            {editStates.informations ? (
+                                                <InformationsForm formData={formData} setFormData={setFormData} toggleEditState={toggleEditState} notify={notify} />
+                                            ) : (
+                                                <div className="flex justify-between items-start gap-x-6 px-4 py-6">
+                                                    <div className="flex items-start gap-x-16">
+                                                        <div className="flex flex-col gap-y-4">
+                                                            <p><span className="font-semibold">Date de création : </span>{moment(formData.creation_date).format('DD/MM/YYYY') || 'Non renseigné'}</p>
+                                                            <div className="flex "><span className="font-semibold">Secteur d'activité : </span>
+                                                                <ul className="list-style-logo">
+                                                                    {formData.activities && formData.activities.map((activity) => (
+                                                                        <li key={activity.id}>{activity.name}</li>
+                                                                    )) || 'Non renseigné'}
+                                                                </ul>
+                                                            </div>
+                                                            <p><span className="font-semibold">Effectif  : </span>{formData.workforce || 'Non renseigné'}</p>
+                                                            <p><span className="font-semibold">Chiffre d'affaire : </span>{(formData.revenue / 1000000).toFixed(2) + 'M€' || 'Non renseigné'}</p>
                                                         </div>
-                                                        <p><span className="font-semibold">Effectif  : </span>{company.workforce || 'Non renseigné'}</p>
-                                                        <p><span className="font-semibold">Chiffre d'affaire : </span>{(company.revenue / 1000000).toFixed(2) + 'M€' || 'Non renseigné'}</p>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            )}
                                         </div>
                                         <div className="border rounded-md mb-8">
                                             <div className="p-4 border-b w-full flex justify-between items-center">

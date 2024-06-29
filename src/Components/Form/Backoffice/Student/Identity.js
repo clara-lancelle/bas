@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import "../../../Styles/Form/Backoffice/studentIdentity.css"
+import "../../../../Styles/Form/Backoffice/studentIdentity.css"
 
 export default function StudentIdentityForm({ formData, setFormData, toggleEditState }) {
     const { REACT_APP_API_URL } = process.env;
