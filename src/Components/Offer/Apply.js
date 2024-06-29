@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation, useParams } from "react-router-dom";
 import { EditorState, convertToRaw, CompositeDecorator } from 'draft-js';
 import { stateToHTML } from 'draft-js-export-html';
 import Ariane from "../Partials/Ariane";
@@ -15,6 +15,7 @@ import arrowBlueDark from '../../Images/Icons/arrow-blue-dark.svg'
 import ImageUploader from "../Fields/ImageUploader";
 import useToken from "../useToken";
 import Modal from 'react-modal';
+import Application from "../Application";
 
 const LinkEditor = (props) => {
     const { url } = props.contentState.getEntity(props.entityKey).getData();
@@ -54,6 +55,7 @@ export default function OfferApply({ isAuthenticated, userInfo, setUserInfo }) {
     const { token, getToken } = useToken();
     const navigate = useNavigate();
     const location = useLocation();
+    const id = useParams()
 
     const [formData, setFormData] = useState({
         gender: '',
@@ -312,9 +314,9 @@ export default function OfferApply({ isAuthenticated, userInfo, setUserInfo }) {
 
     return (
         <>
+        <Application id={id}/>
             <div className="bg-light-grey" onScroll={handleScroll}>
                 <div className="container flex flex-col pt-3 pb-11">
-
                     {ariane(offer.type, offer.name, offer.id)}
                     <div className="mt-18">
                         <div className="p-6 pr-12 border border-white-light bg-white mb-4">
