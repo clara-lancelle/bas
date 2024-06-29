@@ -12,6 +12,7 @@ import useToken from "../useToken";
 import IdentityForm from "../Form/Backoffice/Company/Identity";
 import InformationsForm from "../Form/Backoffice/Company/Informations";
 import DescriptionForm from "../Form/Backoffice/Company/Description";
+import SocialsForm from "../Form/Backoffice/Company/Socials";
 
 export default function CompanyAccount({ notify }) {
     const { REACT_APP_API_URL } = process.env;
@@ -140,7 +141,7 @@ export default function CompanyAccount({ notify }) {
                                                 {editStates.description ? (
                                                     <DescriptionForm formData={formData} setFormData={setFormData} toggleEditState={toggleEditState} notify={notify} />
                                                 ) : (
-                                                    <p>{ company.description ? company.description.replace(/<[^>]+>/g, '') : 'Pas de description' }</p>
+                                                    <p>{company.description ? company.description.replace(/<[^>]+>/g, '') : 'Pas de description'}</p>
                                                 )}
                                             </div>
                                         </div>
@@ -215,13 +216,17 @@ export default function CompanyAccount({ notify }) {
                                                 <h2 className="font-semibold text-xl">Réseaux sociaux</h2>
                                                 <button className="btn-blue-dark flex items-center gap-x-2" onClick={() => toggleEditState('socials')}><img src={pen}></img> <span>Modifier</span></button>
                                             </div>
-                                            <div className="flex justify-between items-start gap-x-6 px-4 py-6">
-                                                <div className="flex flex-col items-start gap-y-8">
-                                                    {company.socialLinks && company.socialLinks.map((media) => (
-                                                        <p key={media.id}><span className="font-semibold">{media.social_network.name} : </span><Link to={media.url} className="text-blue-dark underline">Accéder</Link></p>
-                                                    ))}
+                                            {editStates.socials ? (
+                                                <SocialsForm formData={formData} setFormData={setFormData} toggleEditState={toggleEditState} notify={notify} />
+                                            ) : (
+                                                <div className="flex justify-between items-start gap-x-6 px-4 py-6">
+                                                    <div className="flex flex-col items-start gap-y-8">
+                                                        {company.socialLinks && company.socialLinks.map((media) => (
+                                                            <p key={media.id}><span className="font-semibold">{media.social_network.name} : </span><Link to={media.url} className="text-blue-dark underline">Accéder</Link></p>
+                                                        ))}
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
