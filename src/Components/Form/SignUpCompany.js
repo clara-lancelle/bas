@@ -4,7 +4,7 @@ import useToken from '../useToken';
 export default function SignUpCompany({ closeModal, setIsAuthenticated, setUserInfo, notify }) {
     const { REACT_APP_API_URL } = process.env
     const { setToken, updateUserInfo } = useToken();
-    const [activities, setActivities] = useState();
+    const [activities, setActivities] = useState([]);
     const [categories, setCategories] = useState();
     const [isPasswordFocused, setIsPasswordFocused] = useState(false);
     const [loading, setLoading] = useState(true);
