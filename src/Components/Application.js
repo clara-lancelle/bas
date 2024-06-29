@@ -4,22 +4,19 @@ import useToken from './useToken';
 const Application = (id) => {
     const { REACT_APP_API_URL } = process.env;
     const [skills, setSkills] = useState([])
-
-    console.log(sessionStorage.getItem('userId'))
+    const token = sessionStorage.getItem('userType') == 'Student' && sessionStorage.getItem('token') || ''
+    
     useEffect(() => {
         fetch(`${REACT_APP_API_URL}/api/skills`)
             .then(response => response.json())
             .then(response => (
-                setSkills(response['hydra:member']) 
-                // give skill as array to student or application directly
-                // not done here
+                setSkills(response['hydra:member'].filter((item, index) => index < 3).map(item => `/api/skills/${item.id.toString()}`)) 
             ))
 
     }, [REACT_APP_API_URL])
-
     useEffect(() => {
         const user = {
-            'id': sessionStorage.getItem('userType' == 'Student') && sessionStorage.getItem('userId') || "",
+            'token': token,
             'firstname': 'john',
             'name' : 'doe',
             'gender' : 'Homme',
@@ -47,7 +44,7 @@ const Application = (id) => {
                 "motivations": "string",
                 "cover_letter": "string",
                 "school_name": "string",
-                "skills": [],
+                "skills": skills,
                 "experiences_array": [
                     {
                         "company": "string",
@@ -60,8 +57,8 @@ const Application = (id) => {
             })
         })
             .then(response => response.json())
-            .then(response => (console.log(response)))
-    }, [REACT_APP_API_URL])
+            .then(response => (console.log('response :'+ response)))
+    }, [REACT_APP_API_URL, skills])
     return (
         <div className='bg-light-grey text-blue-dark'>
            Application
