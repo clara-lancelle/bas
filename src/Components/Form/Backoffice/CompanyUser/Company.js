@@ -63,14 +63,14 @@ export default function CompanyUserCompanyForm({ formData, setFormData, toggleEd
         await sendDataToAPI(newFormData);
         await updateFormData(newFormData)
         notify('Vos informations d\'entreprise ont été mises à jour !', 'success');
-        toggleEditState('identity');
+        toggleEditState('company');
     };
 
     const sendDataToAPI = async (newData) => {
         const response = await fetch(`${REACT_APP_API_URL}/api/security/company_users/${formData.id}`, {
-            method: 'PUT',
+            method: 'PATCH',
             headers: {
-                'Content-Type': 'application/ld+json',
+                'Content-Type': 'application/merge-patch+json',
                 'Authorization': `Bearer ${userToken}`,
             },
             body: JSON.stringify(newData)

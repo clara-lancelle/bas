@@ -183,21 +183,21 @@ export default function CompanyUserAccount({ userInfo, notify }) {
                                                 </div>
                                                 <div className="flex justify-between items-start gap-x-6 px-4 py-6">
                                                     <div className="w-2/12">
-                                                        <img src={!userData.profileImage || userData.profileImage == 'null' ? `${REACT_APP_API_URL}/assets/images/users/usr.png` : `${REACT_APP_API_URL}/assets/images/users/${userData.profileImage}`} className="rounded-full h-24 w-24 object-cover"></img>
+                                                        <img src={!formData.profileImage || formData.profileImage == 'null' ? `${REACT_APP_API_URL}/assets/images/users/usr.png` : `${REACT_APP_API_URL}/assets/images/users/${formData.profileImage}`} className="rounded-full h-24 w-24 object-cover"></img>
                                                     </div>
                                                     <div className="w-10/12 flex items-start gap-x-16">
                                                         <div className="flex flex-col gap-y-4">
-                                                            <p><span className="font-semibold">Prénom : </span>{userData.firstname}</p>
-                                                            <p><span className="font-semibold">Nom : </span>{userData.name}</p>
-                                                            <p><span className="font-semibold">Genre : </span>{userData.gender}</p>
-                                                            <p><span className="font-semibold">E-mail : </span>{userData.email || 'Non renseigné'}</p>
-                                                            <p><span className="font-semibold">Téléphone : </span>{userData.cellphone || 'Non renseigné'}</p>
+                                                            <p><span className="font-semibold">Prénom : </span>{formData.firstname}</p>
+                                                            <p><span className="font-semibold">Nom : </span>{formData.name}</p>
+                                                            <p><span className="font-semibold">Genre : </span>{formData.gender}</p>
+                                                            <p><span className="font-semibold">E-mail : </span>{formData.email || 'Non renseigné'}</p>
+                                                            <p><span className="font-semibold">Téléphone : </span>{formData.cellphone || 'Non renseigné'}</p>
                                                         </div>
                                                         <div className="flex flex-col gap-y-4">
-                                                            <p><span className="font-semibold">Adresse : </span>{userData.address || 'Non renseigné' || 'Non renseigné'}</p>
-                                                            <p><span className="font-semibold">Complément d'adresse : </span>{userData.additionalAddress || 'Non renseigné'}</p>
-                                                            <p><span className="font-semibold">Ville : </span>{userData.city || 'Non renseigné'}</p>
-                                                            <p><span className="font-semibold">Code postal : </span>{userData.zipCode || 'Non renseigné'}</p>
+                                                            <p><span className="font-semibold">Adresse : </span>{formData.address || 'Non renseigné' || 'Non renseigné'}</p>
+                                                            <p><span className="font-semibold">Complément d'adresse : </span>{formData.additionalAddress || 'Non renseigné'}</p>
+                                                            <p><span className="font-semibold">Ville : </span>{formData.city || 'Non renseigné'}</p>
+                                                            <p><span className="font-semibold">Code postal : </span>{formData.zipCode || 'Non renseigné'}</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -225,8 +225,8 @@ export default function CompanyUserAccount({ userInfo, notify }) {
                                                     <div className="flex items-start gap-x-16">
                                                         <div className="flex flex-col gap-y-4">
                                                             <p><span className="font-semibold">Entreprise : </span><Link to="/backoffice/mon-organisation" className="text-blue-dark underline">{companyData.name || 'Non renseigné'}</Link></p>
-                                                            <p><span className="font-semibold">Poste : </span>{userData.position || 'Non renseigné'}</p>
-                                                            <p><span className="font-semibold">Téléphone professionnel : </span>{userData.officePhone || 'Non renseigné'}</p>
+                                                            <p><span className="font-semibold">Poste : </span>{formData.position || 'Non renseigné'}</p>
+                                                            <p><span className="font-semibold">Téléphone professionnel : </span>{formData.officePhone || 'Non renseigné'}</p>
                                                         </div>
                                                     </div>
                                                 </div>

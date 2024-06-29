@@ -108,9 +108,9 @@ export default function CompanyUserIdentityForm({ formData, setFormData, toggleE
 
     const sendDataToAPI = async (newData) => {
         const response = await fetch(`${REACT_APP_API_URL}/api/security/company_users/${formData.id}`, {
-            method: 'PUT',
+            method: 'PATCH',
             headers: {
-                'Content-Type': 'application/ld+json',
+                'Content-Type': 'application/merge-patch+json',
                 'Authorization': `Bearer ${userToken}`,
             },
             body: JSON.stringify(newData)
