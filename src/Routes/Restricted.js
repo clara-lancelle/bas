@@ -14,6 +14,7 @@ export const restrictedRoutes = [
         path: '/backoffice/entreprise/offre/creation',
         element: <BackofficeCompanyOffersCreate />,
         restricted: true,
+        props: { notify: () => {} },
     },
     {
         path: '/backoffice/mon-compte',

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Sidebar from "../Sidebar/Sidebar";
 import IdentityForm from "../../Form/Backoffice/CompanyUser/Identity"
 import CompanyForm from "../../Form/Backoffice/CompanyUser/Company"
-import moment from 'moment';
 import { Link } from "react-router-dom";
 import pen from "../../../Images/Icons/pencil.svg";
 import cross from "../../../Images/Icons/cross-white.svg";
