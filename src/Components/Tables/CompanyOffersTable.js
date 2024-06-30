@@ -1,4 +1,5 @@
 import React from "react";
+import moment from 'moment';
 
 export default function CompanyOffersTable({ data }) {
     return (
@@ -34,16 +35,16 @@ export default function CompanyOffersTable({ data }) {
                                 {job.name}
                             </td>
                             <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                                <span className={`py-2 px-6 inline-flex leading-5 font-semibold rounded-full ${job.status === 'Active' ? 'border border-green-500 text-green-500' : 'border border-red-500 text-red-500'
+                                <span className={`py-2 px-6 inline-flex leading-5 font-semibold rounded-full ${job.deleted_at ? 'border border-red-500 text-red-500' : 'border border-green-500 text-green-500'
                                     }`}>
-                                    {job.status}
+                                    {job.deleted_at ? 'Cloturée' : 'Active'}
                                 </span>
                             </td>
                             <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                                {job.publicationDate}
+                                {moment(job.created_at).format('DD/MM/YYYY')}
                             </td>
                             <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                                {job.deadline}
+                                {job.application_limit_date}
                             </td>
                             <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                                 <span className={`py-2 px-6 inline-flex leading-5 font-semibold rounded-full ${job.type === 'Stage' ? 'border border-blue-500 text-blue-500' : 'border border-yellow-500 text-yellow-500'
@@ -52,7 +53,7 @@ export default function CompanyOffersTable({ data }) {
                                 </span>
                             </td>
                             <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                                {job.applications}
+                                {job.applications.length}
                             </td>
                             <td className="border-b border-gray-200">
                                 <button className="px-2 py-1 border rounded-md tracking-widest">...</button>
