@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import moment from 'moment';
-import Ariane from '../Partials/Ariane';
-import Paginate from "../Paginate/Paginate";
-import Sidebar from "./Sidebar/Sidebar";
-import cross from "../../Images/Icons/cross-white.svg";
-import CompanyOffersTable from "../Tables/CompanyOffersTable";
-import pen from "../../Images/Icons/pencil.svg";
-import placeholderLarge from "../../Images/Company/placeholderLarge.png";
-import useToken from "../useToken";
-import IdentityForm from "../Form/Backoffice/Company/Identity";
-import InformationsForm from "../Form/Backoffice/Company/Informations";
-import DescriptionForm from "../Form/Backoffice/Company/Description";
-import SocialsForm from "../Form/Backoffice/Company/Socials";
-import CompanyHeader from "./Company/CompanyHeader"
+import Ariane from '../../Partials/Ariane';
+import Paginate from "../../Paginate/Paginate";
+import Sidebar from "../Sidebar/Sidebar";
+import cross from "../../../Images/Icons/cross-white.svg";
+import CompanyOffersTable from "../../Tables/CompanyOffersTable";
+import pen from "../../../Images/Icons/pencil.svg";
+import placeholderLarge from "../../../Images/Company/placeholderLarge.png";
+import useToken from "../../useToken";
+import IdentityForm from "../../Form/Backoffice/Company/Identity";
+import InformationsForm from "../../Form/Backoffice/Company/Informations";
+import DescriptionForm from "../../Form/Backoffice/Company/Description";
+import SocialsForm from "../../Form/Backoffice/Company/Socials";
+import CompanyHeader from "./CompanyHeader"
 
 export default function CompanyAccount({ notify }) {
     const { REACT_APP_API_URL } = process.env;

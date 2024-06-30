@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import Ariane from '../Partials/Ariane';
-import Paginate from "../Paginate/Paginate";
-import Sidebar from "./Sidebar/Sidebar";
-import plus from "../../Images/Icons/plus-white.svg";
-import CompanyOffersTable from "../Tables/CompanyOffersTable";
-import CompanyHeader from "./Company/CompanyHeader";
+import Ariane from '../../Partials/Ariane';
+import Paginate from "../../Paginate/Paginate";
+import Sidebar from "../Sidebar/Sidebar";
+import plus from "../../../Images/Icons/plus-white.svg";
+import CompanyOffersTable from "../../Tables/CompanyOffersTable";
+import CompanyHeader from "./CompanyHeader";
 
 export default function CompanyList() {
     const userCompanyId = sessionStorage.getItem('userCompanyId')
