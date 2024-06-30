@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "../Sidebar/Sidebar";
 import IdentityForm from "../../Form/Backoffice/Student/Identity"
+import ExperiencesForm from "../../Form/Backoffice/Student/Experiences"
+import InformationsForm from "../../Form/Backoffice/Student/Informations"
 import moment from 'moment';
 import { Link } from "react-router-dom";
 import pen from "../../../Images/Icons/pencil.svg";
 import plus from "../../../Images/Icons/plus-white.svg";
+import cross from "../../../Images/Icons/cross-white.svg";
 
 export default function StudentAccount({ userInfo, notify }) {
 
@@ -16,28 +19,29 @@ export default function StudentAccount({ userInfo, notify }) {
     const userEmail = sessionStorage.getItem('userEmail');
 
     const [formData, setFormData] = useState({
-        gender: '',
-        firstname: '',
-        name: '',
-        birthdate: '',
-        cellphone: '',
-        email: '',
-        emailConfirm: '',
-        address: '',
-        additionalAddress: '',
-        zipCode: '',
-        city: '',
-        websiteUrl: '',
-        linkedinUrl: '',
-        graduation: '',
-        graduationNext: '',
-        schoolName: '',
-        formationName: '',
-        motivations: '',
-        profileImage: [],
-        cv: [],
-        hasDrivingLicense: false,
-        isHandicap: false,
+        firstname: '',               
+        name: '',                    
+        gender: '',                  
+        email: '',                   
+        address: '',                 
+        additional_address: '',      
+        zipCode: '',                 
+        city: '',                    
+        cellphone: '',               
+        profileImage: [],            
+        birthdate: '',               
+        driver_license: '',          
+        experiences: [],             
+        handicap: '',                
+        languages: [],               
+        linkedin_page: '',           
+        personnal_website: '',       
+        prepared_degree: '',         
+        school_name: '',             
+        skills: [],                  
+        study_years: '',             
+        applications: [],
+
     });
 
     const [editStates, setEditStates] = useState({
@@ -63,46 +67,56 @@ export default function StudentAccount({ userInfo, notify }) {
         return moment(dateString).format('DD/MM/YYYY');
     };
 
-    const getUserData = async () => {
-        try {
-            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/security/students/?email=${encodeURIComponent(userEmail)}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${userToken}`,
-                },
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                const userResponse = data['hydra:member'][0];
-                setUserData(userResponse);
-
-                setFormData({
-                    ...formData,
-                    gender: userResponse.gender || '',
-                    firstname: userResponse.firstname || '',
-                    name: userResponse.name || '',
-                    birthdate: formatDateForForm(userResponse.birthdate) || '',
-                    cellphone: userResponse.cellphone || '',
-                    email: userResponse.email || '',
-                    address: userResponse.address || '',
-                    additionalAddress: userResponse.additionalAddress || '',
-                    zipCode: userResponse.zipCode || '',
-                    city: userResponse.city || '',
-                    profileImage: userResponse.profileImage ? [userResponse.profileImage] : [],
-                })
-            } else {
-                console.error('Failed to fetch user data');
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
     useEffect(() => {
+        const getUserData = async () => {
+            try {
+                const response = await fetch(`${process.env.REACT_APP_API_URL}/api/security/users/?email=${encodeURIComponent(userEmail)}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${userToken}`,
+                    },
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const userResponse = data['hydra:member'][0];
+                    setUserData(userResponse);
+                    setFormData(prevFormData => ({
+                        ...prevFormData,
+                        id: userResponse.id,
+                        firstname: userResponse.firstname ? userResponse.firstname : '',
+                        name: userResponse.name ? userResponse.name : '',
+                        gender: userResponse.gender ? userResponse.gender : '',
+                        email: userResponse.email ? userResponse.email : '',
+                        address: userResponse.address ? userResponse.address : '',
+                        additional_address: userResponse.additional_address ? userResponse.additional_address : '',
+                        zipCode: userResponse.zipCode ? userResponse.zipCode : '',
+                        city: userResponse.city ? userResponse.city : '',
+                        cellphone: userResponse.cellphone ? userResponse.cellphone : '',
+                        profileImage: userResponse.profileImage ? userResponse.profileImage : '',
+                        birthdate: formatDateForForm(userResponse.birthdate) || '',
+                        applications: userResponse.applications || [],
+                        driver_license: userResponse.driver_license || '',
+                        experiences: userResponse.experiences || [],
+                        handicap: userResponse.handicap || '',
+                        languages: userResponse.languages || [],
+                        linkedin_page: userResponse.linkedin_page || '',
+                        personnal_website: userResponse.personnal_website || '',
+                        prepared_degree: userResponse.prepared_degree || '',
+                        school_name: userResponse.school_name || '',
+                        skills: userResponse.skills || [],
+                        study_years: userResponse.study_years || '',
+                    }));
+                } else {
+                    console.error('Failed to fetch user data');
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        };
         getUserData();
-    }, [userEmail])
+    }, [userEmail, userToken]);
 
     if (!userData) {
         return <div>No user data available</div>;
@@ -125,70 +139,102 @@ export default function StudentAccount({ userInfo, notify }) {
                             <div className="px-8 py-4 flex gap-x-8">
                                 <div className="w-2/3">
                                     <div className="border rounded-md mb-8">
-                                        <div className="p-4 border-b w-full flex justify-between items-center">
-                                            <h2 className="font-semibold text-xl">Votre identité</h2>
-                                            <button className="btn-blue-dark flex items-center gap-x-2" onClick={() => toggleEditState('identity')}><img src={pen}></img> <span>Modifier</span></button>
-                                        </div>
                                         {editStates.identity ? (
-                                            <IdentityForm formData={formData} />
+                                            <>
+                                                <div className="p-4 border-b w-full flex justify-between items-center">
+                                                    <h2 className="font-semibold text-xl">Votre identité</h2>
+                                                    <button className="btn-blue-dark flex items-baseline gap-x-2" onClick={() => toggleEditState('identity')}><img src={cross}></img> <span>Annuler</span></button>
+                                                </div>
+                                                <IdentityForm formData={formData} setFormData={setFormData} notify={notify} userId={formData.id} toggleEditState={toggleEditState} />
+                                            </>
                                         ) : (
-                                            <div className="flex justify-between items-start gap-x-6 px-4 py-6">
-                                                <div className="w-2/12">
-                                                    <img src={userData.profileImage == 'null' ? `${REACT_APP_API_URL}/assets/images/users/usr.png` : `${REACT_APP_API_URL}/assets/images/users/${userData.profileImage}`} className="rounded-full h-24 w-24 object-cover"></img>
+                                            <>
+                                                <div className="p-4 border-b w-full flex justify-between items-center">
+                                                    <h2 className="font-semibold text-xl">Votre identité</h2>
+                                                    <button className="btn-blue-dark flex items-center gap-x-2" onClick={() => toggleEditState('identity')}><img src={pen}></img> <span>Modifier</span></button>
                                                 </div>
-                                                <div className="w-10/12 flex items-start gap-x-16">
-                                                    <div className="flex flex-col gap-y-4">
-                                                        <p><span className="font-semibold">Prénom : </span>{userData.firstname}</p>
-                                                        <p><span className="font-semibold">Nom : </span>{userData.name}</p>
-                                                        <p><span className="font-semibold">Genre : </span>{userData.gender}</p>
-                                                        <p><span className="font-semibold">Date de naissance : </span>{formatDateForView(userData.birthdate) || 'Non renseigné'}</p>
-                                                        <p><span className="font-semibold">E-mail : </span>{userData.email || 'Non renseigné'}</p>
+                                                <div className="flex justify-between items-start gap-x-6 px-4 py-6">
+                                                    <div className="w-2/12">
+                                                        <img src={userData.profileImage == 'null' ? `${REACT_APP_API_URL}/assets/images/users/usr.png` : `${REACT_APP_API_URL}/assets/images/users/${userData.profileImage}`} className="rounded-full h-24 w-24 object-cover"></img>
                                                     </div>
-                                                    <div className="flex flex-col gap-y-4">
-                                                        <p><span className="font-semibold">Téléphone : </span>{userData.cellphone || 'Non renseigné'}</p>
-                                                        <p><span className="font-semibold">Adresse : </span>{userData.address || 'Non renseigné' || 'Non renseigné'}</p>
-                                                        <p><span className="font-semibold">Complément d'adresse : </span>{userData.additionalAddress || 'Non renseigné'}</p>
-                                                        <p><span className="font-semibold">Ville : </span>{userData.city || 'Non renseigné'}</p>
-                                                        <p><span className="font-semibold">Code postal : </span>{userData.zipCode || 'Non renseigné'}</p>
+                                                    <div className="w-10/12 flex items-start gap-x-16">
+                                                        <div className="flex flex-col gap-y-4">
+                                                            <p><span className="font-semibold">Prénom : </span>{formData.firstname}</p>
+                                                            <p><span className="font-semibold">Nom : </span>{formData.name}</p>
+                                                            <p><span className="font-semibold">Genre : </span>{formData.gender}</p>
+                                                            <p><span className="font-semibold">Date de naissance : </span>{formatDateForView(formData.birthdate) || 'Non renseigné'}</p>
+                                                            <p><span className="font-semibold">E-mail : </span>{formData.email || 'Non renseigné'}</p>
+                                                        </div>
+                                                        <div className="flex flex-col gap-y-4">
+                                                            <p><span className="font-semibold">Téléphone : </span>{formData.cellphone || 'Non renseigné'}</p>
+                                                            <p><span className="font-semibold">Adresse : </span>{formData.address || 'Non renseigné' || 'Non renseigné'}</p>
+                                                            <p><span className="font-semibold">Complément d'adresse : </span>{formData.additionalAddress || 'Non renseigné'}</p>
+                                                            <p><span className="font-semibold">Ville : </span>{formData.city || 'Non renseigné'}</p>
+                                                            <p><span className="font-semibold">Code postal : </span>{formData.zipCode || 'Non renseigné'}</p>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </>
                                         )}
                                     </div>
                                     <div className="border rounded-md">
-                                        <div className="p-4 border-b w-full flex justify-between items-center">
-                                            <h2 className="font-semibold text-xl">Informations complémentaires</h2>
-                                            <button className="btn-blue-dark flex items-center gap-x-2" onClick={() => toggleEditState('informations')}><img src={pen}></img> <span>Modifier</span></button>
-                                        </div>
-                                        <div className="flex justify-between items-start gap-x-6 px-8 py-6">
-                                            <div className="w-10/12 flex items-start gap-x-16">
-                                                <div className="flex flex-col gap-y-4">
-                                                    <p><span className="font-semibold">Handicap : </span>{userData.isHandicap || 'Non renseigné'}</p>
-                                                    <p><span className="font-semibold">Permis de conduire : </span>{userData.isDriverLicense || 'Non renseigné'}</p>
+                                        {editStates.informations ? (
+                                            <>
+                                                <div className="p-4 border-b w-full flex justify-between items-center">
+                                                    <h2 className="font-semibold text-xl">Informations complémentaires</h2>
+                                                    <button className="btn-blue-dark flex items-center gap-x-2" onClick={() => toggleEditState('informations')}><img src={cross}></img> <span>Annuler</span></button>
                                                 </div>
-                                                <div className="flex flex-col gap-y-4">
-                                                    <p><span className="font-semibold">LinkedIn : </span>{userData.linkedinPage ? <Link to={userData.linkedinPage} className="text-blue-dark underline">Accéder</Link> : 'Non renseigné'}</p>
-                                                    <p><span className="font-semibold">Lien personnel : </span>{userData.personnalWebsite ? <Link to={userData.personnalWebsite} className="text-blue-dark underline">Accéder</Link> : 'Non renseigné'}</p>
+                                                <InformationsForm formData={formData} setFormData={setFormData} notify={notify} userId={formData.id} toggleEditState={toggleEditState} />
+                                            </>
+                                        ) : (
+                                            <>
+                                                <div className="p-4 border-b w-full flex justify-between items-center">
+                                                    <h2 className="font-semibold text-xl">Informations complémentaires</h2>
+                                                    <button className="btn-blue-dark flex items-center gap-x-2" onClick={() => toggleEditState('informations')}><img src={pen}></img> <span>Modifier</span></button>
                                                 </div>
-                                            </div>
-                                        </div>
+                                                <div className="flex justify-between items-start gap-x-6 px-8 py-6">
+                                                    <div className="w-10/12 flex items-start gap-x-16">
+                                                        <div className="flex flex-col gap-y-4">
+                                                            <p><span className="font-semibold">Handicap : </span>{(formData.handicap ? 'Oui' : 'Non')  || 'Non renseigné'}</p>
+                                                            <p><span className="font-semibold">Permis de conduire : </span>{(formData.driver_license ? 'Oui' : 'Non') || 'Non renseigné'}</p>
+                                                        </div>
+                                                        <div className="flex flex-col gap-y-4">
+                                                            <p><span className="font-semibold">LinkedIn : </span>{formData.linkedin_page ? <Link to={formData.linkedin_page} className="text-blue-dark underline">Accéder</Link> : 'Non renseigné'}</p>
+                                                            <p><span className="font-semibold">Lien personnel : </span>{formData.personnal_website ? <Link to={formData.personnal_website} className="text-blue-dark underline">Accéder</Link> : 'Non renseigné'}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </>
+                                        )}
                                     </div>
                                 </div>
                                 <div className="w-1/3">
                                     <div className="border rounded-md mb-8">
-                                        <div className="p-4 border-b w-full flex justify-between items-center">
-                                            <h2 className="font-semibold text-xl">Experiences</h2>
-                                            <button className="btn-blue-dark flex items-center gap-x-2" onClick={() => toggleEditState('experiences')}><img src={pen}></img> <span>Modifier</span></button>
-                                        </div>
-                                        <div className="flex justify-between items-start gap-x-6 px-4 py-6">
-                                            <div className="flex items-start gap-x-16">
-                                                <div className="flex flex-col gap-y-4">
-                                                    <p><span className="font-semibold">Niveau d’étude : </span>{userData.studyYears || 'Non renseigné'}</p>
-                                                    <p><span className="font-semibold">Diplôme préparé  : </span>{userData.preparedDegree || 'Non renseigné'}</p>
-                                                    <p><span className="font-semibold">Nom de l’établissement : </span>{userData.schoolName || 'Non renseigné'}</p>
+                                        {editStates.experiences ? (
+                                            <>
+                                                <div className="p-4 border-b w-full flex justify-between items-center">
+                                                    <h2 className="font-semibold text-xl">Experiences</h2>
+                                                    <button className="btn-blue-dark flex items-center gap-x-2" onClick={() => toggleEditState('experiences')}><img src={cross}></img> <span>Annuler</span></button>
                                                 </div>
-                                            </div>
-                                        </div>
+                                                <ExperiencesForm formData={formData} setFormData={setFormData} notify={notify} userId={formData.id} toggleEditState={toggleEditState} />
+                                            </>
+                                        ) : (
+                                            <>
+                                                <div className="p-4 border-b w-full flex justify-between items-center">
+                                                    <h2 className="font-semibold text-xl">Experiences</h2>
+                                                    <button className="btn-blue-dark flex items-center gap-x-2" onClick={() => toggleEditState('experiences')}><img src={pen}></img> <span>Modifier</span></button>
+                                                </div>
+                                                <div className="flex justify-between items-start gap-x-6 px-4 py-6">
+                                                    <div className="flex items-start gap-x-16">
+                                                        <div className="flex flex-col gap-y-4">
+                                                            <p><span className="font-semibold">Niveau d’étude : </span>{formData.study_years || 'Non renseigné'}</p>
+                                                            <p><span className="font-semibold">Diplôme préparé  : </span>{formData.prepared_degree || 'Non renseigné'}</p>
+                                                            <p><span className="font-semibold">Nom de l’établissement : </span>{formData.school_name || 'Non renseigné'}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </>
+                                        )}
                                     </div>
                                     <div className="border rounded-md mb-8">
                                         <div className="p-4 border-b w-full flex justify-between items-center">
