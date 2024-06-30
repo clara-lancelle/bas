@@ -4,6 +4,7 @@ import useToken from './useToken';
 const Application = (id) => {
     const { REACT_APP_API_URL } = process.env;
     const [skills, setSkills] = useState([])
+    const [profileImage, setProfileImage] = useState(null);
     const token = sessionStorage.getItem('userType') == 'Student' && sessionStorage.getItem('token') || ''
     
     useEffect(() => {
@@ -12,9 +13,18 @@ const Application = (id) => {
             .then(response => (
                 setSkills(response['hydra:member'].filter((item, index) => index < 3).map(item => `/api/skills/${item.id.toString()}`)) 
             ))
-
     }, [REACT_APP_API_URL])
-    useEffect(() => {
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setProfileImage(reader.result);
+        };
+        reader.readAsDataURL(file);
+    };
+
+     const handleSubmit = () => {
         const user = {
             'token': token,
             'firstname': 'john',
@@ -29,11 +39,12 @@ const Application = (id) => {
             'personnal_website': 'http://john.com',
             'driver_license': true,
             'prepared_degree': 'CAP, BEP',
-            'study_years': 'Bac +0',
+            'study_years': 'Bac +0',    
             'school_name': 'UTC',
-            'visitor_status': true
+            'visitor_status': true,
+            'profile_image': profileImage
         }
-        fetch(`${REACT_APP_API_URL}/api/applications/persistingApplication`, {
+         fetch(`${REACT_APP_API_URL}/api/applications/persistingApplication`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/ld+json'
@@ -57,13 +68,16 @@ const Application = (id) => {
             })
         })
             .then(response => response.json())
-            .then(response => (console.log('response :'+ response)))
-    }, [REACT_APP_API_URL, skills])
+            .then(response => (console.log('response :', response)));
+    };
+
     return (
         <div className='bg-light-grey text-blue-dark'>
-           Application
+            Application
+            <input type="file" onChange={handleImageChange} />
+            <button onClick={handleSubmit}>Submit</button>
         </div>
-    )
-}
+    );
+};
 
-export default Application
+export default Application;
