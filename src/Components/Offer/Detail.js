@@ -16,6 +16,7 @@ export default function OfferDetail() {
 
     const { REACT_APP_API_URL } = process.env;
     const location = useLocation();
+    const userType = sessionStorage.getItem('userType') ? sessionStorage.getItem('userType') : null
 
     const formatDate = (isoString) => {
         const date = new Date(isoString);
@@ -107,13 +108,21 @@ export default function OfferDetail() {
                                     </div>
                                 </div>
                                 <div className="flex gap-x-8">
-                                    <div className="border-r pr-8">
-                                        <Link to="https://linkedin.fr" className="flex items-center h-full"><img src={share} className="w-[32px] min-w-[32px]"></img></Link>
-                                    </div>
+                                    {userType && userType !== 'CompanyUser' ? (
+                                        <>
+                                            <div className="border-r pr-8">
+                                                <Link to="https://linkedin.fr" className="flex items-center h-full"><img src={share} className="w-[32px] min-w-[32px]"></img></Link>
+                                            </div>
 
-                                    <div className="flex items-center text-white font-bold bg-blue-dark">
-                                        <Link to="postuler" className="px-14 py-4" state={{ offerId: offer.id }}>Postuler</Link>
-                                    </div>
+                                            <div className="flex items-center text-white font-bold bg-blue-dark">
+                                                <Link to="postuler" className="px-14 py-4" state={{ offerId: offer.id }}>Postuler</Link>
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <div className="pr-8">
+                                            <Link to="https://linkedin.fr" className="flex items-center h-full"><img src={share} className="w-[32px] min-w-[32px]"></img></Link>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -142,10 +151,11 @@ export default function OfferDetail() {
                             ))}
                         </ul>
                     </div>
-
-                    <div className="flex items-center text-white font-bold bg-blue-dark w-fit py-4 px-10">
-                        <Link to="postuler" state={{ offerId: offer.id }}>Postuler</Link>
-                    </div>
+                    {userType && userType !== 'CompanyUser' && (
+                        <div className="flex items-center text-white font-bold bg-blue-dark w-fit py-4 px-10">
+                            <Link to="postuler" state={{ offerId: offer.id }}>Postuler</Link>
+                        </div>
+                    )}
                 </div>
 
                 <div className="w-1/3">
