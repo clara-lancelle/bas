@@ -1,7 +1,7 @@
-import BackofficeCompanyOffers from '../Components/Backoffice/CompanyOffers';
+import BackofficeCompanyOffers from '../Components/Backoffice/Company/CompanyOffers';
 import BackofficeUserAccount from '../Components/Backoffice/UserAccount';
 import BackofficeCompanyUserAccount from '../Components/Backoffice/Company/CompanyUserAccount';
-import BackofficeCompanyAccount from '../Components/Backoffice/CompanyAccount';
+import BackofficeCompanyAccount from '../Components/Backoffice/Company/CompanyAccount';
 
 export const restrictedRoutes = [
     {

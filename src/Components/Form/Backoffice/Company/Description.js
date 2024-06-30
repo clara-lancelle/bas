@@ -9,6 +9,7 @@ export default function CompanyIdentityForm({ formData, setFormData, toggleEditS
     const [newFormData, setNewFormData] = useState([]);
     const [loading, setLoading] = useState(false);
     const userToken = sessionStorage.getItem('token')
+    const userCompanyId = sessionStorage.getItem('userCompanyId') 
 
     useEffect(() => {
         if (formData.description) {
@@ -38,7 +39,7 @@ export default function CompanyIdentityForm({ formData, setFormData, toggleEditS
 };
 
 const sendDataToAPI = async (newData) => {
-    const response = await fetch(`${REACT_APP_API_URL}/api/security/companies/96`, {
+    const response = await fetch(`${REACT_APP_API_URL}/api/security/companies/${userCompanyId}`, {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/merge-patch+json',
@@ -49,7 +50,7 @@ const sendDataToAPI = async (newData) => {
 
     if (!response.ok) {
         const errorData = await response.json();
-        console.error('Erreur lors de la création du compte', errorData);
+        console.error('Erreur lors de la mise à jour de la description de l\'entreprise', errorData);
         return;
     }
 
