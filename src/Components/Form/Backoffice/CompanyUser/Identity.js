@@ -39,7 +39,7 @@ export default function CompanyUserIdentityForm({ formData, setFormData, toggleE
             const reader = new FileReader();
             reader.onloadend = () => {
                 setSelectedImage(reader.result);
-                setNewFormData({ ...newFormData, profileImage: file }); // Optionnel: mise à jour de formData si nécessaire
+                setNewFormData({ ...newFormData, profileImage: file });
             };
             reader.readAsDataURL(file);
         }
@@ -108,9 +108,9 @@ export default function CompanyUserIdentityForm({ formData, setFormData, toggleE
 
     const sendDataToAPI = async (newData) => {
         const response = await fetch(`${REACT_APP_API_URL}/api/security/company_users/${formData.id}`, {
-            method: 'PATCH',
+            method: 'PUT',
             headers: {
-                'Content-Type': 'application/merge-patch+json',
+                'Content-Type': 'application/ld+json',
                 'Authorization': `Bearer ${userToken}`,
             },
             body: JSON.stringify(newData)

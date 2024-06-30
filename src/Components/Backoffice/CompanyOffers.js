@@ -5,8 +5,13 @@ import Paginate from "../Paginate/Paginate";
 import Sidebar from "./Sidebar/Sidebar";
 import plus from "../../Images/Icons/plus-white.svg";
 import CompanyOffersTable from "../Tables/CompanyOffersTable";
+import CompanyHeader from "./Company/CompanyHeader";
 
 export default function CompanyList() {
+    const userCompanyId = sessionStorage.getItem('userCompanyId')
+    const userToken = sessionStorage.getItem('token')
+    const [company, setCompany] = useState([])
+    const [loading, setLoading] = useState([])
     const data = [
         {
             name: 'Social Media Assistant',
@@ -17,16 +22,39 @@ export default function CompanyList() {
             applications: 19
         }
     ];
+
+    useEffect(() => {
+        const getCompanyData = async () => {
+            try {
+                const response = await fetch(`${process.env.REACT_APP_API_URL}/api/companies/${userCompanyId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${userToken}`,
+                    },
+                });
+
+                if (response.ok) {
+                    const companyResponse = await response.json();
+                    setCompany(companyResponse);
+                } else {
+                    console.error('Failed to fetch user data');
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        setLoading(true)
+        getCompanyData()
+        setLoading(false)
+
+    }, [])
+
     return (
         <div className="h-full flex">
             <Sidebar userType={'administrator'} activeItem="offers"/>
             <div className="w-10/12">
-                <div className="mb-8 py-4 px-8 flex justify-between border-b">
-                    <img></img>
-                    <div className="flex items-center h-3/4">
-                        <button className="btn-blue-dark flex items-center gap-x-2"><img src={plus}></img> <span>Nouvelle offre</span></button>
-                    </div>
-                </div>
+                <CompanyHeader imageName={company.large_image} companyName={company.name}/>
                 <div class="mx-8 border">
                     <div className="ps-6 py-6 pe-10 flex justify-between">
                         <span className="font-semibold text-xl">X offres trouvées</span>

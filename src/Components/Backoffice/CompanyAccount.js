@@ -4,7 +4,7 @@ import moment from 'moment';
 import Ariane from '../Partials/Ariane';
 import Paginate from "../Paginate/Paginate";
 import Sidebar from "./Sidebar/Sidebar";
-import plus from "../../Images/Icons/plus-white.svg";
+import cross from "../../Images/Icons/cross-white.svg";
 import CompanyOffersTable from "../Tables/CompanyOffersTable";
 import pen from "../../Images/Icons/pencil.svg";
 import placeholderLarge from "../../Images/Company/placeholderLarge.png";
@@ -13,11 +13,13 @@ import IdentityForm from "../Form/Backoffice/Company/Identity";
 import InformationsForm from "../Form/Backoffice/Company/Informations";
 import DescriptionForm from "../Form/Backoffice/Company/Description";
 import SocialsForm from "../Form/Backoffice/Company/Socials";
+import CompanyHeader from "./Company/CompanyHeader"
 
 export default function CompanyAccount({ notify }) {
     const { REACT_APP_API_URL } = process.env;
     const { token } = useToken();
     const userToken = sessionStorage.getItem('token');
+    const userCompanyId = sessionStorage.getItem('userCompanyId')
     const [loading, setLoading] = useState(false);
     const [company, setCompany] = useState(false);
     const [formData, setFormData] = useState({});
@@ -39,7 +41,7 @@ export default function CompanyAccount({ notify }) {
     useEffect(() => {
         const getCompanyData = async () => {
             try {
-                const response = await fetch(`${process.env.REACT_APP_API_URL}/api/companies/96`, {
+                const response = await fetch(`${process.env.REACT_APP_API_URL}/api/companies/${userCompanyId}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -86,6 +88,7 @@ export default function CompanyAccount({ notify }) {
         setLoading(false)
 
     }, [])
+
     if (loading) {
         return (<p>Loading ...</p>)
     } else {
@@ -99,51 +102,61 @@ export default function CompanyAccount({ notify }) {
                         )}
                         {!loading && (
                             <>
-                                <div className="mb-8 py-4 px-8 flex justify-between border-b">
-                                    <img></img>
-                                    <div className="flex items-center h-3/4">
-                                        <button className="btn-blue-dark flex items-center gap-x-2"><img src={plus}></img> <span>Nouvelle offre</span></button>
-                                    </div>
-                                </div>
+                                <CompanyHeader imageName={formData.large_image} companyName={formData.name}/>
 
                                 <div className="px-8 py-4 flex gap-x-8">
                                     <div className="w-3/5">
                                         <div className="border rounded-md mb-8">
-                                            <div className="p-4 border-b w-full flex justify-between items-center">
-                                                <h2 className="font-semibold text-xl">Identité</h2>
-                                                <button className="btn-blue-dark flex items-center gap-x-2" onClick={() => toggleEditState('identity')}><img src={pen}></img> <span>Modifier</span></button>
-                                            </div>
                                             {editStates.identity ? (
-                                                <IdentityForm formData={formData} setFormData={setFormData} toggleEditState={toggleEditState} notify={notify} />
+                                                <>
+                                                    <div className="p-4 border-b w-full flex justify-between items-center">
+                                                        <h2 className="font-semibold text-xl">Identité</h2>
+                                                        <button className="btn-blue-dark flex items-center gap-x-2" onClick={() => toggleEditState('identity')}><img src={cross}></img> <span>Annuler</span></button>
+                                                    </div>
+                                                    <IdentityForm formData={formData} setFormData={setFormData} toggleEditState={toggleEditState} notify={notify} />
+                                                </>
                                             ) : (
-                                                <div className="w-full flex items-start gap-x-16 px-4 py-6">
-                                                    <div className="flex flex-col gap-y-4">
-                                                        <p><span className="font-semibold">Nom : </span>{formData.name}</p>
-                                                        <p><span className="font-semibold">SIRET : </span>{formData.siret}</p>
-                                                        <p><span className="font-semibold">Catégorie : </span>{formData.category && formData.category.name ? formData.category.name : 'Non renseigné'}</p>
-                                                        <p><span className="font-semibold">Téléphone : </span>{formData.phone_num || 'Non renseigné'}</p>
+                                                <>
+                                                    <div className="p-4 border-b w-full flex justify-between items-center">
+                                                        <h2 className="font-semibold text-xl">Identité</h2>
+                                                        <button className="btn-blue-dark flex items-center gap-x-2" onClick={() => toggleEditState('identity')}><img src={pen}></img> <span>Modifier</span></button>
                                                     </div>
-                                                    <div className="flex flex-col gap-y-4">
-                                                        <p><span className="font-semibold">Adresse : </span>{formData.address || 'Non renseigné'}</p>
-                                                        <p><span className="font-semibold">Complément d'adresse : </span>{formData.additional_address || 'Non renseigné'}</p>
-                                                        <p><span className="font-semibold">Ville : </span>{formData.city || 'Non renseigné'}</p>
-                                                        <p><span className="font-semibold">Code postal : </span>{formData.zip_code || 'Non renseigné'}</p>
+                                                    <div className="w-full flex items-start gap-x-16 px-4 py-6">
+                                                        <div className="flex flex-col gap-y-4">
+                                                            <p><span className="font-semibold">Nom : </span>{formData.name}</p>
+                                                            <p><span className="font-semibold">SIRET : </span>{formData.siret}</p>
+                                                            <p><span className="font-semibold">Catégorie : </span>{formData.category && formData.category.name ? formData.category.name : 'Non renseigné'}</p>
+                                                            <p><span className="font-semibold">Téléphone : </span>{formData.phone_num || 'Non renseigné'}</p>
+                                                        </div>
+                                                        <div className="flex flex-col gap-y-4">
+                                                            <p><span className="font-semibold">Adresse : </span>{formData.address || 'Non renseigné'}</p>
+                                                            <p><span className="font-semibold">Complément d'adresse : </span>{formData.additional_address || 'Non renseigné'}</p>
+                                                            <p><span className="font-semibold">Ville : </span>{formData.city || 'Non renseigné'}</p>
+                                                            <p><span className="font-semibold">Code postal : </span>{formData.zip_code || 'Non renseigné'}</p>
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                </>
                                             )}
                                         </div>
                                         <div className="border rounded-md mb-8">
-                                            <div className="p-4 border-b w-full flex justify-between items-center">
-                                                <h2 className="font-semibold text-xl">Description</h2>
-                                                <button className="btn-blue-dark flex items-center gap-x-2" onClick={() => toggleEditState('description')}><img src={pen}></img> <span>Modifier</span></button>
-                                            </div>
-                                            <div className="flex justify-between items-start gap-x-6 px-4 py-6">
-                                                {editStates.description ? (
+                                            {editStates.description ? (
+                                                <>
+                                                    <div className="p-4 border-b w-full flex justify-between items-center">
+                                                        <h2 className="font-semibold text-xl">Description</h2>
+                                                        <button className="btn-blue-dark flex items-center gap-x-2" onClick={() => toggleEditState('description')}><img src={cross}></img> <span>Annuler</span></button>
+                                                    </div>
                                                     <DescriptionForm formData={formData} setFormData={setFormData} toggleEditState={toggleEditState} notify={notify} />
-                                                ) : (
-                                                    <p>{company.description ? company.description.replace(/<[^>]+>/g, '') : 'Pas de description'}</p>
-                                                )}
-                                            </div>
+                                                </>
+                                            ) : (<>
+                                                <div className="p-4 border-b w-full flex justify-between items-center">
+                                                    <h2 className="font-semibold text-xl">Description</h2>
+                                                    <button className="btn-blue-dark flex items-center gap-x-2" onClick={() => toggleEditState('description')}><img src={pen}></img> <span>Modifier</span></button>
+                                                </div>
+                                                <div className="flex justify-between items-start gap-x-6 px-4 py-6">
+                                                    <p>{formData.description ? formData.description.replace(/<[^>]+>/g, '') : 'Pas de description'}</p>
+                                                </div>
+                                            </>
+                                            )}
                                         </div>
                                         <div className="border rounded-md mb-8">
                                             <div className="p-4 border-b w-full flex justify-between items-center">
@@ -186,46 +199,69 @@ export default function CompanyAccount({ notify }) {
                                     </div>
                                     <div className="w-2/5">
                                         <div className="border rounded-md mb-8">
-                                            <div className="p-4 border-b w-full flex justify-between items-center">
-                                                <h2 className="font-semibold text-xl">Informations</h2>
-                                                <button className="btn-blue-dark flex items-center gap-x-2" onClick={() => toggleEditState('informations')}><img src={pen}></img> <span>Modifier</span></button>
-                                            </div>
                                             {editStates.informations ? (
-                                                <InformationsForm formData={formData} setFormData={setFormData} toggleEditState={toggleEditState} notify={notify} />
+                                                <>
+                                                    <div className="p-4 border-b w-full flex justify-between items-center">
+                                                        <h2 className="font-semibold text-xl">Informations</h2>
+                                                        <button className="btn-blue-dark flex items-center gap-x-2" onClick={() => toggleEditState('informations')}><img src={cross}></img> <span>Annuler</span></button>
+                                                    </div>
+                                                    <InformationsForm formData={formData} setFormData={setFormData} toggleEditState={toggleEditState} notify={notify} />
+                                                </>
                                             ) : (
-                                                <div className="flex justify-between items-start gap-x-6 px-4 py-6">
-                                                    <div className="flex items-start gap-x-16">
-                                                        <div className="flex flex-col gap-y-4">
-                                                            <p><span className="font-semibold">Date de création : </span>{moment(formData.creation_date).format('DD/MM/YYYY') || 'Non renseigné'}</p>
-                                                            <div className="flex "><span className="font-semibold">Secteur d'activité : </span>
-                                                                <ul className="list-style-logo">
-                                                                    {formData.activities && formData.activities.map((activity) => (
-                                                                        <li key={activity.id}>{activity.name}</li>
-                                                                    )) || 'Non renseigné'}
-                                                                </ul>
+                                                <>
+                                                    <div className="p-4 border-b w-full flex justify-between items-center">
+                                                        <h2 className="font-semibold text-xl">Informations</h2>
+                                                        <button className="btn-blue-dark flex items-center gap-x-2" onClick={() => toggleEditState('informations')}><img src={pen}></img> <span>Modifier</span></button>
+                                                    </div>
+                                                    <div className="flex justify-between items-start gap-x-6 px-4 py-6">
+                                                        <div className="flex items-start gap-x-16">
+                                                            <div className="flex flex-col gap-y-4">
+                                                                <p><span className="font-semibold">Date de création : </span>{moment(formData.creation_date).format('DD/MM/YYYY') || 'Non renseigné'}</p>
+                                                                <div className="flex "><span className="font-semibold">Secteur d'activité : </span>
+                                                                    <ul className="list-style-logo">
+                                                                        {formData.activities && formData.activities.map((activity) => (
+                                                                            <li key={activity.id}>{activity.name}</li>
+                                                                        )) || 'Non renseigné'}
+                                                                    </ul>
+                                                                </div>
+                                                                <p><span className="font-semibold">Effectif  : </span>{formData.workforce || 'Non renseigné'}</p>
+                                                                <p><span className="font-semibold">Chiffre d'affaire : </span>{(formData.revenue / 1000000).toFixed(2) + 'M€' || 'Non renseigné'}</p>
                                                             </div>
-                                                            <p><span className="font-semibold">Effectif  : </span>{formData.workforce || 'Non renseigné'}</p>
-                                                            <p><span className="font-semibold">Chiffre d'affaire : </span>{(formData.revenue / 1000000).toFixed(2) + 'M€' || 'Non renseigné'}</p>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                </>
                                             )}
                                         </div>
                                         <div className="border rounded-md mb-8">
-                                            <div className="p-4 border-b w-full flex justify-between items-center">
-                                                <h2 className="font-semibold text-xl">Réseaux sociaux</h2>
-                                                <button className="btn-blue-dark flex items-center gap-x-2" onClick={() => toggleEditState('socials')}><img src={pen}></img> <span>Modifier</span></button>
-                                            </div>
                                             {editStates.socials ? (
-                                                <SocialsForm formData={formData} setFormData={setFormData} toggleEditState={toggleEditState} notify={notify} />
-                                            ) : (
-                                                <div className="flex justify-between items-start gap-x-6 px-4 py-6">
-                                                    <div className="flex flex-col items-start gap-y-8">
-                                                        {company.socialLinks && company.socialLinks.map((media) => (
-                                                            <p key={media.id}><span className="font-semibold">{media.social_network.name} : </span><Link to={media.url} className="text-blue-dark underline">Accéder</Link></p>
-                                                        ))}
+                                                <>
+                                                    <div className="p-4 border-b w-full flex justify-between items-center">
+                                                        <h2 className="font-semibold text-xl">Réseaux sociaux</h2>
+                                                        <button className="btn-blue-dark flex items-center gap-x-2" onClick={() => toggleEditState('socials')}><img src={cross}></img> <span>Annuler</span></button>
                                                     </div>
-                                                </div>
+                                                    <SocialsForm
+                                                        formData={formData}
+                                                        setFormData={setFormData}
+                                                        toggleEditState={toggleEditState}
+                                                        notify={notify} />
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <div className="p-4 border-b w-full flex justify-between items-center">
+                                                        <h2 className="font-semibold text-xl">Réseaux sociaux</h2>
+                                                        <button className="btn-blue-dark flex items-center gap-x-2" onClick={() => toggleEditState('socials')}><img src={pen}></img> <span>Modifier</span></button>
+                                                    </div>
+                                                    <div className="flex justify-between items-start gap-x-6 px-4 py-6">
+                                                        <div className="flex flex-col items-start gap-y-8">
+                                                            {formData.socialLinks && formData.socialLinks.map((media) => (
+                                                                <p key={media.id}><span className="font-semibold">{media.social_network.name || media.name} : </span><Link to={media.url} className="text-blue-dark underline">Accéder</Link></p>
+                                                            ))}
+                                                            {!formData.socialLinks || formData.socialLinks.length == 0 && (
+                                                                <p>Augmentez votre visibilité en ajoutant vos réseaux dès maintenant !</p>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                </>
                                             )}
                                         </div>
                                     </div>
