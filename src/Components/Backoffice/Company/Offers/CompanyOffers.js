@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import Ariane from '../../Partials/Ariane';
-import Paginate from "../../Paginate/Paginate";
-import Sidebar from "../Sidebar/Sidebar";
-import plus from "../../../Images/Icons/plus-white.svg";
-import CompanyOffersTable from "../../Tables/CompanyOffersTable";
-import CompanyHeader from "./CompanyHeader";
+import Ariane from '../../../Partials/Ariane';
+import Paginate from "../../../Paginate/Paginate";
+import Sidebar from "../../Sidebar/Sidebar";
+import plus from "../../../../Images/Icons/plus-white.svg";
+import CompanyOffersTable from "../../../Tables/CompanyOffersTable";
+import CompanyHeader from "../CompanyHeader";
 
 export default function CompanyList() {
     const { REACT_APP_API_URL } = process.env
@@ -60,7 +60,7 @@ export default function CompanyList() {
         <div className="h-full flex">
             <Sidebar userType={'administrator'} activeItem="offers" />
             <div className="w-10/12">
-                <CompanyHeader imageName={company.large_image} companyName={company.name} />
+                <CompanyHeader imageName={company.large_image} companyName={company.name} showOfferCreate={true} />
                 <div class="mx-8 border">
                     <div className="ps-6 py-6 pe-10 flex justify-between">
                         <span className="font-semibold text-xl">{offers.length > 0 ? offers.length : '0'} offres trouvées</span>

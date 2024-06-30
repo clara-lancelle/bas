@@ -102,7 +102,7 @@ export default function CompanyAccount({ notify }) {
                         )}
                         {!loading && (
                             <>
-                                <CompanyHeader imageName={formData.large_image} companyName={formData.name}/>
+                                <CompanyHeader imageName={formData.large_image} companyName={formData.name} showOfferCreate={true}/>
 
                                 <div className="px-8 py-4 flex gap-x-8">
                                     <div className="w-3/5">
