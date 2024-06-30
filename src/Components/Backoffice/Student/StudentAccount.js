@@ -3,6 +3,7 @@ import Sidebar from "../Sidebar/Sidebar";
 import IdentityForm from "../../Form/Backoffice/Student/Identity"
 import ExperiencesForm from "../../Form/Backoffice/Student/Experiences"
 import InformationsForm from "../../Form/Backoffice/Student/Informations"
+import SkillsForm from "../../Form/Backoffice/Student/Skills"
 import moment from 'moment';
 import { Link } from "react-router-dom";
 import pen from "../../../Images/Icons/pencil.svg";
@@ -19,29 +20,28 @@ export default function StudentAccount({ userInfo, notify }) {
     const userEmail = sessionStorage.getItem('userEmail');
 
     const [formData, setFormData] = useState({
-        firstname: '',               
-        name: '',                    
-        gender: '',                  
-        email: '',                   
-        address: '',                 
-        additional_address: '',      
-        zipCode: '',                 
-        city: '',                    
-        cellphone: '',               
-        profileImage: [],            
-        birthdate: '',               
-        driver_license: '',          
-        experiences: [],             
-        handicap: '',                
-        languages: [],               
-        linkedin_page: '',           
-        personnal_website: '',       
-        prepared_degree: '',         
-        school_name: '',             
-        skills: [],                  
-        study_years: '',             
+        firstname: '',
+        name: '',
+        gender: '',
+        email: '',
+        address: '',
+        additional_address: '',
+        zipCode: '',
+        city: '',
+        cellphone: '',
+        profileImage: [],
+        birthdate: '',
+        driver_license: '',
+        experiences: [],
+        handicap: '',
+        languages: [],
+        linkedin_page: '',
+        personnal_website: '',
+        prepared_degree: '',
+        school_name: '',
+        skills: [],
+        study_years: '',
         applications: [],
-
     });
 
     const [editStates, setEditStates] = useState({
@@ -69,6 +69,7 @@ export default function StudentAccount({ userInfo, notify }) {
 
     useEffect(() => {
         const getUserData = async () => {
+            setLoading(true)
             try {
                 const response = await fetch(`${process.env.REACT_APP_API_URL}/api/security/users/?email=${encodeURIComponent(userEmail)}`, {
                     method: 'GET',
@@ -96,16 +97,12 @@ export default function StudentAccount({ userInfo, notify }) {
                         cellphone: userResponse.cellphone ? userResponse.cellphone : '',
                         profileImage: userResponse.profileImage ? userResponse.profileImage : '',
                         birthdate: formatDateForForm(userResponse.birthdate) || '',
-                        applications: userResponse.applications || [],
                         driver_license: userResponse.driver_license || '',
-                        experiences: userResponse.experiences || [],
                         handicap: userResponse.handicap || '',
-                        languages: userResponse.languages || [],
                         linkedin_page: userResponse.linkedin_page || '',
                         personnal_website: userResponse.personnal_website || '',
                         prepared_degree: userResponse.prepared_degree || '',
                         school_name: userResponse.school_name || '',
-                        skills: userResponse.skills || [],
                         study_years: userResponse.study_years || '',
                     }));
                 } else {
@@ -117,14 +114,54 @@ export default function StudentAccount({ userInfo, notify }) {
         };
         getUserData();
     }, [userEmail, userToken]);
+    useEffect(() => {
+        const getUserData = async () => {
+            if (formData.id) {
+                try {
+                    const response = await fetch(`${process.env.REACT_APP_API_URL}/api/students/${formData.id}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
 
-    if (!userData) {
+                    if (response.ok) {
+                        const data = await response.json();
+                        const studentResponse = data;
+                        console.log(studentResponse)
+                        setUserData({ ...userData, ...studentResponse });
+                        setFormData(prevFormData => ({
+                            ...prevFormData,
+                            applications: studentResponse.applications || [],
+                            experiences: studentResponse.experiences || [],
+                            languages: studentResponse.languages || [],
+                            skills: studentResponse.skills || [],
+                            iri: studentResponse['@id'] || [],
+                        }));
+                    } else {
+                        console.error('Failed to fetch user data');
+                    }
+                } catch (error) {
+                    console.error(error);
+                } finally {
+                    setLoading(false)
+                }
+            }
+        };
+        getUserData();
+    }, [userEmail, userToken, formData.id]);
+
+    if (!userData && !loading) {
         return <div>No user data available</div>;
+    }
+    if (loading) {
+        return <p>Chargement</p>;
     }
 
     return (
         <>
             <div className="h-full flex">
+                {console.log(formData, userData)}
                 <Sidebar userType={'student'} activeItem="home" />
                 <div className="w-10/12">
                     {loading && (
@@ -195,7 +232,7 @@ export default function StudentAccount({ userInfo, notify }) {
                                                 <div className="flex justify-between items-start gap-x-6 px-8 py-6">
                                                     <div className="w-10/12 flex items-start gap-x-16">
                                                         <div className="flex flex-col gap-y-4">
-                                                            <p><span className="font-semibold">Handicap : </span>{(formData.handicap ? 'Oui' : 'Non')  || 'Non renseigné'}</p>
+                                                            <p><span className="font-semibold">Handicap : </span>{(formData.handicap ? 'Oui' : 'Non') || 'Non renseigné'}</p>
                                                             <p><span className="font-semibold">Permis de conduire : </span>{(formData.driver_license ? 'Oui' : 'Non') || 'Non renseigné'}</p>
                                                         </div>
                                                         <div className="flex flex-col gap-y-4">
@@ -237,19 +274,64 @@ export default function StudentAccount({ userInfo, notify }) {
                                         )}
                                     </div>
                                     <div className="border rounded-md mb-8">
-                                        <div className="p-4 border-b w-full flex justify-between items-center">
-                                            <h2 className="font-semibold text-xl">Compétences</h2>
-                                            <button className="btn-blue-dark flex items-center gap-x-2" onClick={() => toggleEditState('skills')}><img src={plus}></img> <span>Ajouter</span></button>
-                                        </div>
-                                        <div className="flex justify-between items-start gap-x-6 px-4 py-6">
-                                            <div className="flex items-start gap-x-16">
-                                                <div className="flex flex-col gap-y-4">
-                                                    <p><span className="font-semibold">Compétences : </span><br />{userData.cv || 'Non renseigné'}</p>
-                                                    <p><span className="font-semibold">Langues et niveaux : </span><br />{userData.cv || 'Non renseigné'}</p>
-                                                    <p><span className="font-semibold">Expériences professionnelles : </span><br />{userData.cv || 'Non renseigné'}</p>
+                                        {editStates.skills ? (
+                                            <>
+                                                <div className="p-4 border-b w-full flex justify-between items-center">
+                                                    <h2 className="font-semibold text-xl">Compétences</h2>
+                                                    <button className="btn-blue-dark flex items-center gap-x-2" onClick={() => toggleEditState('skills')}><img src={cross}></img> <span>Annuler</span></button>
                                                 </div>
-                                            </div>
-                                        </div>
+                                                <SkillsForm formData={formData} setFormData={setFormData} notify={notify} userId={formData.id} toggleEditState={toggleEditState} />
+                                            </>
+                                        ) : (
+                                            <>
+                                                <div className="p-4 border-b w-full flex justify-between items-center">
+                                                    <h2 className="font-semibold text-xl">Compétences</h2>
+                                                    <button className="btn-blue-dark flex items-center gap-x-2" onClick={() => toggleEditState('skills')}><img src={plus}></img> <span>Ajouter</span></button>
+                                                </div>
+                                                <div className="flex justify-between items-start gap-x-6 px-4 py-6">
+                                                    <div className="flex items-start gap-x-16">
+                                                        <div className="flex flex-col gap-y-4">
+                                                            <div className="flex flex-col gap-x-8">
+                                                                <span className="font-semibold">Compétences : </span><br />
+                                                                {formData.skills ? (
+                                                                    <ul className="ps-8 list-style-logo">
+                                                                        {formData.skills.map((skill, index) => (
+                                                                            <li key={index}>{skill.name}</li>
+                                                                        ))}
+                                                                    </ul>
+                                                                ) : (
+                                                                    <span>Non renseigné</span>
+                                                                )}
+                                                            </div>
+                                                            <div className="flex flex-col  gap-x-8">
+                                                                <span className="font-semibold">Langues et niveaux : </span><br />
+                                                                {formData.languages ? (
+                                                                    <ul className="ps-8 list-style-logo">
+                                                                        {formData.languages.map((language, index) => (
+                                                                            <li key={index}>{language.name} ({language.level})</li>
+                                                                        ))}
+                                                                    </ul>
+                                                                ) : (
+                                                                    <span>Non renseigné</span>
+                                                                )}
+                                                            </div>
+                                                            <div className="flex flex-col  gap-x-8">
+                                                                <span className="font-semibold">Expériences professionnelles : </span><br />
+                                                                {formData.experiences ? (
+                                                                    <ul className="ps-8 list-style-logo">
+                                                                        {formData.experiences.map((experience, index) => (
+                                                                            <li key={index}>{experience.type}:  {experience.company} ({experience.year})</li>
+                                                                        ))}
+                                                                    </ul>
+                                                                ) : (
+                                                                    <span>Non renseigné</span>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </>
+                                        )}
                                     </div>
                                     <div className="border rounded-md mb-8">
                                         <div className="p-4 border-b w-full flex justify-between items-center">

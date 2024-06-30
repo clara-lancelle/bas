@@ -39,7 +39,7 @@ export default function StudentInformationsForm({ formData, setFormData, toggleE
 
         if (!response.ok) {
             const errorData = await response.json();
-            console.error('Erreur lors de la mise à jour des informations d\'identité de l\'entreprise', errorData);
+            console.error('Erreur lors de la mise à jour des informations complémentaires', errorData);
             return;
         }
 

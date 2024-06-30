@@ -1,13 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 
 export default function StudentExperiencesForm({ formData, setFormData, toggleEditState, notify, userId }) {
     const { REACT_APP_API_URL } = process.env;
     const [studyLevels, setStudyLevels] = useState([]);
     const [newFormData, setNewFormData] = useState([]);
-    const [selectedImage, setSelectedImage] = useState(null);
     const [errors, setErrors] = useState([]);
     const [loading, setLoading] = useState(false);
-    const fileInputRef = useRef(null);
     const userToken = sessionStorage.getItem('token')
 
     useEffect(() => {
@@ -30,22 +28,6 @@ export default function StudentExperiencesForm({ formData, setFormData, toggleEd
 
         fetchStudyLevels();
     }, []);
-
-    const handleImageClick = () => {
-        fileInputRef.current.click();
-    };
-
-    const handleFileChange = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setSelectedImage(reader.result);
-                setNewFormData({ ...newFormData, profileImage: file });
-            };
-            reader.readAsDataURL(file);
-        }
-    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -94,7 +76,7 @@ export default function StudentExperiencesForm({ formData, setFormData, toggleEd
 
         if (!response.ok) {
             const errorData = await response.json();
-            console.error('Erreur lors de la mise à jour des informations d\'identité de l\'entreprise', errorData);
+            console.error('Erreur lors de la mise à jour des experiences', errorData);
             return;
         }
 
@@ -116,7 +98,7 @@ export default function StudentExperiencesForm({ formData, setFormData, toggleEd
                     </select>
                 </label>
                 <label>
-                    <span className="font-semibold">Diplôme pérparé : </span>
+                    <span className="font-semibold">Diplôme préparé : </span>
                     <select name="prepared_degree" defaultValue={formData.prepared_degree} onChange={handleChange}>
                         <option value="">Sélectionnez le niveau</option>
                         {studyLevels.map((level, index) => (

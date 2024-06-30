@@ -264,10 +264,11 @@ export default function OfferApply({ isAuthenticated, userInfo, setUserInfo }) {
             const contentState = editorState.getCurrentContent(); // Récupération du contenu
             const rawContentState = JSON.stringify(convertToRaw(contentState));
             const htmlContent = stateToHTML(contentState); // Transformaton de l'objet en HTML
-            setFormData((prevFormData) => ({
-                ...prevFormData,
-                motivations: htmlContent,
-            }));
+            // setFormData((prevFormData) => ({
+            //     ...prevFormData,
+            //     motivations: htmlContent,
+            // }));
+            console.log(formData)
         } else {
             console.error('EditorState is null');
         }

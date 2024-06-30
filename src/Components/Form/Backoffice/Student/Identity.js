@@ -109,7 +109,7 @@ export default function StudentIdentityForm({ formData, setFormData, toggleEditS
 
         if (!response.ok) {
             const errorData = await response.json();
-            console.error('Erreur lors de la mise à jour des informations d\'identité de l\'entreprise', errorData);
+            console.error('Erreur lors de la mise à jour des informations d\'identité', errorData);
             return;
         }
 
