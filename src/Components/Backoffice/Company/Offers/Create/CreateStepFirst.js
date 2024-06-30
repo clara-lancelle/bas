@@ -74,6 +74,9 @@ export default function CreateStepFirst({ setStep, step, formData, setFormData, 
                 if (monthsDifference >= 2 && formData.revenue <= 575) {
                     newErrors.revenue = "La rémunération doit être supérieure à 575€ si l'offre dure plus de 2 mois.";
                 }
+                if (formData.revenue < 0) {
+                    newErrors.revenue = "La rémunération ne peut pas être négative.";
+                }
             }
         }
         if(formData.type === 'Alternance'){
