@@ -1,35 +1,23 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-const SkillsAdder = ({ onSkillsChange, initialSkills = [] }) => {
+const SkillsAdder = ({ onSkillsChange }) => {
   const [availableSkills, setAvailableSkills] = useState([]);
-  const [selectedSkills, setSelectedSkills] = useState(initialSkills);
-  const [selectedSkillsIRI, setSelectedSkillsIRI] = useState(initialSkills.map(skill => skill['@id']));
+  const [selectedSkills, setSelectedSkills] = useState([]);
   const [showSkillList, setShowSkillList] = useState(false);
-  const [loading, setLoading] = useState(false);
   const { REACT_APP_API_URL } = process.env;
   const containerRef = useRef(null);
 
   useEffect(() => {
-    const fetchSkills = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch(`${REACT_APP_API_URL}/api/skills`);
-        if (response.ok) {
-          const data = await response.json();
-          const allSkills = data['hydra:member'];
-          setAvailableSkills(allSkills.filter(skill => !selectedSkillsIRI.includes(skill['@id'])));
-        } else {
-          console.error('Failed to fetch Skills');
-        }
-      } catch (error) {
-        console.error('Error fetching Skills:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    // Compétences temporaires
+    // const tempSkills = [{name: 'Réseaux sociaux', value: 'socialMedia'},  {name: 'Canva', value: 'canva'},  {name: 'Swello', value: 'swello'},  {name: 'Photoshop', value: 'photoshop'},   {name: 'Illustrator', value: 'illustrator'}];
+    // setAvailableSkills(tempSkills);
 
-    fetchSkills();
-  }, [selectedSkillsIRI, REACT_APP_API_URL]);
+    fetch(`${REACT_APP_API_URL}/api/skills`)
+      .then(response => response.json())
+      .then(data => setAvailableSkills(data['hydra:member']))
+      .catch(error => console.error('Error fetching skills:', error));
+      
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -37,7 +25,7 @@ const SkillsAdder = ({ onSkillsChange, initialSkills = [] }) => {
         setShowSkillList(false);
       }
     };
-
+    
     document.addEventListener('click', handleClickOutside);
     return () => {
       document.removeEventListener('click', handleClickOutside);
@@ -45,36 +33,31 @@ const SkillsAdder = ({ onSkillsChange, initialSkills = [] }) => {
   }, []);
 
   const addSkill = (skill) => {
-    const updatedSelectedSkills = [...selectedSkills, skill];
-    const updatedSelectedSkillsIRI = [...selectedSkillsIRI, skill['@id']];
+    const updatedSelectedSkills = [...selectedSkills, {name: skill.name, id: skill['@id']}];
     setSelectedSkills(updatedSelectedSkills);
-    setSelectedSkillsIRI(updatedSelectedSkillsIRI);
-    setAvailableSkills(availableSkills.filter(s => s['@id'] !== skill['@id']));
-    onSkillsChange(updatedSelectedSkillsIRI);
+    setAvailableSkills(availableSkills.filter(s => s !== skill));
+    onSkillsChange(updatedSelectedSkills);
   };
 
   const removeSkill = (skill) => {
-    const updatedSelectedSkills = selectedSkills.filter(s => s['@id'] !== skill['@id']);
-    const updatedSelectedSkillsIRI = selectedSkillsIRI.filter(id => id !== skill['@id']);
+    const updatedSelectedSkills = selectedSkills.filter(s => s !== skill);
     setSelectedSkills(updatedSelectedSkills);
-    setSelectedSkillsIRI(updatedSelectedSkillsIRI);
     setAvailableSkills([...availableSkills, skill]);
-    onSkillsChange(updatedSelectedSkillsIRI);
+    onSkillsChange(updatedSelectedSkills);
   };
-
-  return (
+    return (
     <div ref={containerRef} className="skills-adder relative">
       <div className="selected-skills flex flex-wrap gap-2">
         {selectedSkills.map((skill, index) => (
           <div key={index} className="skill-item bg-blue-600 text-white px-2 py-1 rounded relative flex items-center">
             {skill.name}
             <span 
-              onClick={() => removeSkill(skill)} 
+              onClick={() => removeSkill(skill.name)} 
               className="ml-2 cursor-pointer"
             >
               &times;
             </span>
-            <input type="hidden" name="skills[]" value={skill['@id']} />
+            <input type="hidden" name="skills[]" value={skill.name} />
           </div>
         ))}
         <div 
@@ -85,7 +68,7 @@ const SkillsAdder = ({ onSkillsChange, initialSkills = [] }) => {
         </div>
       </div>
       {showSkillList && (
-        <div className="skills-list mt-2 border border-blue-600 rounded p-2 max-h-48 overflow-y-scroll bg-white">
+        <div className="skills-list mt-2 border border-blue-600 rounded p-2 bg-white">
           {availableSkills.map((skill, index) => (
             <div 
               key={index} 

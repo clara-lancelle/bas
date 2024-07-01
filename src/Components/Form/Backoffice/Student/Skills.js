@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import ExperienceAdder from "../../../Fields/ExperienceAdderList";
-import LanguagesAdder from "../../../Fields/LanguageLevelList";
+import ExperienceAdder from "../../../Fields/ExperienceAdder";
+import LanguagesAdder from "../../../Fields/LanguageLevel";
 import SkillsAdder from "../../../Fields/SkillsList";
 
 export default function StudentSkillsForm({ formData, setFormData, toggleEditState, notify, userId }) {

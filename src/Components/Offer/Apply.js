@@ -6,8 +6,8 @@ import Ariane from "../Partials/Ariane";
 import JobProfiles from "../JobProfiles/JobProfiles";
 import RichTextEditor from '../Fields/RichTextEditor';
 import SkillsList from '../Fields/SkillsList';
-import LanguageLevelList from '../Fields/LanguageLevelList';
-import ExperienceAdderList from '../Fields/ExperienceAdderList';
+import LanguageLevel from '../Fields/LanguageLevel';
+import ExperienceAdder from '../Fields/ExperienceAdder';
 import FileUploader from '../Fields/FileUploader';
 import Checkbox from '../Fields/Checkbox';
 import arrow from '../../Images/Icons/arrow-right-grey-dark.svg'
@@ -15,7 +15,6 @@ import arrowBlueDark from '../../Images/Icons/arrow-blue-dark.svg'
 import ImageUploader from "../Fields/ImageUploader";
 import useToken from "../useToken";
 import Modal from 'react-modal';
-import Application from "../Application";
 
 const LinkEditor = (props) => {
     const { url } = props.contentState.getEntity(props.entityKey).getData();
@@ -48,41 +47,48 @@ export default function OfferApply({ isAuthenticated, userInfo, setUserInfo }) {
     const [editorState, setEditorState] = useState(EditorState.createEmpty()); // Assurez-vous que l'état est initialisé
     const [offer, setOffer] = useState([]);
     const [studyLevels, setStudyLevels] = useState([]);
+    const [studyYears, setStudyYears] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isOpenModal, setIsOpenModal] = useState(false);
     const [isBlocked, setIsBlocked] = useState(false);
+    const [profileImage, setProfileImage] = useState(null);
     const { REACT_APP_API_URL } = process.env;
     const { token, getToken } = useToken();
     const navigate = useNavigate();
     const location = useLocation();
     const id = useParams()
-
     const [formData, setFormData] = useState({
-        gender: '',
-        firstname: '',
-        name: '',
-        birthdate: '',
-        cellphone: '',
-        email: '',
-        emailConfirm: '',
-        address: '',
-        additionalAddress: '',
-        zipCode: '',
-        city: '',
-        websiteUrl: '',
-        linkedinUrl: '',
-        graduation: '',
-        graduationNext: '',
-        schoolName: '',
-        formationName: '',
+        student_array: {
+            gender: '',
+            firstname: '',
+            name: '',
+            birthdate: '',
+            cellphone: '',
+            email: '',
+            emailConfirm: '',
+            address: '',
+            additionalAddress: '',
+            zipCode: '',
+            city: '',
+            personnal_website: '',
+            linkedinUrl: '',
+            study_years: '',
+            prepared_degree: '',
+            formation_name: '',
+            prepared_degree: '',
+            driver_license: false,
+            handicap: false,
+        },
+        offer: `/api/offers/${id.id}`,
+        school_name: '',
         motivations: '',
-        profileImage: [],
-        experiences: [],
+        profile_image: [],
+        experiences_array: [],
+        skills: [],
         cv: [],
-        motivationLetter: [],
+        cover_letter: '',
         otherFile: [],
-        hasDrivingLicense: false,
-        isHandicap: false,
+        
         isCreateAccount: false,
     });
 
@@ -124,23 +130,28 @@ export default function OfferApply({ isAuthenticated, userInfo, setUserInfo }) {
             if (response.ok) {
                 const data = await response.json();
                 const userData = data['hydra:member'][0];
-                
-                console.log(data)
-
                 setFormData({
                     ...formData,
-                    gender: userData.gender || '',
-                    firstname: userData.firstname || '',
-                    name: userData.name || '',
-                    birthdate: formatDate(userData.birthdate) || '',
-                    cellphone: userData.cellphone || '',
-                    email: userData.email || '',
-                    emailConfirm: userData.email || '',
-                    address: userData.address || '',
-                    additionalAddress: userData.additionalAddress || '',
-                    zipCode: userData.zipCode || '',
-                    city: userData.city || '',
-                    profileImage: userData.profileImage ? [userData.profileImage] : [],
+                    student_array: {
+                        token: userToken,
+                        gender: userData.gender || '',
+                        firstname: userData.firstname || '',
+                        name: userData.name || '',
+                        birthdate: formatDate(userData.birthdate) || '',
+                        cellphone: userData.cellphone || '',
+                        email: userData.email || '',
+                        emailConfirm: userData.email || '',
+                        address: userData.address || '',
+                        zipCode: userData.zipCode || '',
+                        city: userData.city || '',
+                        personnal_website: userData.personnal_website || '',
+                        driver_license: false,
+                        prepared_degree: userData.prepared_degree || '',
+                        study_years: userData.study_years || '',    
+                        school_name: userData.school_name || '',
+                        visitor_status: false,
+                        profile_image: userData.profile_image ? [userData.profile_image] : [],
+                    }
                 })
             }
         } catch (error) {
@@ -150,7 +161,6 @@ export default function OfferApply({ isAuthenticated, userInfo, setUserInfo }) {
     
     useEffect(() => {
         if (isAuthenticated && getToken() !== '') {
-            console.log(sessionStorage.getItem('userType') == 'CompanyUser', sessionStorage.getItem('userType'), userInfo)
             if(sessionStorage.getItem('userType') == 'CompanyUser'){
                 setIsOpenModal(true)
                 setIsBlocked(true)
@@ -159,17 +169,27 @@ export default function OfferApply({ isAuthenticated, userInfo, setUserInfo }) {
             }
         } else {
             setFormData({
-                gender: '',
-                firstname: '',
-                name: '',
-                birthdate: '',
-                cellphone: '',
-                email: '',
-                emailConfirm: '',
-                address: '',
-                additionalAddress: '',
-                zipCode: '',
-                city: ''
+                ...formData,
+                student_array: {
+                    gender: '',
+                    firstname: '',
+                    name: '',
+                    birthdate: '',
+                    cellphone: '',
+                    email: '',
+                    emailConfirm: '',
+                    address: '',
+                    additionalAddress: '',
+                    zipCode: '',
+                    city: '',
+                    personnal_website: '',
+                    driver_license: false,
+                    prepared_degree: '',
+                    study_years: '',    
+                    school_name: '',
+                    visitor_status: true,
+                    profile_image: ''
+                }
             });
         }
     }, [isAuthenticated, token]);
@@ -187,6 +207,19 @@ export default function OfferApply({ isAuthenticated, userInfo, setUserInfo }) {
         };
 
         fetchStudyLevels();
+
+        const fetchStudyYears = async () => {
+            try {
+                const studyYearsResponse = await fetch(`${REACT_APP_API_URL}/api/students/StudyYears`);
+                const studyYearsData = await studyYearsResponse.json();
+                setStudyYears(studyYearsData['hydra:member']);
+
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        fetchStudyYears();
 
         const fetchData = async () => {
             try {
@@ -230,17 +263,24 @@ export default function OfferApply({ isAuthenticated, userInfo, setUserInfo }) {
     };
 
     const handleSkillsChange = (skills) => {
+        const ids = skills.map(({name, id}) => id)
         setFormData({
             ...formData,
-            skills: skills,
+            skills: ids,
         });
     };
 
-    const handleFileUpload = (name, files) => {
-        setFormData({
+    const handleFileUpload = (name, file) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setProfileImage(reader.result);
+            setFormData({
             ...formData,
-            [name]: files,
+            [name]: reader.result,
         });
+        };
+        reader.readAsDataURL(file);
+        
     };
 
     const handleLanguagesChange = (languages) => {
@@ -251,9 +291,10 @@ export default function OfferApply({ isAuthenticated, userInfo, setUserInfo }) {
     };
 
     const handleExperiencesChange = (experiences) => {
+        console.log(experiences)
         setFormData({
             ...formData,
-            experiences: experiences,
+            experiences_array: [...experiences],
         });
     };
 
@@ -274,7 +315,16 @@ export default function OfferApply({ isAuthenticated, userInfo, setUserInfo }) {
         }
 
         // Call API en post pour envoyer les data dans la table référençant les postulations
-        console.log(formData)
+        fetch(`${REACT_APP_API_URL}/api/applications/persistingApplication`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/ld+json'
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => response.json())
+        .then(response => (console.log('response :'+ response)));
+
         // Une fois le call API terminé
         if (formData.isCreateAccount) {
             navigate("/finaliser-inscription", { state: { formData: formData } });
@@ -315,7 +365,6 @@ export default function OfferApply({ isAuthenticated, userInfo, setUserInfo }) {
 
     return (
         <>
-        <Application id={id}/>
             <div className="bg-light-grey" onScroll={handleScroll}>
                 <div className="container flex flex-col pt-3 pb-11">
                     {ariane(offer.type, offer.name, offer.id)}
@@ -366,7 +415,7 @@ export default function OfferApply({ isAuthenticated, userInfo, setUserInfo }) {
                             </div>
                             <div className="w-2/5 flex flex-col">
                                 <label className="required font-semibold">Prénom</label>
-                                <input type="text" name="firstname" className="input-apply" placeholder="Jean" value={formData.firstname} disabled={!!formData.firstname} onChange={handleChange}></input>
+                                <input type="text" name="firstname" className="input-apply" placeholder="Jean" value={formData.student_array.firstname} disabled={!!formData.student_array.firstname} onChange={handleChange}></input>
                             </div>
                             <div className="w-2/5 flex flex-col">
                                 <label className="required font-semibold">Nom</label>
@@ -415,7 +464,7 @@ export default function OfferApply({ isAuthenticated, userInfo, setUserInfo }) {
                         </div>
                         <div className="w-full flex flex-col mb-8">
                             <label className="font-semibold">Adresse de votre site web personnel</label>
-                            <input type="text" name="websiteUrl" className="input-apply" placeholder="https://www.jeandupont.fr" value={formData.websiteUrl} disabled={!!formData.websiteUrl}  onChange={handleChange}></input>
+                            <input type="text" name="personnal_website" className="input-apply" placeholder="https://www.jeandupont.fr" value={formData.personnal_website} disabled={!!formData.personnal_website}  onChange={handleChange}></input>
                         </div>
                         <div className="w-full flex flex-col mb-8">
                             <label className="font-semibold">Lien vers votre page Linkedin</label>
@@ -423,10 +472,10 @@ export default function OfferApply({ isAuthenticated, userInfo, setUserInfo }) {
                         </div>
                         <div className="flex gap-x-[52px] text-grey-dark">
                             <div className="flex gap-x-[10px]">
-                                <Checkbox label={'J’ai le permis de conduire'} checked={!!formData.hasDrivingLicense || false} activeCheckEvent={true} onChange={(isChecked) => handleCheckboxChange('hasDrivingLicense', isChecked)} />
+                                <Checkbox label={'J’ai le permis de conduire'} checked={!!formData.driver_license || false} activeCheckEvent={true} onChange={(isChecked) => handleCheckboxChange('driver_license', isChecked)} />
                             </div>
                             <div className="flex gap-x-[10px]">
-                                <Checkbox label={'J’ai une forme de handicap'} checked={!!formData.isHandicap || false} activeCheckEvent={true} onChange={(isChecked) => handleCheckboxChange('isHandicap', isChecked)} />
+                                <Checkbox label={'J’ai une forme de handicap'} checked={!!formData.handicap || false} activeCheckEvent={true} onChange={(isChecked) => handleCheckboxChange('handicap', isChecked)} />
                             </div>
                         </div>
                     </div>
@@ -435,30 +484,30 @@ export default function OfferApply({ isAuthenticated, userInfo, setUserInfo }) {
                         <div className="flex gap-x-[25px] mb-8">
                             <div className="w-1/4 flex flex-col">
                                 <label className="required font-semibold">Niveau d'études</label>
-                                <select name="graduation" className="input-apply" onChange={handleChange}>
+                                <select name="study_years" className="input-apply" onChange={handleChange}>
                                     <option default hidden>-</option>
-                                    {studyLevels.length > 0 && studyLevels.map((studyLevel) => (
-                                        <option value={studyLevel}>{studyLevel}</option>
+                                    {studyYears.length > 0 && studyYears.map((studyYear) => (
+                                        <option value={formData.study_years}>{studyYear}</option>
                                     ))}
                                 </select>
                             </div>
                             <div className="w-1/3 flex flex-col">
                                 <label className="font-semibold">Diplôme préparé</label>
-                                <select name="graduationNext" className="input-apply" onChange={handleChange}>
+                                <select name="prepared_degree" className="input-apply" onChange={handleChange}>
                                     <option default hidden>-</option>
                                     {studyLevels.length > 0 && studyLevels.map((studyLevel) => (
-                                        <option value={studyLevel}>{studyLevel}</option>
+                                        <option value={formData.prepared_degree}>{studyLevel}</option>
                                     ))}
                                 </select>
                             </div>
                             <div className="w-5/12 flex flex-col">
                                 <label className="required font-semibold">Nom de l’établissement</label>
-                                <input type="text" name="schoolName" className="input-apply" placeholder="Lycée Saint-Vincent" onChange={handleChange}></input>
+                                <input type="text" name="school_name" className="input-apply" placeholder="Lycée Saint-Vincent" value={formData.school_name} onChange={handleChange}></input>
                             </div>
                         </div>
                         <div className="flex flex-col gap-x-[25px] mb-8">
                             <label className="font-semibold">Nom de la formation préparée</label>
-                            <input type="text" name="formationName" className="input-apply" placeholder="Licence générale informatique, mention développement web " onChange={handleChange}></input>
+                            <input type="text" name="formation_name" className="input-apply" value={formData.formation_name} placeholder="Licence générale informatique, mention développement web " onChange={handleChange}></input>
                         </div>
                         <div className="flex flex-col gap-x-[25px] mb-8">
                             <label className="font-semibold">Vos atouts & motivations pour postuler à cette offre de stage</label>
@@ -485,7 +534,7 @@ export default function OfferApply({ isAuthenticated, userInfo, setUserInfo }) {
                     <div className="pb-5 border-b">
                         <p className="text-2xl text-blue-dark font-semibold mb-4">Votre photo</p>
                         <p className="text-grey-dark mb-4">Ajouter votre photo à votre profil est apprécié par les entreprises et augmente vos chances</p>
-                        <ImageUploader name={'profilePicture'} onUpload={(files) => handleFileUpload('profilePicture', files)} userImage={formData.profileImage} apiUrl={REACT_APP_API_URL}/>
+                        <ImageUploader name={'profile_image'} onUpload={(files) => handleFileUpload('profile_image', files)} userImage={profileImage || formData.profile_image} apiUrl={REACT_APP_API_URL}/>
                     </div>
                     <div className="py-5 border-b">
                         <p className="text-2xl text-blue-dark font-semibold mb-4">Vos compétences</p>
@@ -495,12 +544,12 @@ export default function OfferApply({ isAuthenticated, userInfo, setUserInfo }) {
                     <div className="py-5 border-b">
                         <p className="text-2xl text-blue-dark font-semibold mb-4">Votre pratique des langues</p>
                         <p className="text-grey-dark mb-4">Ajoutez les langues que vous pratiquez :</p>
-                        <LanguageLevelList name={'languageLevels'} onLanguagesChange={handleLanguagesChange} />
+                        <LanguageLevel name={'languageLevels'} onLanguagesChange={handleLanguagesChange} />
                     </div>
                     <div className="py-5 border-b">
                         <p className="text-2xl text-blue-dark font-semibold mb-4">Votre experience pro</p>
                         <p className="text-grey-dark mb-4">Stages, emplois d’été, projets personnels :</p>
-                        <ExperienceAdderList name={'experiences'} onExperiencesChange={handleExperiencesChange} />
+                        <ExperienceAdder name={'experiences'} onExperiencesChange={handleExperiencesChange} />
                     </div>
                     <div className="pt-5 ">
                         <p className="text-2xl text-blue-dark font-semibold mb-4">CV et autres documents</p>
@@ -508,15 +557,15 @@ export default function OfferApply({ isAuthenticated, userInfo, setUserInfo }) {
 
                         <div className="flex flex-col gap-y-2 mb-4">
                             <label className="font-semibold">Votre CV <span className="text-sm font-normal">(format PDF, 20 Mo max)</span></label>
-                            <FileUploader label={'Importez votre CV'} accept={'application/pdf'} name={'cv'} onUpload={(files) => handleFileUpload('cv', files)} />
+                            <FileUploader label={'Importez votre CV'} accept={'application/pdf'} name={'cv'} />
                         </div>
                         <div className="flex flex-col gap-y-2 mb-4">
                             <label className="font-semibold">Lettre de motivation <span className="text-sm font-normal">(format PDF, 20 Mo max)</span></label>
-                            <FileUploader label={'Importez votre lettre de motivation'} accept={'application/pdf'} name={'motivationLetter'} onUpload={(files) => handleFileUpload('motivationLetter', files)} />
+                            <FileUploader label={'Importez votre lettre de motivation'} accept={'application/pdf'} name={'cover_letter'}/>
                         </div>
                         <div className="flex flex-col gap-y-2 mb-4">
                             <label className="font-semibold">Autre document <span className="text-sm font-normal">(format PDF ou ZIP, 50 Mo max)</span></label>
-                            <FileUploader label={'Importez un autre document'} accept={'application/pdf'} name={'otherFile'} onUpload={(files) => handleFileUpload('otherFile', files)} />
+                            <FileUploader label={'Importez un autre document'} accept={'application/pdf'} name={'otherFile'}/>
                         </div>
                     </div>
                 </div>
