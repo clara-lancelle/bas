@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation, useParams } from 'react-router-dom';
 import Ariane from "../Partials/Ariane";
 import JobProfiles from "../JobProfiles/JobProfiles";
 import MapComponent from '../Partials/MapComponent'
@@ -13,9 +13,11 @@ export default function OfferDetail() {
     const [offer, setOffer] = useState([])
     const [company, setCompany] = useState([])
     const [loading, setLoading] = useState(true);
-
+    const [isAdministrator, setIsAdministrator] = useState(false)
+    const userType = sessionStorage.getItem('userType')
     const { REACT_APP_API_URL } = process.env;
-    const location = useLocation();
+    // const location = useLocation();
+    const { id } = useParams();
 
     const formatDate = (isoString) => {
         const date = new Date(isoString);
@@ -25,14 +27,14 @@ export default function OfferDetail() {
         return `${day}/${month}/${year}`;
     };
 
-    const ariane = (offerType, offerName, offerId) => {
+    const ariane = (offerType, offerName, id) => {
         if (offerType == 'stage') {
             return (
                 <Ariane ariane={[
                     { url: '/', text: 'Accueil' },
                     { text: 'Offres' },
                     { url: '/offres/stage', text: 'Stage' },
-                    { url: '/offre/stage/' + offerId, text: offerName },
+                    { url: '/offre/stage/' + id, text: offerName },
                 ]} />
             )
         } else {
@@ -41,7 +43,7 @@ export default function OfferDetail() {
                     { url: '/', text: 'Accueil' },
                     { text: 'Offres' },
                     { url: '/offres/alternance', text: 'Alternance' },
-                    { url: '/offre/alternance/' + offerId, text: offerName },
+                    { url: '/offre/alternance/' + id, text: offerName },
                 ]} />
             )
         }
@@ -50,10 +52,10 @@ export default function OfferDetail() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const offerResponse = await fetch(`${REACT_APP_API_URL}/api/offers/${location.state.offerId}`);
+                const offerResponse = await fetch(`${REACT_APP_API_URL}/api/offers/${id}`);
                 const offerData = await offerResponse.json();
                 setOffer(offerData);
-
+console.log(offerResponse, offerData)
                 const companyResponse = await fetch(`${REACT_APP_API_URL}/api/companies/${offerData.company.id}`);
                 const companyData = await companyResponse.json();
                 setCompany(companyData);
@@ -70,7 +72,12 @@ export default function OfferDetail() {
         };
 
         fetchData();
-    }, [REACT_APP_API_URL, location.state.offerId]);
+    }, [REACT_APP_API_URL, id]);
+
+    useEffect(() => {
+        console.log(userType == 'CompanyUser')
+        userType == 'CompanyUser' ? setIsAdministrator(true) : setIsAdministrator(false)
+    }, [userType])
 
     const scrollToTop = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -107,13 +114,15 @@ export default function OfferDetail() {
                                     </div>
                                 </div>
                                 <div className="flex gap-x-8">
-                                    <div className="border-r pr-8">
+                                    <div className="">
                                         <Link to="https://linkedin.fr" className="flex items-center h-full"><img src={share} className="w-[32px] min-w-[32px]"></img></Link>
                                     </div>
+                                    {!isAdministrator && (
+                                        <div className="flex items-center text-white font-bold border-l pl-8">
+                                            <Link to="postuler" className="px-14 py-4 bg-blue-dark" state={{ offerId: offer.id }}>Postuler</Link>
+                                        </div>
+                                    )}
 
-                                    <div className="flex items-center text-white font-bold bg-blue-dark">
-                                        <Link to="postuler" className="px-14 py-4" state={{ offerId: offer.id }}>Postuler</Link>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -142,10 +151,12 @@ export default function OfferDetail() {
                             ))}
                         </ul>
                     </div>
+                    {!isAdministrator && (
+                        <div className="flex items-center text-white font-bold bg-blue-dark w-fit py-4 px-10">
+                            <Link to="postuler" state={{ offerId: offer.id }}>Postuler</Link>
+                        </div>
+                    )}
 
-                    <div className="flex items-center text-white font-bold bg-blue-dark w-fit py-4 px-10">
-                        <Link to="postuler" state={{ offerId: offer.id }}>Postuler</Link>
-                    </div>
                 </div>
 
                 <div className="w-1/3">
