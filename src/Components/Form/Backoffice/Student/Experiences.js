@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 export default function StudentExperiencesForm({ formData, setFormData, toggleEditState, notify, userId }) {
     const { REACT_APP_API_URL } = process.env;
     const [studyLevels, setStudyLevels] = useState([]);
+    const [studyYears, setStudyYears] = useState([]);
     const [newFormData, setNewFormData] = useState([]);
     const [errors, setErrors] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -27,6 +28,27 @@ export default function StudentExperiencesForm({ formData, setFormData, toggleEd
         };
 
         fetchStudyLevels();
+    }, []);
+
+    useEffect(() => {
+        setLoading(true)
+        const fetchStudyYears = async () => {
+            try {
+                const response = await fetch(`${REACT_APP_API_URL}/api/students/StudyYears`);
+                if (response.ok) {
+                    const data = await response.json();
+                    setStudyYears(data['hydra:member']);
+                } else {
+                    console.error('Failed to fetch StudyYears');
+                }
+            } catch (error) {
+                console.error('Error fetching StudyYears:', error);
+            } finally {
+                setLoading(false)
+            }
+        };
+
+        fetchStudyYears();
     }, []);
 
     const handleChange = (e) => {
@@ -90,9 +112,9 @@ export default function StudentExperiencesForm({ formData, setFormData, toggleEd
                     <span className="font-semibold">Niveau d'étude : </span>
                     <select name="study_years" defaultValue={formData.study_years} onChange={handleChange}>
                         <option value="">Sélectionnez le niveau</option>
-                        {studyLevels.map((level, index) => (
-                            <option key={index} value={level} selected={formData.study_years == level}>
-                                {level}
+                        {studyYears.map((year, index) => (
+                            <option key={index} value={year} selected={formData.study_years == year}>
+                                {year}
                             </option>
                         ))}
                     </select>

@@ -115,7 +115,7 @@ export default function StudentAccount({ userInfo, notify }) {
         getUserData();
     }, [userEmail, userToken]);
     useEffect(() => {
-        const getUserData = async () => {
+        const setStudentData = async () => {
             if (formData.id) {
                 try {
                     const response = await fetch(`${process.env.REACT_APP_API_URL}/api/students/${formData.id}`, {
@@ -148,7 +148,7 @@ export default function StudentAccount({ userInfo, notify }) {
                 }
             }
         };
-        getUserData();
+        setStudentData();
     }, [userEmail, userToken, formData.id]);
 
     if (!userData && !loading) {
