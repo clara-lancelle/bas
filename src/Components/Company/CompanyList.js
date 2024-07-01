@@ -4,6 +4,7 @@ import Ariane from '../Partials/Ariane';
 import CompanyFiltersHandler from "../Filters/CompanyFiltersHandler";
 import './companyList.css';
 import Paginate from "../Paginate/Paginate";
+import unknownCompanyImg from '../../Images/Company/unknown-company.png'
 
 export default function CompanyList() {
     const [selectedActivity, setSelectedActivity] = useState()
@@ -76,6 +77,7 @@ export default function CompanyList() {
                             <h2 className="text-[32px] font-semibold">Résultats</h2>
                             <span>{companies.length > 1 && `${companies.length} entreprises trouvées` || `${companies.length} entreprise trouvée`} </span>
                         </div>
+                        {companies.length > 0 && (
                         <div>
                             <span className="text-grey-dark opacity-70">Trier par :</span>
                             <select className="border-r pr-2 font-medium cursor-pointer bg-transparent" value={selectedSort}
@@ -84,14 +86,20 @@ export default function CompanyList() {
                                 <option value={2}>Nom (Z-A)</option>
                             </select>
                         </div>
+                        )}
                     </div>
 
+                    {companies.length > 0 ? (
                     <div className="flex flex-wrap gap-6">
                         {companies?.map(({ name, city, picto_image, id, description, offers, activities, ...items }) => (
                             <Link to={`/entreprise/${id}`} state={{ companyId: id }} className="companyCard" key={name + id}>
                                 <div className="p-6 border border-white-light h-full">
                                     <div className="flex justify-between items-start">
-                                        <img alt={`${name} image`} src={`${process.env.REACT_APP_API_URL}/assets/images/companies/${picto_image}`} className="w-20 h-20 object-contain" />
+                                        {picto_image ? (
+                                            <img alt={`${name} image`} src={`${process.env.REACT_APP_API_URL}/assets/images/companies/${picto_image}`} className="w-20 h-20 object-contain" />
+                                        ) : (
+                                            <img alt={`${name} image`} src={unknownCompanyImg} className="w-20 h-20 object-contain" />
+                                        )}
                                         {(countInternship = offers.filter(offer => offer.type === 'Stage').length || 0) && "" || ""}
                                         {(countApprenticeship = offers.filter(offer => offer.type === 'Alternance').length || 0) && "" || ""}
                                         {(countInternship || countApprenticeship) && (
@@ -120,6 +128,11 @@ export default function CompanyList() {
                         ))}
                         <Paginate currentPage={1} />
                     </div>
+                    ) : (
+                        <div className="">
+                            <p>Aucune entreprise trouvée</p>
+                        </div>
+                    )}
                 </div>
             </div>
         </>

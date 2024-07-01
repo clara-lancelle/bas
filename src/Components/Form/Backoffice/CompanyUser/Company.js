@@ -5,6 +5,7 @@ export default function CompanyUserCompanyForm({ formData, setFormData, toggleEd
     const [genders, setGenders] = useState([]);
     const [newFormData, setNewFormData] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [errors, setErrors] = useState([]);
     const userToken = sessionStorage.getItem('token')
 
     const handleChange = (event) => {
@@ -21,50 +22,28 @@ export default function CompanyUserCompanyForm({ formData, setFormData, toggleEd
         await setFormData(updatedFormData);
     };
 
-    const isModifiedFormDataValid = (formData) => {
-        const requiredFields = {
-            position: 'Poste',
-            officePhone: 'Téléphone professionnel',
-        };
+    const validateFormData = () => {
+        const newErrors = {};
+        const phoneRegex = /^0\d{9}$/;
+        if ('position' in newFormData && newFormData.position.trim() === '') newErrors.position = "Le poste est requis.";
+        if ('officePhone' in newFormData && newFormData.officePhone !== '' && !phoneRegex.test(newFormData.officePhone)) newErrors.officePhone = "Téléphone invalide.";
 
-        for (let field in formData) {
-            if (requiredFields.hasOwnProperty(field)) {
-                const value = formData[field];
-                if (value === null || value.trim() === '' || (Array.isArray(value) && value.length === 0)) {
-                    return {
-                        isValid: false,
-                        message: `${requiredFields[field]} ne doit pas être vide.`
-                    };
-                }
-    
-                if (field === 'officePhone') {
-                    const phoneRegex = /^0\d{9}$/;
-                    if (!phoneRegex.test(value)) {
-                        return {
-                            isValid: false,
-                            message: `Le numéro de téléphone doit commencer par 0 et contenir exactement 10 chiffres.`
-                        };
-                    }
-                }
-            }
-        }
-        return { isValid: true, message: '' };
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
     };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        const { isValid, message } = isModifiedFormDataValid(newFormData);
-
-        if (!isValid) {
-            notify(message, 'error');
-            return;
-        }
-        await sendDataToAPI(newFormData);
-        await updateFormData(newFormData)
-        notify('Vos informations d\'entreprise ont été mises à jour !', 'success');
-        toggleEditState('company');
-    };
+        if (validateFormData()) {
+            await sendDataToAPI(newFormData);
+            await updateFormData(newFormData);
+            notify('Vos informations d\'entreprise ont été mises à jour !', 'success');
+            toggleEditState('company');
+        } else {
+            notify('Vérifiez vos champs', 'error');
+        };
+    }
 
     const sendDataToAPI = async (newData) => {
         const response = await fetch(`${REACT_APP_API_URL}/api/security/company_users/${formData.id}`, {
@@ -93,10 +72,12 @@ export default function CompanyUserCompanyForm({ formData, setFormData, toggleEd
                     <label>
                         <span className="font-semibold">Poste : </span>
                         <input type="text" name="position" defaultValue={formData.position} className="border-b py-1 ps-2 ms-2" onChange={handleChange} />
+                        {errors.position && <p className="text-red-500">{errors.position}</p>}
                     </label>
                     <label>
                         <span className="font-semibold">Téléphone : </span>
                         <input type="phone" name="officePhone" defaultValue={formData.officePhone} className="border-b py-1 ps-2 ms-2" onChange={handleChange} />
+                        {errors.officePhone && <p className="text-red-500">{errors.officePhone}</p>}
                     </label>
                 </div>
             </div>

@@ -5,8 +5,9 @@ export default function CompanyIdentityForm({ formData, setFormData, toggleEditS
     const [categories, setCategories] = useState([]);
     const [newFormData, setNewFormData] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [errors, setErrors] = useState([]);
     const userToken = sessionStorage.getItem('token')
-    const userCompanyId = sessionStorage.getItem('userCompanyId') 
+    const userCompanyId = sessionStorage.getItem('userCompanyId')
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -42,51 +43,44 @@ export default function CompanyIdentityForm({ formData, setFormData, toggleEditS
         await setFormData(updatedFormData);
     };
 
-    const isModifiedFormDataValid = (formData) => {
-        const requiredFields = {
-            name: 'Nom',
-            siret: 'SIRET',
-            category: 'Catégorie',
-            phone_num: 'Numéro de téléphone',
-            address: 'Adresse',
-            city: 'Ville',
-            zip_code: 'Code postal'
-        };
+    const validateFormData = () => {
+        const newErrors = {};
+        const phoneRegex = /^0\d{9}$/;
+        if ('name' in newFormData && newFormData.name.trim() === '') newErrors.name = "Le nom de l'entreprise est requis.";
+        if ('siret' in newFormData && newFormData.siret.trim() === '') newErrors.siret = "Le SIRET est requis.";
+        if ('siret' in newFormData && newFormData.siret.length !== 14) newErrors.siret = "Le SIRET doit faire 14 caractères.";
+        if ('siret' in newFormData && !/^\d+$/.test(newFormData.siret)) newErrors.siret = "Le SIRET ne doit contenir que des chiffres.";
+        if ('category' in newFormData && newFormData.category.trim() === '') newErrors.category = "La catégorie est requise.";
+        if ('address' in newFormData && newFormData.address.trim() === '') newErrors.address = "L'adresse est requise.";
+        if ('city' in newFormData && newFormData.city.trim() === '') newErrors.city = "La ville est requise.";
+        if ('zip_code' in newFormData && newFormData.zip_code.trim() === '') newErrors.zip_code = "Le code postal est requis.";
+        if ('phone_num' in newFormData && !phoneRegex.test(newFormData.phone_num)) newErrors.phone_num = "Téléphone invalide.";
+        if ('phone_num' in newFormData && newFormData.phone_num.trim() === '') newErrors.phone_num = "Le téléphone est requis.";
 
-        for (let field in formData) {
-            if (requiredFields.hasOwnProperty(field) && (formData[field] === null || formData[field].trim() === '' || formData[field] == [])) {
-                return {
-                    isValid: false,
-                    message: `${requiredFields[field]} ne doit pas être vide.`
-                };
-            }
-        }
-        return { isValid: true, message: '' };
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
     };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        const { isValid, message } = isModifiedFormDataValid(newFormData);
-
-        if (!isValid) {
-            notify(message, 'error');
-            return;
-        }
-
-        if (newFormData.category) {
-            const newFormIdentityData = {
-                ...newFormData,
-                category: newFormData.category['@id']
-            };
-            await sendDataToAPI(newFormIdentityData);
+        if (validateFormData()) {
+            if (newFormData.category) {
+                const newFormIdentityData = {
+                    ...newFormData,
+                    category: newFormData.category['@id']
+                };
+                await sendDataToAPI(newFormIdentityData);
+            } else {
+                await sendDataToAPI(newFormData);
+            }
+            await updateFormData(newFormData);
+            notify('L\'identité de l\'entreprise à été mise à jour !', 'success');
+            toggleEditState('identity');
         } else {
-            await sendDataToAPI(newFormData);
-        }
-        await updateFormData(newFormData)
-        notify('L\'identité de l\'entreprise à été mise à jour !', 'success');
-        toggleEditState('identity');
-    };
+            notify('Vérifiez vos champs', 'error');
+        };
+    }
 
     const sendDataToAPI = async (newData) => {
         const response = await fetch(`${REACT_APP_API_URL}/api/security/companies/${userCompanyId}`, {
@@ -114,10 +108,12 @@ export default function CompanyIdentityForm({ formData, setFormData, toggleEditS
                     <label>
                         <span className="font-semibold">Nom : </span>
                         <input type="text" name="name" defaultValue={formData.name} className="border-b py-1 ps-2 ms-2" onChange={handleChange} />
+                        {errors.name && <p className="text-red-500">{errors.name}</p>}
                     </label>
                     <label>
                         <span className="font-semibold">SIRET : </span>
                         <input type="text" name="siret" defaultValue={formData.siret} className="border-b py-1 ps-2 ms-2" onChange={handleChange} />
+                        {errors.siret && <p className="text-red-500">{errors.siret}</p>}
                     </label>
                     <label>
                         <span className="font-semibold">Catégorie : </span>
@@ -133,16 +129,19 @@ export default function CompanyIdentityForm({ formData, setFormData, toggleEditS
                                 </option>
                             ))}
                         </select>
+                        {errors.category && <p className="text-red-500">{errors.category}</p>}
                     </label>
                     <label>
                         <span className="font-semibold">Téléphone : </span>
                         <input type="text" name="phone_num" defaultValue={formData.phone_num} className="border-b py-1 ps-2 ms-2" onChange={handleChange} />
+                        {errors.phone_num && <p className="text-red-500">{errors.phone_num}</p>}
                     </label>
                 </div>
                 <div className="flex flex-col gap-y-4">
                     <label>
                         <span className="font-semibold">Adresse : </span>
                         <input type="text" name="address" defaultValue={formData.address} className="border-b py-1 ps-2 ms-2" onChange={handleChange} />
+                        {errors.address && <p className="text-red-500">{errors.address}</p>}
                     </label>
                     <label>
                         <span className="font-semibold">Complément d'adresse : </span>
@@ -151,10 +150,12 @@ export default function CompanyIdentityForm({ formData, setFormData, toggleEditS
                     <label>
                         <span className="font-semibold">Ville : </span>
                         <input type="text" name="city" defaultValue={formData.city} className="border-b py-1 ps-2 ms-2" onChange={handleChange} />
+                        {errors.city && <p className="text-red-500">{errors.city}</p>}
                     </label>
                     <label>
                         <span className="font-semibold">Code postal : </span>
                         <input type="text" name="zip_code" defaultValue={formData.zip_code} className="border-b py-1 ps-2 ms-2" onChange={handleChange} />
+                        {errors.zip_code && <p className="text-red-500">{errors.zip_code}</p>}
                     </label>
                 </div>
             </div>

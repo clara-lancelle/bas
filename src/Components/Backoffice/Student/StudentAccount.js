@@ -128,7 +128,6 @@ export default function StudentAccount({ userInfo, notify }) {
                     if (response.ok) {
                         const data = await response.json();
                         const studentResponse = data;
-                        console.log(studentResponse)
                         setUserData({ ...userData, ...studentResponse });
                         setFormData(prevFormData => ({
                             ...prevFormData,
@@ -161,7 +160,6 @@ export default function StudentAccount({ userInfo, notify }) {
     return (
         <>
             <div className="h-full flex">
-                {console.log(formData, userData)}
                 <Sidebar userType={'student'} activeItem="home" />
                 <div className="w-10/12">
                     {loading && (
