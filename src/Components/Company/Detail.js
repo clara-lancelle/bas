@@ -19,7 +19,7 @@ import mwLogo from '../../Images/Company/mw-logo-large.png'
 import mwPicture from '../../Images/Temp/company-1.png'
 import './companyList.css';
 import SocialLinks from "../SocialLinks/SocialLinks";
-
+import unknownCompanyImg from '../../Images/Company/unknown-company.png'
 
 export default function CompanyDetail() {
 
@@ -107,11 +107,15 @@ export default function CompanyDetail() {
                             </div>
                             <div className="flex flex-col justify-between">
                                 <span>Activités</span>
-                                <div className="flex flex-col gap-x-2">
-                                    {company.activities.map((activity) => (
-                                        <span className="font-semibold" key={activity.name}>{activity.name}</span>
-                                    ))}
-                                </div>
+                                {company.activities.length > 0 ? (
+                                    <div className="flex flex-col gap-x-2">
+                                        {company.activities.map((activity) => (
+                                            <span className="font-semibold" key={activity.name}>{activity.name}</span>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <span className="font-semibold">Non renseignées</span>
+                                )}
                             </div>
                         </div>
                         <div className="flex items-start gap-4">
@@ -129,7 +133,7 @@ export default function CompanyDetail() {
                             </div>
                             <div className="flex flex-col justify-start">
                                 <span>Effectifs</span>
-                                <span className="font-semibold">{company.workforce}</span>
+                                <span className="font-semibold">{company.workforce ? company.workforce : 'Non renseigné'}</span>
                             </div>
                         </div>
                         <div className="flex items-start gap-4">
@@ -138,7 +142,13 @@ export default function CompanyDetail() {
                             </div>
                             <div className="flex flex-col justify-start">
                                 <span>Chiffre d'affaire</span>
-                                <span className="font-semibold">{(company.revenue / 1000000).toFixed(2)} M€</span>{/* A ajouter en base */}
+                                {company.revenue ? (
+                                    <span className="font-semibold">
+                                        {(company.revenue / 1000000).toFixed(2)} M€
+                                    </span>
+                                ) : (
+                                    <span className="font-semibold">Non renseigné</span>
+                                )}
                             </div>
                         </div>
                         <div className="flex items-start gap-4">
@@ -155,25 +165,45 @@ export default function CompanyDetail() {
             </div>
 
             <div className="mt-14 container flex ">
-                <div className="w-2/3 mr-16">
-                    <div className="mb-6">
-                        <h2 className="font-semibold mb-4 text-3xl">Présentation</h2>
-                        <p>{company.description}</p>
+                {company.description || company.socialLinks.length > 0 || company.companyImages.length > 0 ? (
+                    <div className="w-2/3 mr-16">
+                        {company.description ? (
+                            <div className="mb-6">
+                                <h2 className="font-semibold mb-4 text-3xl">Présentation</h2>
+                                <p>{company.description}</p>
+                            </div>
+                        ) : (
+                            <div className="mb-6">
+                                <h2 className="font-semibold mb-4 text-3xl">Présentation</h2>
+                                <p>Aucune présentation renseignée par l'entreprise</p>
+                            </div>
+                        )}
+                        {company.socialLinks.length > 0 && (
+                            <div className="mb-10">
+                                <h2 className="font-semibold mb-6 text-3xl">Réseaux sociaux</h2>
+                                <div className="flex gap-4 justify-start">
+                                    <SocialLinks links={company.socialLinks} />
+                                </div>
+                            </div>
+                        )}
+                        {company.companyImages.length > 0 && (
+                            <div>
+                                <CompanyDetailPictures pictures={company.companyImages} />
+                            </div>
+                        )}
                     </div>
-                    <div className="mb-10">
-                        <h2 className="font-semibold mb-6 text-3xl">Réseaux sociaux</h2>
-                        <div className="flex gap-4 justify-start">
-                            <SocialLinks links={company.socialLinks} />
-                        </div>
+                ) : (
+                    <div className="w-2/3 mr-16">
+                        <p>Aucunes informations disponible pour cette entreprise.</p>
                     </div>
-
-                    <div>
-                        <CompanyDetailPictures pictures={company.companyImages} />
-                    </div>
-                </div>
+                )}
 
                 <div className="w-1/3">
-                    <img src={`${REACT_APP_API_URL}/assets/images/companies/${company.large_image}`} className="max-w-full max-h-[80px] mb-10" />
+                    {company.large_image ? (
+                        <img src={`${REACT_APP_API_URL}/assets/images/companies/${company.large_image}`} className="max-w-full max-h-[80px] mb-10" />
+                    ) : (
+                        <img src={unknownCompanyImg} className="max-w-full max-h-[80px] mb-10"></img>
+                    )}
                     <div className="mb-4">
                         <h2 className="text-[32px] font-semibold mb-4 text-grey-dark">Situation</h2>
                         <div className="flex flex-col opacity-70">
@@ -241,25 +271,25 @@ export default function CompanyDetail() {
                         }
                         {apprenticeshipOffers.length > 0 &&
                             <>
-                        <h2 className="text-[32px] font-semibold text-grey-dark leading-110 mt-13">Offres d'alternance proposées</h2>
-                        <div className="mt-12 mb-18 offer-container">
-                            {apprenticeshipOffers?.slice(0, 4)?.map(({ company: { picto_image, name: companyName, city, ...rest }, type, id, description, name, job_profiles, ...items }) => (
-                                <Link to={`/offre/${id}`} state={{ offerId: id }} key={id} className="offer-card border h-[283px] overflow-hidden justify-between flex flex-col">
-                                    <div>
-                                        <h3 className="font-semibold text-[18px]">{name}</h3>
-                                        <p className="offer-informations text-md text-wrap">{companyName} • {city}</p>
-                                    </div>
-                                    <p className="!max-h-16 opacity-50 text-md relative txt-elipsis">{description}</p>
-                                    <div className="flex justify-start items-center flex-wrap gap-2">
-                                        {job_profiles?.map((profile) => (
-                                            <JobProfiles key={profile.name} profile={profile} />
-                                        ))}
-                                    </div>
-                                </Link>
-                            ))}
-                        </div>
-                        </>
-}
+                                <h2 className="text-[32px] font-semibold text-grey-dark leading-110 mt-13">Offres d'alternance proposées</h2>
+                                <div className="mt-12 mb-18 offer-container">
+                                    {apprenticeshipOffers?.slice(0, 4)?.map(({ company: { picto_image, name: companyName, city, ...rest }, type, id, description, name, job_profiles, ...items }) => (
+                                        <Link to={`/offre/${id}`} state={{ offerId: id }} key={id} className="offer-card border h-[283px] overflow-hidden justify-between flex flex-col">
+                                            <div>
+                                                <h3 className="font-semibold text-[18px]">{name}</h3>
+                                                <p className="offer-informations text-md text-wrap">{companyName} • {city}</p>
+                                            </div>
+                                            <p className="!max-h-16 opacity-50 text-md relative txt-elipsis">{description}</p>
+                                            <div className="flex justify-start items-center flex-wrap gap-2">
+                                                {job_profiles?.map((profile) => (
+                                                    <JobProfiles key={profile.name} profile={profile} />
+                                                ))}
+                                            </div>
+                                        </Link>
+                                    ))}
+                                </div>
+                            </>
+                        }
                     </div>
                 </div>
             )}

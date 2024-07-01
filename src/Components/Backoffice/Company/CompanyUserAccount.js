@@ -26,7 +26,7 @@ export default function CompanyUserAccount({ userInfo, notify }) {
         cellphone: '',
         email: '',
         address: '',
-        additionalAddress: '',
+        additional_address: '',
         zipCode: '',
         city: '',
         profileImage: [],
@@ -160,7 +160,7 @@ export default function CompanyUserAccount({ userInfo, notify }) {
                     {!loading && userData && (
                         <>
                             <div className="mb-8 py-4 px-8 flex justify-between border-b w-full text-xl">
-                                <p>Bienvenue <span className="font-semibold">{userData.firstname} {userData.name}</span></p>
+                                <p>Bienvenue <span className="font-semibold">{formData.firstname} {formData.name}</span></p>
                             </div>
 
                             <div className="px-8 py-4 flex gap-x-8">
@@ -194,7 +194,7 @@ export default function CompanyUserAccount({ userInfo, notify }) {
                                                         </div>
                                                         <div className="flex flex-col gap-y-4">
                                                             <p><span className="font-semibold">Adresse : </span>{formData.address || 'Non renseigné' || 'Non renseigné'}</p>
-                                                            <p><span className="font-semibold">Complément d'adresse : </span>{formData.additionalAddress || 'Non renseigné'}</p>
+                                                            <p><span className="font-semibold">Complément d'adresse : </span>{formData.additional_address || 'Non renseigné'}</p>
                                                             <p><span className="font-semibold">Ville : </span>{formData.city || 'Non renseigné'}</p>
                                                             <p><span className="font-semibold">Code postal : </span>{formData.zipCode || 'Non renseigné'}</p>
                                                         </div>

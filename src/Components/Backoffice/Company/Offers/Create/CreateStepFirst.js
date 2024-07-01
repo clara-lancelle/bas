@@ -41,6 +41,7 @@ export default function CreateStepFirst({ setStep, step, formData, setFormData, 
         today.setHours(0, 0, 0, 0);
 
         if (!formData.name || formData.name.trim() === '') newErrors.name = "Le nom est requis.";
+        if (!formData.name || formData.name.length < 10) newErrors.name = "Le nom doit faire au moins 10 caractères.";
         if (!formData.type || formData.type.trim() === '') newErrors.type = "Le type est requis.";
         if (!formData.start_date || formData.start_date.trim() === '') {
             newErrors.start_date = "La date de début est requise.";

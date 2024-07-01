@@ -4,6 +4,7 @@ import Ariane from '../Partials/Ariane';
 import CompanyFiltersHandler from "../Filters/CompanyFiltersHandler";
 import './companyList.css';
 import Paginate from "../Paginate/Paginate";
+import unknownCompanyImg from '../../Images/Company/unknown-company.png'
 
 export default function CompanyList() {
     const [selectedActivity, setSelectedActivity] = useState()
@@ -94,7 +95,11 @@ export default function CompanyList() {
                             <Link to={`/entreprise/${id}`} state={{ companyId: id }} className="companyCard" key={name + id}>
                                 <div className="p-6 border border-white-light h-full">
                                     <div className="flex justify-between items-start">
-                                        <img alt={`${name} image`} src={`${process.env.REACT_APP_API_URL}/assets/images/companies/${picto_image}`} className="w-20 h-20 object-contain" />
+                                        {picto_image ? (
+                                            <img alt={`${name} image`} src={`${process.env.REACT_APP_API_URL}/assets/images/companies/${picto_image}`} className="w-20 h-20 object-contain" />
+                                        ) : (
+                                            <img alt={`${name} image`} src={unknownCompanyImg} className="w-20 h-20 object-contain" />
+                                        )}
                                         {(countInternship = offers.filter(offer => offer.type === 'Stage').length || 0) && "" || ""}
                                         {(countApprenticeship = offers.filter(offer => offer.type === 'Alternance').length || 0) && "" || ""}
                                         {(countInternship || countApprenticeship) && (

@@ -55,7 +55,6 @@ export default function OfferDetail() {
                 const offerResponse = await fetch(`${REACT_APP_API_URL}/api/offers/${id}`);
                 const offerData = await offerResponse.json();
                 setOffer(offerData);
-console.log(offerResponse, offerData)
                 const companyResponse = await fetch(`${REACT_APP_API_URL}/api/companies/${offerData.company.id}`);
                 const companyData = await companyResponse.json();
                 setCompany(companyData);
@@ -75,7 +74,6 @@ console.log(offerResponse, offerData)
     }, [REACT_APP_API_URL, id]);
 
     useEffect(() => {
-        console.log(userType == 'CompanyUser')
         userType == 'CompanyUser' ? setIsAdministrator(true) : setIsAdministrator(false)
     }, [userType])
 
@@ -133,23 +131,31 @@ console.log(offerResponse, offerData)
                 <div className="w-2/3 mr-16">
                     <div className="mb-10">
                         <h2 className="font-semibold mb-4 text-[32px] text-grey-dark">A propos de ce stage</h2>
-                        <p>{offer.description}</p>
+                        <p className="break-words">{offer.description}</p>
                     </div>
                     <div className="mb-10">
                         <h2 className="font-semibold mb-4 text-[32px] text-grey-dark">Missions</h2>
-                        <ul className="list-img-check">
-                            {offer.missions.map((mission) => (
-                                <li>{mission.text}</li>
-                            ))}
-                        </ul>
+                        {offer.missions.length > 0 ? (
+                            <ul className="list-img-check">
+                                {offer.missions.map((mission) => (
+                                    <li className="break-words">{mission.text}</li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p>Aucune mission renseignée.</p>
+                        )}
                     </div>
                     <div className="mb-10">
                         <h2 className="font-semibold mb-4 text-[32px] text-grey-dark">Profil recherché</h2>
-                        <ul className="list-img-check">
-                            {offer.required_profiles.map((required_profile) => (
-                                <li>{required_profile.text}</li>
-                            ))}
-                        </ul>
+                        {offer.required_profiles.length > 0 ? (
+                            <ul className="list-img-check">
+                                {offer.required_profiles.map((required_profile) => (
+                                    <li className="break-words">{required_profile.text}</li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p>Aucun profil requis renseigné.</p>
+                        )}
                     </div>
                     {!isAdministrator && (
                         <div className="flex items-center text-white font-bold bg-blue-dark w-fit py-4 px-10">
@@ -193,18 +199,22 @@ console.log(offerResponse, offerData)
                     <div className="py-10 border-b">
                         <h2 className="text-blue-dark text-2xl font-semibold mb-6">Profils métiers</h2>
                         <div className="flex flex-wrap justify-start gap-x-2">
-                            {offer.job_profiles.map((job_profile) => (
+                            {offer.job_profiles.length > 0 ?offer.job_profiles.map((job_profile) => (
                                 <JobProfiles profile={job_profile} />
-                            ))}
+                            )) : (
+                                <span>Aucun profil métier renseigné</span>
+                            )}
                         </div>
                     </div>
 
                     <div className="py-10">
                         <h2 className="text-blue-dark text-2xl font-semibold mb-6">Compétences recherchées</h2>
                         <div className="flex flex-wrap justify-start gap-2">
-                            {offer.skills.map((skill) => (
+                            {offer.skills.length > 0 ? offer.skills.map((skill) => (
                                 <Skill skill={skill} />
-                            ))}
+                            )) : (
+                                <span>Aucune compétence recherchée renseignée</span>
+                            )}
                         </div>
                     </div>
                 </div>

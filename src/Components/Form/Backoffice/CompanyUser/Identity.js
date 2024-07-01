@@ -6,6 +6,7 @@ export default function CompanyUserIdentityForm({ formData, setFormData, toggleE
     const [newFormData, setNewFormData] = useState([]);
     const [selectedImage, setSelectedImage] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [errors, setErrors] = useState([]);
     const userToken = sessionStorage.getItem('token')
     const fileInputRef = useRef(null);
 
@@ -59,58 +60,37 @@ export default function CompanyUserIdentityForm({ formData, setFormData, toggleE
         await setFormData(updatedFormData);
     };
 
-    const isModifiedFormDataValid = (formData) => {
-        const requiredFields = {
-            firstname: 'Prénom',
-            name: 'Nom',
-            gender: 'Genre',
-            cellphone: 'Numéro de téléphone',
-        };
+    const validateFormData = () => {
+        const newErrors = {};
+        const phoneRegex = /^0\d{9}$/;
+        if ('firstname' in newFormData && newFormData.firstname.trim() === '') newErrors.firstname = "Le prénom est requis.";
+        if ('name' in newFormData && newFormData.name.trim() === '') newErrors.name = "Le nom est requis.";
+        if ('gender' in newFormData && newFormData.gender.trim() === '') newErrors.gender = "Le genre est requis.";
+        if ('cellphone' in newFormData && !phoneRegex.test(newFormData.cellphone)) newErrors.cellphone = "Téléphone invalide.";
+        if ('cellphone' in newFormData && newFormData.cellphone.trim() === '') newErrors.cellphone = "Téléphone est requis.";
 
-        for (let field in formData) {
-            if (requiredFields.hasOwnProperty(field)) {
-                const value = formData[field];
-                if (value === null || value.trim() === '' || (Array.isArray(value) && value.length === 0)) {
-                    return {
-                        isValid: false,
-                        message: `${requiredFields[field]} ne doit pas être vide.`
-                    };
-                }
-
-                if (field === 'cellphone') {
-                    const phoneRegex = /^0\d{9}$/;
-                    if (!phoneRegex.test(value)) {
-                        return {
-                            isValid: false,
-                            message: `Le numéro de téléphone doit commencer par 0 et contenir exactement 10 chiffres.`
-                        };
-                    }
-                }
-            }
-        }
-        return { isValid: true, message: '' };
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
     };
-
+    
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        const { isValid, message } = isModifiedFormDataValid(newFormData);
-
-        if (!isValid) {
-            notify(message, 'error');
-            return;
-        }
-        await sendDataToAPI(newFormData);
-        await updateFormData(newFormData)
-        notify('Votre fiche d\'identité à été mise à jour !', 'success');
-        toggleEditState('identity');
-    };
+        if (validateFormData()) {
+            await sendDataToAPI(newFormData);
+            await updateFormData(newFormData);
+            notify('Votre fiche d\'identité à été mise à jour !', 'success');
+            toggleEditState('identity');
+        } else {
+            notify('Vérifiez vos champs', 'error');
+        };
+    }
 
     const sendDataToAPI = async (newData) => {
         const response = await fetch(`${REACT_APP_API_URL}/api/security/company_users/${formData.id}`, {
-            method: 'PUT',
+            method: 'PATCH',
             headers: {
-                'Content-Type': 'application/ld+json',
+                'Content-Type': 'application/merge-patch+json',
                 'Authorization': `Bearer ${userToken}`,
             },
             body: JSON.stringify(newData)
@@ -158,10 +138,12 @@ export default function CompanyUserIdentityForm({ formData, setFormData, toggleE
                         <label>
                             <span className="font-semibold">Prénom : </span>
                             <input type="text" name="firstname" defaultValue={formData.firstname} className="border-b py-1 ps-2 ms-2" onChange={handleChange} />
+                            {errors.firstname && <p className="text-red-500">{errors.firstname}</p>}
                         </label>
                         <label>
                             <span className="font-semibold">Nom : </span>
                             <input type="text" name="name" defaultValue={formData.name} className="border-b py-1 ps-2 ms-2" onChange={handleChange} />
+                            {errors.name && <p className="text-red-500">{errors.name}</p>}
                         </label>
                         <label>
                             <span className="font-semibold">Genre : </span>
@@ -177,11 +159,13 @@ export default function CompanyUserIdentityForm({ formData, setFormData, toggleE
                                     </option>
                                 ))}
                             </select>
+                            {errors.gender && <p className="text-red-500">{errors.gender}</p>}
                         </label>
                         <p><span className="font-semibold">E-mail : </span>{formData.email}</p>
                         <label>
                             <span className="font-semibold">Téléphone : </span>
                             <input type="phone" name="cellphone" defaultValue={formData.cellphone} className="border-b py-1 ps-2 ms-2" onChange={handleChange} />
+                            {errors.cellphone && <p className="text-red-500">{errors.cellphone}</p>}
                         </label>
                     </div>
                     <div className="flex flex-col gap-y-4">
