@@ -58,23 +58,19 @@ export default function StudentIdentityForm({ formData, setFormData, toggleEditS
     }
 
 
-    const validateFormData = (newFormData) => {
+    const validateFormData = () => {
         const newErrors = {};
-        if (newFormData.firstname && newFormData.firstname.trim() === '') newErrors.firstname = "Le prénom est requis."; 
-        if (newFormData.name && newFormData.name.trim() === '') newErrors.name = "Le nom est requis."; 
-        if (newFormData.gender && newFormData.gender.trim() === '') newErrors.gender = "Le genre est requis."; 
-        if (newFormData.birthdate && newFormData.birthdate.trim() === '') newErrors.start_date = "La date de naissance est requise."; 
-        if (newFormData.address && newFormData.address.trim() === '') newErrors.address = "L'adresse est requise."; 
-        if (newFormData.city && newFormData.city.trim() === '') newErrors.city = "La ville est requise."; 
-        if (newFormData.zipCode && newFormData.zipCode.trim() === '') newErrors.zipCode = "Le code postal est requis."; 
-        if (newFormData.cellphone && newFormData.cellphone.trim() === '') {
-            newErrors.cellphone = "Téléphone est requis.";
-        } else {
-            const phoneRegex = /^0\d{9}$/;
-            if (newFormData.cellphone && !phoneRegex.test(newFormData.cellphone)) {
-                newErrors.cellphone = "Téléphone invalide.";
-            }
-        }
+        const phoneRegex = /^0\d{9}$/;
+        if ('firstname' in newFormData && newFormData.firstname.trim() === '') newErrors.firstname = "Le prénom est requis.";
+        if ('name' in newFormData && newFormData.name.trim() === '') newErrors.name = "Le nom est requis.";
+        if ('gender' in newFormData && newFormData.gender.trim() === '') newErrors.gender = "Le genre est requis.";
+        if ('birthdate' in newFormData && newFormData.birthdate.trim() === '') newErrors.birthdate = "La date de naissance est requise.";
+        if ('address' in newFormData && newFormData.address.trim() === '') newErrors.address = "L'adresse est requise.";
+        if ('city' in newFormData && newFormData.city.trim() === '') newErrors.city = "La ville est requise.";
+        if ('zipCode' in newFormData && newFormData.zipCode.trim() === '') newErrors.zipCode = "Le code postal est requis.";
+        if ('cellphone' in newFormData && !phoneRegex.test(newFormData.cellphone)) newErrors.cellphone = "Téléphone invalide.";
+        if ('cellphone' in newFormData && newFormData.cellphone.trim() === '') newErrors.cellphone = "Téléphone est requis.";
+
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -82,7 +78,7 @@ export default function StudentIdentityForm({ formData, setFormData, toggleEditS
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        if (validateFormData(newFormData)) {
+        if (validateFormData()) {
             await sendDataToAPI(newFormData);
             await updateFormData(newFormData)
             notify('Votre fiche d\'identité à été mise à jour !', 'success');
@@ -147,49 +143,57 @@ export default function StudentIdentityForm({ formData, setFormData, toggleEditS
                 <div className="flex flex-col gap-y-4">
                     <label>
                         <span className="font-semibold">Prénom : </span>
-                        <input className="border-b py-1 ps-2 ms-2" name="firstname" defaultValue={formData.firstname} onChange={handleChange} />
+                        <input className={`border-b py-1 ps-2 ms-2 ${errors.firstname ? 'border-red-500' : ''}`} name="firstname" defaultValue={formData.firstname} onChange={handleChange} />
+                        {errors.firstname && <p className="text-red-500">{errors.firstname}</p>}
                     </label>
                     <label>
                         <span className="font-semibold">Nom : </span>
-                        <input className="border-b py-1 ps-2 ms-2" name="name" defaultValue={formData.name} onChange={handleChange} />
+                        <input className={`border-b py-1 ps-2 ms-2 ${errors.name ? 'border-red-500' : ''}`} name="name" defaultValue={formData.name} onChange={handleChange} />
+                        {errors.name && <p className="text-red-500">{errors.name}</p>}
                     </label>
                     <label>
                         <span className="font-semibold">Genre : </span>
                         <select name="gender" defaultValue={formData.gender} onChange={handleChange}>
                             <option value="">Sélectionnez le genre</option>
                             {genders.map((gender, index) => (
-                                <option key={index} value={gender}>
+                                <option key={index} value={gender} selected={formData.gender == gender}>
                                     {gender}
                                 </option>
                             ))}
                         </select>
+                        {errors.gender && <p className="text-red-500">{errors.gender}</p>}
                     </label>
                     <label>
                         <span className="font-semibold">Date de naissance : </span>
-                        <input className="border-b py-1 ps-2 ms-2" name="birthdate" defaultValue={formData.birthdate} onChange={handleChange} type="date" />
+                        <input className={`border-b py-1 ps-2 ms-2 ${errors.birthdate ? 'border-red-500' : ''}`} name="birthdate" defaultValue={formData.birthdate} onChange={handleChange} type="date" />
+                        {errors.birthdate && <p className="text-red-500">{errors.birthdate}</p>}
                     </label>
                     <p><span className="font-semibold">E-mail : </span>{formData.email || 'Non renseigné'}</p>
                 </div>
                 <div className="flex flex-col gap-y-4">
                     <label>
                         <span className="font-semibold">Téléphone : </span>
-                        <input className="border-b py-1 ps-2 ms-2" name="cellphone" defaultValue={formData.cellphone} onChange={handleChange} />
+                        <input className={`border-b py-1 ps-2 ms-2 ${errors.cellphone ? 'border-red-500' : ''}`} name="cellphone" defaultValue={formData.cellphone} onChange={handleChange} />
+                        {errors.cellphone && <p className="text-red-500">{errors.cellphone}</p>}
                     </label>
                     <label>
                         <span className="font-semibold">Adresse : </span>
-                        <input className="border-b py-1 ps-2 ms-2" name="address" defaultValue={formData.address} onChange={handleChange} />
+                        <input className={`border-b py-1 ps-2 ms-2 ${errors.address ? 'border-red-500' : ''}`} name="address" defaultValue={formData.address} onChange={handleChange} />
+                        {errors.address && <p className="text-red-500">{errors.address}</p>}
                     </label>
                     <label>
                         <span className="font-semibold">Complément d'adresse : </span>
-                        <input className="border-b py-1 ps-2 ms-2" name="additionalAddress" defaultValue={formData.additionalAddress} onChange={handleChange} />
+                        <input className={`border-b py-1 ps-2 ms-2`} name="additional_address" defaultValue={formData.additional_address} onChange={handleChange} />
                     </label>
                     <label>
                         <span className="font-semibold">Ville : </span>
-                        <input className="border-b py-1 ps-2 ms-2" name="city" defaultValue={formData.city} onChange={handleChange} />
+                        <input className={`border-b py-1 ps-2 ms-2 ${errors.city ? 'border-red-500' : ''}`} name="city" defaultValue={formData.city} onChange={handleChange} />
+                        {errors.city && <p className="text-red-500">{errors.city}</p>}
                     </label>
                     <label>
                         <span className="font-semibold">Code postal : </span>
-                        <input className="border-b py-1 ps-2 ms-2" name="zipCode" defaultValue={formData.zipCode} onChange={handleChange} />
+                        <input className={`border-b py-1 ps-2 ms-2 ${errors.zipCode ? 'border-red-500' : ''}`} name="zipCode" defaultValue={formData.zipCode} onChange={handleChange} />
+                        {errors.zipCode && <p className="text-red-500">{errors.zipCode}</p>}
                     </label>
                 </div>
             </div>

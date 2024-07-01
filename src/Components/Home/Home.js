@@ -6,12 +6,14 @@ import arrowRight from '../../Images/Icons/arrow-right.svg'
 import JobProfiles from "../JobProfiles/JobProfiles";
 
 
-export default function Home({openSignUpModal}) {
+export default function Home({ openSignUpModal }) {
     const { REACT_APP_API_URL } = process.env;
     const [offerCount, setOfferCount] = useState()
     const [companiesWithTheMostOffers, setCompaniesWithTheMostOffers] = useState([])
     const [lastOffers, setLastOffers] = useState([])
     const [lastRequests, setLastRequests] = useState([])
+    const [isAuthenticated, setIsAuthenticated] = useState(false)
+    const userToken = sessionStorage.getItem('token')
 
     useEffect(() => {
         fetch(`${REACT_APP_API_URL}/api/offers/count`, {
@@ -49,6 +51,10 @@ export default function Home({openSignUpModal}) {
             .catch(err => console.error(err));
     }, [])
 
+    useEffect(() => {
+        userToken ? setIsAuthenticated(true) : setIsAuthenticated(false)
+    }, [userToken])
+
     return (
         <>
             <div className="background">
@@ -75,21 +81,22 @@ export default function Home({openSignUpModal}) {
                 </div>
             </div>
 
-            <div className="my-18">
-                <div className="container company-bg">
-                    <div className="p-18 pb-0 flex justify-around">
-                        <div className="flex flex-col w-1/3 text-white">
-                            <h2 className="mb-6 font-semibold text-4xl leading-110">Entreprises,<br />déposez vos offres <br />gratuitement</h2>
-                            <h3 className="mb-6">Vous pourrez gérer votre planning d’accueil et bénéficier de nombreux services intégrés.</h3>
-                            <div className="flex items-center btn-white w-fit">
-                                <button onClick={openSignUpModal}>Créer votre compte</button>
+            {!isAuthenticated && (
+                <div className="my-18">
+                    <div className="container company-bg">
+                        <div className="p-18 pb-0 flex justify-around">
+                            <div className="flex flex-col w-1/3 text-white">
+                                <h2 className="mb-6 font-semibold text-4xl leading-110">Entreprises,<br />déposez vos offres <br />gratuitement</h2>
+                                <h3 className="mb-6">Vous pourrez gérer votre planning d’accueil et bénéficier de nombreux services intégrés.</h3>
+                                <div className="flex items-center btn-white w-fit">
+                                    <button onClick={openSignUpModal}>Créer votre compte</button>
+                                </div>
                             </div>
+                            <img alt="image d'un dashboard" src={dashboardCompany} />
                         </div>
-                        <img alt="image d'un dashboard" src={dashboardCompany} />
                     </div>
                 </div>
-            </div>
-
+            )}
             <div className="mb-18 container">
                 <div className="flex justify-between items-baseline">
                     <h2 className="text-5xl font-semibold text-grey-dark leading-110">Dernières

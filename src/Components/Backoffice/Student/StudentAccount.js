@@ -170,7 +170,7 @@ export default function StudentAccount({ userInfo, notify }) {
                     {!loading && (
                         <>
                             <div className="mb-8 py-4 px-8 flex justify-between border-b w-full text-xl">
-                                <p>Bienvenue <span className="font-semibold">{userData.firstname} {userData.name}</span></p>
+                                <p>Bienvenue <span className="font-semibold">{formData.firstname} {formData.name}</span></p>
                             </div>
 
                             <div className="px-8 py-4 flex gap-x-8">
@@ -205,7 +205,7 @@ export default function StudentAccount({ userInfo, notify }) {
                                                         <div className="flex flex-col gap-y-4">
                                                             <p><span className="font-semibold">Téléphone : </span>{formData.cellphone || 'Non renseigné'}</p>
                                                             <p><span className="font-semibold">Adresse : </span>{formData.address || 'Non renseigné' || 'Non renseigné'}</p>
-                                                            <p><span className="font-semibold">Complément d'adresse : </span>{formData.additionalAddress || 'Non renseigné'}</p>
+                                                            <p><span className="font-semibold">Complément d'adresse : </span>{formData.additional_address || 'Non renseigné'}</p>
                                                             <p><span className="font-semibold">Ville : </span>{formData.city || 'Non renseigné'}</p>
                                                             <p><span className="font-semibold">Code postal : </span>{formData.zipCode || 'Non renseigné'}</p>
                                                         </div>
@@ -236,8 +236,8 @@ export default function StudentAccount({ userInfo, notify }) {
                                                             <p><span className="font-semibold">Permis de conduire : </span>{(formData.driver_license ? 'Oui' : 'Non') || 'Non renseigné'}</p>
                                                         </div>
                                                         <div className="flex flex-col gap-y-4">
-                                                            <p><span className="font-semibold">LinkedIn : </span>{formData.linkedin_page ? <Link to={formData.linkedin_page} className="text-blue-dark underline">Accéder</Link> : 'Non renseigné'}</p>
-                                                            <p><span className="font-semibold">Lien personnel : </span>{formData.personnal_website ? <Link to={formData.personnal_website} className="text-blue-dark underline">Accéder</Link> : 'Non renseigné'}</p>
+                                                            <p><span className="font-semibold">LinkedIn : </span>{formData.linkedin_page ? <Link to={formData.linkedin_page} target="_blank" className="text-blue-dark underline">Accéder</Link> : 'Non renseigné'}</p>
+                                                            <p><span className="font-semibold">Lien personnel : </span>{formData.personnal_website ? <Link to={formData.personnal_website} target="_blank" className="text-blue-dark underline">Accéder</Link> : 'Non renseigné'}</p>
                                                         </div>
                                                     </div>
                                                 </div>

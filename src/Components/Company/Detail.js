@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Ariane from '../Partials/Ariane';
 import CompanyDetailPictures from './CompanyDetailPictures';
 import JobProfiles from "../JobProfiles/JobProfiles";
@@ -28,17 +28,15 @@ export default function CompanyDetail() {
     const [internshipOffers, setInternshipOffers] = useState([])
     const [loading, setLoading] = useState(true)
     const { REACT_APP_API_URL } = process.env;
-    const location = useLocation();
+    const { id } = useParams();
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // Fetch the company using the company ID from the offer
-                const companyResponse = await fetch(`${REACT_APP_API_URL}/api/companies/${location.state.companyId}`);
+                const companyResponse = await fetch(`${REACT_APP_API_URL}/api/companies/${id}`);
                 const companyData = await companyResponse.json();
                 setCompany(companyData);
 
-                // Set loading to false after all data is fetched
                 setLoading(false);
             } catch (error) {
                 console.error(error);
@@ -47,7 +45,7 @@ export default function CompanyDetail() {
         };
 
         fetchData();
-    }, [REACT_APP_API_URL, location.state.companyId]);
+    }, [REACT_APP_API_URL, id]);
 
     useEffect(() => {
         const fetchOffers = async () => {
@@ -94,7 +92,7 @@ export default function CompanyDetail() {
                     <Ariane ariane={[
                         { url: '/', text: 'Accueil' },
                         { url: '/entreprises', text: 'Entreprises' },
-                        { url: '/entreprise/', text: company.name }, // Id et nom de l'entreprise
+                        { url: '/entreprise/', text: company.name },
                     ]} />
                     <div className="mt-8 mb-6">
                         <h1 className="text-5xl font-bold text-grey-dark">{company.name}</h1>
@@ -140,7 +138,7 @@ export default function CompanyDetail() {
                             </div>
                             <div className="flex flex-col justify-start">
                                 <span>Chiffre d'affaire</span>
-                                <span className="font-semibold">1,2 M€</span>{/* A ajouter en base */}
+                                <span className="font-semibold">{(company.revenue / 1000000).toFixed(2)} M€</span>{/* A ajouter en base */}
                             </div>
                         </div>
                         <div className="flex items-start gap-4">
