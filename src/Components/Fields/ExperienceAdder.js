@@ -101,7 +101,7 @@ const ExperienceAdder = ({ name, onExperiencesChange }) => {
               value={newExperience.year}
               type="number" 
               min="1950" 
-              max="2025 "
+              max="2025"
               onChange={(e) => setNewExperience({ ...newExperience, year: e.target.value })}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border-b p-2"
             />
