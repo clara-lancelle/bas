@@ -15,7 +15,6 @@ import arrowBlueDark from '../../Images/Icons/arrow-blue-dark.svg'
 import ImageUploader from "../Fields/ImageUploader";
 import useToken from "../useToken";
 import Modal from 'react-modal';
-import Application from "../Application";
 
 const LinkEditor = (props) => {
     const { url } = props.contentState.getEntity(props.entityKey).getData();
@@ -366,7 +365,6 @@ export default function OfferApply({ isAuthenticated, userInfo, setUserInfo }) {
 
     return (
         <>
-        <Application id={id}/>
             <div className="bg-light-grey" onScroll={handleScroll}>
                 <div className="container flex flex-col pt-3 pb-11">
                     {ariane(offer.type, offer.name, offer.id)}
