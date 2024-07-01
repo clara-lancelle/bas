@@ -87,6 +87,7 @@ export default function OfferList({ type }) {
                             <h2 className="text-[32px] font-semibold">Résultats</h2>
                             <span>{offers.length > 1 && `${offers.length} offres trouvées` || `${offers.length} offre trouvée`}</span>
                         </div>
+                        {offers.length > 0 && (
                         <div>
                             <span className="text-gray-dark opacity-70">Trier par :</span>
                             <select className="border-r pr-2 font-medium cursor-pointer bg-transparent" value={selectedSort}
@@ -98,6 +99,7 @@ export default function OfferList({ type }) {
                                 <option value={5}>Nombre de jours restant pour postuler (croissant)</option>
                             </select>
                         </div>
+                        )}
                     </div>
 
                     {offers.length > 0 ? (

@@ -76,6 +76,7 @@ export default function CompanyList() {
                             <h2 className="text-[32px] font-semibold">Résultats</h2>
                             <span>{companies.length > 1 && `${companies.length} entreprises trouvées` || `${companies.length} entreprise trouvée`} </span>
                         </div>
+                        {companies.length > 0 && (
                         <div>
                             <span className="text-grey-dark opacity-70">Trier par :</span>
                             <select className="border-r pr-2 font-medium cursor-pointer bg-transparent" value={selectedSort}
@@ -84,8 +85,10 @@ export default function CompanyList() {
                                 <option value={2}>Nom (Z-A)</option>
                             </select>
                         </div>
+                        )}
                     </div>
 
+                    {companies.length > 0 ? (
                     <div className="flex flex-wrap gap-6">
                         {companies?.map(({ name, city, picto_image, id, description, offers, activities, ...items }) => (
                             <Link to={`/entreprise/${id}`} state={{ companyId: id }} className="companyCard" key={name + id}>
@@ -120,6 +123,11 @@ export default function CompanyList() {
                         ))}
                         <Paginate currentPage={1} />
                     </div>
+                    ) : (
+                        <div className="">
+                            <p>Aucune entreprise trouvée</p>
+                        </div>
+                    )}
                 </div>
             </div>
         </>
