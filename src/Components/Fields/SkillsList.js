@@ -61,7 +61,6 @@ const SkillsAdder = ({ onSkillsChange, initialSkills = [] }) => {
     setAvailableSkills([...availableSkills, skill]);
     onSkillsChange(updatedSelectedSkillsIRI);
   };
-
   return (
     <div ref={containerRef} className="skills-adder relative">
       <div className="selected-skills flex flex-wrap gap-2">
@@ -69,7 +68,7 @@ const SkillsAdder = ({ onSkillsChange, initialSkills = [] }) => {
           <div key={index} className="skill-item bg-blue-600 text-white px-2 py-1 rounded relative flex items-center">
             {skill.name}
             <span 
-              onClick={() => removeSkill(skill)} 
+              onClick={() => removeSkill(skill.name)} 
               className="ml-2 cursor-pointer"
             >
               &times;

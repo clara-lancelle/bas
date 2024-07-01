@@ -79,7 +79,7 @@ const ImageUploader = ({name, onUpload, userImage, apiUrl}) => {
             <p className='text-sm text-blue-dark'>Importer (500x500 pixels max) <br /> <span className='text-grey-placeholder'>JPG or PNG (5 Mo max)</span></p>
           )}
           {!imageIndicatorText && (
-            <p className='text-sm text-blue-dark'>{userImage}</p>
+            <p className='text-sm text-blue-dark overflow-hidden'>{userImage}</p>
           )}
         </div>
         {imagePreview && (

@@ -5,7 +5,7 @@ const Application = (id) => {
     const { REACT_APP_API_URL } = process.env;
     const [skills, setSkills] = useState([])
     const [profileImage, setProfileImage] = useState(null);
-    const token = sessionStorage.getItem('userType') == 'Student' && sessionStorage.getItem('token') || ''
+    const userId = sessionStorage.getItem('userType') == 'Student' && sessionStorage.getItem('userId') || ''
     
     useEffect(() => {
         fetch(`${REACT_APP_API_URL}/api/skills`)
@@ -17,6 +17,7 @@ const Application = (id) => {
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
+        //  console.log(file)
         const reader = new FileReader();
         reader.onloadend = () => {
             setProfileImage(reader.result);
@@ -25,8 +26,7 @@ const Application = (id) => {
     };
 
      const handleSubmit = () => {
-        const user = {
-            'token': token,
+        const user = {    
             'firstname': 'john',
             'name' : 'doe',
             'gender' : 'Homme',
@@ -63,8 +63,6 @@ const Application = (id) => {
                         "year": "2023"
                     }
                 ],
-                "coverLetter": "string",
-                "schoolName": "string"
             })
         })
             .then(response => response.json())
