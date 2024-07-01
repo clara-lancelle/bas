@@ -60,10 +60,11 @@ export default function StudentExperiencesForm({ formData, setFormData, toggleEd
         setErrors({ ...errors, [name]: '' });
     }
 
-
-    const validateFormData = (newFormData) => {
+    const validateFormData = () => {
         const newErrors = {};
-        if (newFormData.study_years && newFormData.study_years.trim() === '') newErrors.study_years = "Le niveau d'étude est requis.";
+        if ('study_years' in newFormData && newFormData.study_years.trim() === '') newErrors.study_years = "Le niveau d'étude est requis.";
+        if ('prepared_degree' in newFormData && newFormData.prepared_degree.trim() === '') newErrors.prepared_degree = "Le diplôme préparé est requis.";
+
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -118,6 +119,7 @@ export default function StudentExperiencesForm({ formData, setFormData, toggleEd
                             </option>
                         ))}
                     </select>
+                    {errors.study_years && <p className="text-red-500">{errors.study_years}</p>}
                 </label>
                 <label>
                     <span className="font-semibold">Diplôme préparé : </span>
@@ -132,6 +134,7 @@ export default function StudentExperiencesForm({ formData, setFormData, toggleEd
                             </option>
                         ))}
                     </select>
+                    {errors.prepared_degree && <p className="text-red-500">{errors.prepared_degree}</p>}
                 </label>
                 <label>
                     <span className="font-semibold">Nom de l’établissement : </span>
