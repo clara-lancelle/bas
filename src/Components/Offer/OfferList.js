@@ -100,47 +100,53 @@ export default function OfferList({ type }) {
                         </div>
                     </div>
 
-                    <div className="flex flex-col">
-                        {offers?.map(({ company: { name: companyName, city, picto_image }, id, name, start_date, end_date, job_profiles, calculatedLimitDays, calculatedDuration, ...items }) => (
-                            <div key={name + id} className="p-6 border border-white-light mb-4 flex justify-between">
-                                <div className="flex justify-start">
-                                    <img alt={`${companyName} image`} src={`${process.env.REACT_APP_API_URL}/assets/images/companies/${picto_image}`} className="w-16 h-16 object-contain"></img>
-                                    <div className="ms-6">
-                                        <h3 className="mb-2 font-semibold text-xl">{name}</h3>
-                                        <p className="mb-2 block">
-                                            <span className="font-bold">{companyName}</span>
-                                            • {city} • Du {start_date} au {end_date} ({calculatedDuration} jours)
-                                            {type == 'Stage' && Number(calculatedDuration) > 44 && (
-                                                <span className="text-[#FF007A] items-center flex gap-x-2">
-                                                    <span className="block bg-[#FF007A] rounded h-[10px] w-[10px]"></span>
-                                                    Rémunéré
-                                                </span>
-                                            )}
+                    {offers.length > 0 ? (
+                        <div className="flex flex-col">
+                            {offers?.map(({ company: { name: companyName, city, picto_image }, id, name, start_date, end_date, job_profiles, calculatedLimitDays, calculatedDuration, ...items }) => (
+                                <div key={name + id} className="p-6 border border-white-light mb-4 flex justify-between">
+                                    <div className="flex justify-start">
+                                        <img alt={`${companyName} image`} src={`${process.env.REACT_APP_API_URL}/assets/images/companies/${picto_image}`} className="w-16 h-16 object-contain"></img>
+                                        <div className="ms-6">
+                                            <h3 className="mb-2 font-semibold text-xl">{name}</h3>
+                                            <p className="mb-2 block">
+                                                <span className="font-bold">{companyName}</span>
+                                                • {city} • Du {start_date} au {end_date} ({calculatedDuration} jours)
+                                                {type == 'Stage' && Number(calculatedDuration) > 44 && (
+                                                    <span className="text-[#FF007A] items-center flex gap-x-2">
+                                                        <span className="block bg-[#FF007A] rounded h-[10px] w-[10px]"></span>
+                                                        Rémunéré
+                                                    </span>
+                                                )}
 
-                                        </p>
-                                        <div className="flex items-center">
-                                            <span className="text-blue-dark tag-contract">{type}</span>
-                                            <div className="border-l pl-2 flex justify-between ml-1 gap-x-2">
-                                                {job_profiles?.map((profile) => (
-                                                    <JobProfiles profile={profile} />
-                                                ))}
+                                            </p>
+                                            <div className="flex items-center">
+                                                <span className="text-blue-dark tag-contract">{type}</span>
+                                                <div className="border-l pl-2 flex justify-between ml-1 gap-x-2">
+                                                    {job_profiles?.map((profile) => (
+                                                        <JobProfiles profile={profile} />
+                                                    ))}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="w-1/5">
-                                    <div className="flex flex-col">
-                                        <div className="flex items-center justify-center btn-blue-dark mb-4">
-                                            <Link to={`/offre/${id}`} state={{ offerId: id }}>En savoir plus</Link>
+                                    <div className="w-1/5">
+                                        <div className="flex flex-col">
+                                            <div className="flex items-center justify-center btn-blue-dark mb-4">
+                                                <Link to={`/offre/${id}`} state={{ offerId: id }}>En savoir plus</Link>
+                                            </div>
+                                            <ProgressBar limitDays={calculatedLimitDays} />
+                                            <span className="text-xs">Reste {calculatedLimitDays} jours pour postuler</span>
                                         </div>
-                                        <ProgressBar limitDays={calculatedLimitDays} />
-                                        <span className="text-xs">Reste {calculatedLimitDays} jours pour postuler</span>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
-                        <Paginate currentPage={1} />
-                    </div>
+                            ))}
+                            <Paginate currentPage={1} />
+                        </div>
+                    ) : (
+                        <div className="">
+                            <p>Aucune offre trouvée</p>
+                        </div>
+                    )}
                 </div>
             </div >
         </>
